@@ -1,0 +1,163 @@
+@extends('layouts.layoutsAdmin')
+
+@section('title', 'Edit Book')
+
+@push('styles')
+    <link rel="stylesheet" href="{{ asset('css/book-management.css') }}">
+@endpush
+
+@section('content')
+<main class="col-lg-10 col-md-9 ms-sm-auto px-4">
+    <section class="konten">
+        <div class="isi">
+            <div class="container mt-5">
+                <h2>Edit Book</h2>
+
+                @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <strong>Whoops! Ada beberapa masalah:</strong>
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h4>Edit Book: {{ $book->title }}</h4>
+                    </div>
+
+                    <div class="card-body">
+                        {{-- FORM UPDATE BUKU --}}
+                        <form method="POST"
+                              action="{{ route('admin.books.update', $book->id) }}"
+                              enctype="multipart/form-data">
+                            @csrf
+
+                            <div class="row">
+                                {{-- KIRI --}}
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="title" class="form-label">Title</label>
+                                        <input type="text"
+                                               class="form-control"
+                                               id="title"
+                                               name="title"
+                                               value="{{ old('title', $book->title) }}"
+                                               required>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="author" class="form-label">Author</label>
+                                        <input type="text"
+                                               class="form-control"
+                                               id="author"
+                                               name="author"
+                                               value="{{ old('author', $book->author) }}"
+                                               required>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="genre" class="form-label">Genre</label>
+                                        <select class="form-control"
+                                                id="genre"
+                                                name="genre"
+                                                required>
+                                            @foreach ($genre_options as $option)
+                                                <option value="{{ $option }}"
+                                                    {{ old('genre', $book->genre) == $option ? 'selected' : '' }}>
+                                                    {{ $option }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+
+                                {{-- KANAN --}}
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="year" class="form-label">Year</label>
+                                        <input type="number"
+                                               class="form-control"
+                                               id="year"
+                                               name="year"
+                                               value="{{ old('year', $book->year) }}"
+                                               required>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="content" class="form-label">Content</label>
+                                        <textarea class="form-control"
+                                                  id="content"
+                                                  name="content"
+                                                  rows="4"
+                                                  required>{{ old('content', $book->content) }}</textarea>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="image" class="form-label">Book Cover Image</label>
+
+                                        @if ($book->image_path)
+                                            <div class="mb-2">
+                                                <img src="{{ $book->image_path }}"
+                                                     alt="Current Cover"
+                                                     class="img-thumbnail"
+                                                     style="max-height: 120px;">
+                                                <p class="text-muted small">Current image</p>
+                                            </div>
+                                        @endif
+
+                                        <input type="file"
+                                               class="form-control"
+                                               id="image"
+                                               name="image"
+                                               accept="image/*">
+                                        <div class="form-text">
+                                            Kosongkan jika tidak ingin mengganti cover
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mt-4">
+                                <button type="submit" class="btn btn-primary">
+                                    Update Book
+                                </button>
+
+                                <a href="{{ route('admin.genre.index', ['genre' => $book->genre]) }}"
+                                   class="btn btn-secondary ms-2">
+                                    Cancel
+                                </a>
+                            </div>
+                        </form>
+                        {{-- END FORM --}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+@endsection
+
+@push('scripts')
+<script>
+    document.querySelector('.sidebar-toggle')?.addEventListener('click', function () {
+        document.querySelector('.sidebar')?.classList.toggle('active');
+    });
+
+    document.addEventListener('click', function (event) {
+        const sidebar = document.querySelector('.sidebar');
+        const toggleBtn = document.querySelector('.sidebar-toggle');
+
+        if (window.innerWidth <= 768 &&
+            sidebar &&
+            toggleBtn &&
+            !sidebar.contains(event.target) &&
+            !toggleBtn.contains(event.target)) {
+            sidebar.classList.remove('active');
+        }
+    });
+</script>
+@endpush
