@@ -46,7 +46,7 @@
         </div>
       </div>
     @empty
-      <p>Belum ada buku favorit.</p>
+      <p>Belum ada buku favorittt.</p>
     @endforelse
   </div>
 
