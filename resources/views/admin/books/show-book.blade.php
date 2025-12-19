@@ -29,7 +29,7 @@
         
         {{-- Tombol Kembali --}}
         <a href="{{ url('/genre') }}" class="btn btn-outline-secondary mb-4">
-            <i class="fas fa-arrow-left me-2"></i> Kembali ke Daftar 
+            <i class="fas fa-arrow-left me-2"></i> Kembali ke Daftar Buku
         </a>
 
         <div class="card border-0 shadow-sm">
