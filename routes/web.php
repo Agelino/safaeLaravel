@@ -24,6 +24,7 @@ use App\Http\Controllers\ContactController;
 use App\Http\Controllers\AboutController;
 use App\Http\Controllers\PembayaranController;
 
+
 // =====================================================
 // AUTH PUBLIC
 // =====================================================
@@ -83,7 +84,8 @@ Route::middleware('auth')->group(function () {
     // =====================================================
     // REWARD USER
     // =====================================================
-    Route::get('/reward', [RewardController::class, 'index'])->name('reward.index');
+Route::get('/reward', [RewardController::class, 'index'])->name('reward.index');
+
 
 
     // =====================================================
@@ -209,9 +211,6 @@ Route::post('/komentar/hapus/{id}', [KomentarController::class, 'hapus'])->name(
     Route::put('/kelola-riwayat/{id}', [KelolaRiwayatBacaController::class, 'update'])->name('kelolariwayat.update');
     Route::delete('/kelola-riwayat/{id}', [KelolaRiwayatBacaController::class, 'destroy'])->name('kelolariwayat.delete');
 
-Route::get('/reward', [AdminRewardController::class, 'index'])->name('admin.reward.index');
-
-    Route::delete('/reward/{user}', [AdminRewardController::class, 'reset']) ->name('admin.reward.reset');
 
     // =====================================================
     // USER TULIS BUKU
