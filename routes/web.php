@@ -23,6 +23,7 @@ use App\Http\Controllers\BookSubmissionController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\AboutController;
 use App\Http\Controllers\PembayaranController;
+use App\Http\Controllers\AdminKomentarController;
 
 
 // =====================================================
@@ -211,6 +212,9 @@ Route::post('/komentar/hapus/{id}', [KomentarController::class, 'hapus'])->name(
     Route::put('/kelola-riwayat/{id}', [KelolaRiwayatBacaController::class, 'update'])->name('kelolariwayat.update');
     Route::delete('/kelola-riwayat/{id}', [KelolaRiwayatBacaController::class, 'destroy'])->name('kelolariwayat.delete');
 
+
+       Route::get('/admin/komentar', [AdminKomentarController::class, 'index'])->name('admin.komentar');
+    Route::post('/admin/komentar/hapus/{id}', [AdminKomentarController::class, 'hapus'])->name('admin.komentar.hapus');
 
     // =====================================================
     // USER TULIS BUKU
