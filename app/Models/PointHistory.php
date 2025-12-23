@@ -4,21 +4,25 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Komentar extends Model
+class PointHistory extends Model
 {
-    protected $table = 'komentar';
+    protected $table = 'point_histories';
 
     protected $fillable = [
         'user_id',
         'book_id',
-        'page',
-        'username',
-        'komentar',
-        'image_path',
+        'points'
     ];
 
+    // relasi ke user
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    // relasi ke book
+    public function book()
+    {
+        return $this->belongsTo(Book::class);
     }
 }

@@ -157,9 +157,9 @@
         <i class="fa fa-book me-2"></i> Genre Buku
     </a>
 
-    <a href="{{ route('bukufavorit') }}" class="{{ request()->is('bukufavorit') ? 'active' : '' }}">
-        <i class="fa fa-heart me-2"></i> Buku Favorit
-    </a>
+ <a href="{{ route('favorite.index') }}" class="{{ request()->is('buku-favorit*') ? 'active' : '' }}">
+    <i class="fa fa-heart me-2"></i> Buku Favorit
+</a>
 
     <a href="{{ route('reading.history') }}" class="{{ request()->is('riwayat-baca*') ? 'active' : '' }}">
         <i class="fa fa-clock me-2"></i> Riwayat Baca

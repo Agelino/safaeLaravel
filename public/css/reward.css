@@ -1,0 +1,101 @@
+.reward-wrapper {
+    position: relative;
+    padding: 30px;
+}
+
+/* TOP 3 */
+.top-three {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-bottom: 30px;
+}
+
+.top-card {
+    width: 170px;
+    padding: 20px;
+    text-align: center;
+    border-radius: 20px;
+    position: relative;
+}
+
+.rank-1 {
+    background: #e5aa3b;
+    transform: scale(1.1);
+}
+
+.rank-2 {
+    background: #f5d9a6;
+}
+
+.rank-3 {
+    background: #f7eed2;
+}
+
+.badge-rank {
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    background: #fbc02d;
+    color: #000;
+    border-radius: 50%;
+    padding: 8px 12px;
+    font-weight: bold;
+}
+
+.avatar {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin: 10px 0;
+}
+
+/* RANK LIST */
+.rank-list {
+    max-width: 500px;
+    margin: auto;
+}
+
+.rank-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #fff;
+    padding: 12px 18px;
+    border-radius: 15px;
+    margin-bottom: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,.1);
+}
+
+.rank-number {
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.avatar-sm {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin: 0 10px;
+}
+
+/* USER CARD */
+.user-point-card {
+    position: absolute;
+    top: 120px;
+    right: 40px;
+    width: 200px;
+    background: #6fa8dc;
+    color: #fff;
+    padding: 15px;
+    border-radius: 15px;
+    text-align: center;
+}
+
+.avatar-lg {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    margin: 10px 0;
+}

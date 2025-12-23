@@ -47,9 +47,10 @@
             📚 Daftar Buku
         </a>
 
-        <a href="/komentar" class="btn btn-yellow">
-            💬 Komentar
-        </a>
+        <a href="{{ url('/books/'.$buku->id.'/page/'.$page.'/komentar') }}" class="btn btn-yellow">
+    💬 Komentar
+</a>
+
 
     </div>
 </div>

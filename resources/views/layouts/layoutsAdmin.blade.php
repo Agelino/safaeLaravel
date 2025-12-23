@@ -45,6 +45,13 @@
                 </a>
             </li>
 
+                {{-- KELOLA REWARD --}}
+<li class="{{ request()->is('admin/rewards') || request()->is('admin/rewards*') ? 'active' : '' }}">
+    <a href="{{ url('/admin/rewards') }}">
+        <i class="fa-solid fa-gift"></i> Kelola Reward
+    </a>
+</li>
+
             {{-- KELOLA FORUM --}}
             <li class="{{ request()->is('admin/forum') || request()->is('admin/forum*') ? 'active' : '' }}">
                 <a href="{{ url('/admin/forum') }}">
@@ -74,6 +81,9 @@
           
         </ul>
     </nav>
+
+
+
 
     <!-- HEADER -->
     <header class="admin-header">

@@ -24,13 +24,13 @@
 
     </div>
 
-    <form method="GET" action="{{ route('genre.index') }}" class="search-bar">
+    <form method="GET" action="{{ route('genre.index') }}" class="search-bar d-flex">
         <input type="text"
                name="search"
                class="form-control"
                placeholder="Cari buku..."
                value="{{ $search }}">
-        <button class="btn btn-primary">
+        <button class="btn btn-primary ms-1">
             <i class="fa fa-search"></i>
         </button>
     </form>
@@ -55,16 +55,44 @@
 
                 <div class="card-body">
                     <h6 class="card-title">{{ $book->title }}</h6>
-                    <p><strong>Author:</strong> {{ $book->author }}</p>
-                    <p><strong>Genre:</strong> {{ $book->genre }}</p>
-                    <p><strong>Year:</strong> {{ $book->year }}</p>
+                    <p class="mb-1"><strong>Author:</strong> {{ $book->author }}</p>
+                    <p class="mb-1"><strong>Genre:</strong> {{ $book->genre }}</p>
+                    <p class="mb-0"><strong>Year:</strong> {{ $book->year }}</p>
                 </div>
 
-                <div class="card-footer bg-white text-center">
+                {{-- FOOTER BUTTON --}}
+                <div class="card-footer bg-white text-center d-flex justify-content-center gap-1">
+
+                    {{-- VIEW --}}
                     <a href="{{ route('fullbacaan.show', $book->id) }}"
-                       class="btn btn-sm btn-info text-white">
+                       class="btn btn-sm btn-info text-white"
+                       title="Lihat Buku">
                         <i class="fa fa-eye"></i>
                     </a>
+
+                    {{-- FAVORITE --}}
+                    @auth
+                        @if(in_array($book->id, $favorites))
+                            <button class="btn btn-sm btn-danger" disabled title="Sudah Favorit">
+                                <i class="fa fa-heart"></i>
+                            </button>
+                        @else
+                            <form action="{{ route('favorite.tambah') }}" method="POST">
+                                @csrf
+                                <input type="hidden" name="book_id" value="{{ $book->id }}">
+                                <button class="btn btn-sm btn-outline-danger" title="Tambah Favorit">
+                                    <i class="fa fa-heart"></i>
+                                </button>
+                            </form>
+                        @endif
+                    @else
+                        <a href="{{ route('login') }}"
+                           class="btn btn-sm btn-outline-danger"
+                           title="Login untuk favorit">
+                            <i class="fa fa-heart"></i>
+                        </a>
+                    @endauth
+
                 </div>
 
             </div>

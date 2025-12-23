@@ -6,76 +6,59 @@
 
 <div class="komentar-container">
 
-    <!-- FORM TAMBAH KOMENTAR -->
+    <!-- FORM KOMENTAR -->
     <div class="komentar-card">
-        <h1>Bagian Komentar</h1>
-
-        <p class="user-auto">
-            Silakan tulis komentar Anda :
-            <strong>{{ Auth::check() ? Auth::user()->name : "Anonymous" }}</strong>
-        </p>
+        <h1>Komentar</h1>
 
         <form action="/komentar/simpan" method="POST" enctype="multipart/form-data">
             @csrf
-            <div class="form-group">
-                <textarea name="komentar" placeholder="Komentar Anda" required></textarea>
-            </div>
 
-            <div class="form-group file-group">
-                <label class="file-label">
-                    <input type="file" name="image" hidden>
-                    Pilih Gambar
-                </label>
-                <span class="file-info">Tidak ada file yang dipilih</span>
-            </div>
+            <input type="hidden" name="book_id" value="{{ $bookId }}">
+            <input type="hidden" name="page" value="{{ $page }}">
 
-            <button type="submit" class="btn-kirim">Kirim Komentar</button>
+            <textarea name="komentar" placeholder="Tulis komentar..." required></textarea>
+
+            <input type="file" name="image">
+
+            <button type="submit" class="btn-kirim">
+                Kirim
+            </button>
         </form>
     </div>
 
-
     <!-- LIST KOMENTAR -->
     <div class="komentar-list">
-        <h2>Semua Komentar</h2>
+        @forelse($komentar as $c)
+            <div class="komentar-item">
 
-        @foreach ($komentar as $c)
-        <div class="komentar-item">
+                <strong class="username">{{ $c->username }}</strong>
+                <p class="text">{{ $c->komentar }}</p>
 
-            <strong class="username">{{ $c->username }}</strong>
-            <p class="text">{{ $c->komentar }}</p>
+                @if($c->image_path)
+                    <img src="{{ asset('uploads/' . $c->image_path) }}" class="komentar-img">
+                @endif
 
-            @if($c->image_path)
-                <img src="{{ asset('uploads/' . $c->image_path) }}" class="komentar-img">
-            @endif
-
-            @if(Auth::check() && Auth::id() == $c->user_id)
-            <div style="margin-top:10px; display:flex; gap:10px;">
-
-                <!-- BUTTON EDIT FIXED -->
-                <a href="{{ route('komentar.edit', $c->id) }}" class="btn btn-warning">Edit</a>
-
-                <!-- BUTTON HAPUS FIXED -->
-                <form action="{{ route('komentar.hapus', $c->id) }}" method="POST"
-                      onsubmit="return confirm('Yakin ingin menghapus komentar ini?')">
-                    @csrf
-                    <button type="submit" class="btn btn-danger">Hapus</button>
-                </form>
+                {{-- 🔒 TOMBOL HAPUS: HANYA PEMILIK --}}
+                @if(Auth::check() && Auth::id() === $c->user_id)
+                    <form action="{{ route('komentar.hapus', $c->id) }}"
+                          method="POST"
+                          onsubmit="return confirm('Yakin ingin menghapus komentar ini?')"
+                          style="margin-top:10px;">
+                        @csrf
+                        <button type="submit" class="btn btn-danger btn-sm">
+                            🗑 Hapus
+                        </button>
+                    </form>
+                @endif
 
             </div>
-            @endif
-
-        </div>
-        @endforeach
-
+        @empty
+            <p style="text-align:center; opacity:0.7;">
+                Belum ada komentar di halaman ini.
+            </p>
+        @endforelse
     </div>
 
 </div>
-
-<script>
-document.querySelector('input[name="image"]').addEventListener('change', function(){
-    const info = document.querySelector('.file-info');
-    info.textContent = this.files[0] ? this.files[0].name : "Tidak ada file yang dipilih";
-});
-</script>
 
 @endsection

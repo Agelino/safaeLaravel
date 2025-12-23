@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AdminRewardController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
@@ -75,10 +76,9 @@ Route::middleware('auth')->group(function () {
     // =====================================================
     // FAVORIT USER
     // =====================================================
-    Route::get('/bukufavorit', [BukuFavoritController::class, 'index'])->name('bukufavorit');
-    Route::post('/tambah-favorit', [BukuFavoritController::class, 'tambah'])->name('tambah.favorit');
-    Route::post('/hapus-favorit', [BukuFavoritController::class, 'hapus'])->name('hapus.favorit');
-
+     Route::get('/buku-favorit', [BukuFavoritController::class, 'index'])->name('favorite.index');
+    Route::post('/buku-favorit/tambah', [BukuFavoritController::class, 'tambah'])->name('favorite.tambah');
+    Route::post('/buku-favorit/hapus', [BukuFavoritController::class, 'hapus'])->name('favorite.hapus');
 
     // =====================================================
     // REWARD USER
@@ -109,12 +109,12 @@ Route::middleware('auth')->group(function () {
     // =====================================================
     // KOMENTAR USER
     // =====================================================
-    Route::get('/komentar', [KomentarController::class, 'index'])->name('komentar.index');
-    Route::get('/komentar/input', [KomentarController::class, 'input'])->name('komentar.input');
-    Route::post('/komentar/simpan', [KomentarController::class, 'simpan'])->name('komentar.simpan');
-    Route::get('/komentar/{id}/edit', [KomentarController::class, 'edit'])->name('komentar.edit');
-    Route::post('/komentar/{id}/update', [KomentarController::class, 'update'])->name('komentar.update');
-    Route::post('/komentar/{id}/hapus', [KomentarController::class, 'hapus'])->name('komentar.hapus');
+Route::get('/books/{book}/page/{page}/komentar', [KomentarController::class, 'index']);
+Route::post('/komentar/simpan', [KomentarController::class, 'simpan']);
+
+Route::get('/komentar/edit/{id}', [KomentarController::class, 'edit'])->name('komentar.edit');
+Route::post('/komentar/update/{id}', [KomentarController::class, 'update'])->name('komentar.update');
+Route::post('/komentar/hapus/{id}', [KomentarController::class, 'hapus'])->name('komentar.hapus');
 
 
     // =====================================================
@@ -199,6 +199,9 @@ Route::middleware('auth')->group(function () {
     Route::put('/kelola-riwayat/{id}', [KelolaRiwayatBacaController::class, 'update'])->name('kelolariwayat.update');
     Route::delete('/kelola-riwayat/{id}', [KelolaRiwayatBacaController::class, 'destroy'])->name('kelolariwayat.delete');
 
+Route::get('/reward', [AdminRewardController::class, 'index'])->name('admin.reward.index');
+
+    Route::delete('/reward/{user}', [AdminRewardController::class, 'reset']) ->name('admin.reward.reset');
 
     // =====================================================
     // USER TULIS BUKU

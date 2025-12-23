@@ -1,54 +1,47 @@
 @extends('layouts.app')
 
+@section('title', 'Buku Favorit')
+
 @section('content')
-<div class="container mt-4">
+<div class="container">
 
-  <!-- Tombol Back -->
-  <a href="{{ url('home') }}" class="btn btn-secondary mb-3">
-    <i class="fa-solid fa-arrow-left"></i> Back
-  </a>
+    <h3 class="mb-4">❤️ Buku Favorit Saya</h3>
 
-  <h1 class="mb-4">Pilih Buku Favorit Anda</h1>
+    <div class="row">
+        @forelse ($favorites as $fav)
+            <div class="col-md-3 mb-3">
+                <div class="card h-100 border-danger">
 
-  <div class="d-flex flex-wrap gap-3">
-    @foreach ($books as $book)
-      <div class="card shadow-sm" style="width: 18rem;">
-        <img src="{{ asset($book['image']) }}" class="card-img-top" alt="{{ $book['title'] }}">
-        <div class="card-body text-center">
-          <h5 class="card-title">{{ $book['title'] }}</h5>
-          <p class="card-text">Oleh: {{ $book['author'] }}</p>
-          <form method="POST" action="{{ route('tambah.favorit') }}">
-            @csrf
-            <input type="hidden" name="title" value="{{ $book['title'] }}">
-            <input type="hidden" name="author" value="{{ $book['author'] }}">
-            <input type="hidden" name="image" value="{{ $book['image'] }}">
-            <button type="submit" class="btn btn-primary">Tambah ke Favorit</button>
-          </form>
-        </div>
-      </div>
-    @endforeach
-  </div>
+                    {{-- COVER --}}
+                    @if (!empty($fav->book->image_path))
+                        <img src="{{ asset($fav->book->image_path) }}"
+                             class="card-img-top"
+                             alt="{{ $fav->book->title }}">
+                    @else
+                        <img src="https://via.placeholder.com/300x200?text=No+Image"
+                             class="card-img-top"
+                             alt="No Image">
+                    @endif
 
-  <h2 class="mt-5 mb-3 text-center">Daftar Buku Favorit</h2>
+                    <div class="card-body text-center">
+                        <h6>{{ $fav->book->title }}</h6>
+                        <p class="text-muted">{{ $fav->book->author }}</p>
 
-  <div class="d-flex flex-wrap gap-3 justify-content-center">
-    @forelse ($favorites as $book)
-      <div class="card shadow-sm" style="width: 18rem;">
-        <img src="{{ asset($book['image']) }}" class="card-img-top" alt="{{ $book['title'] }}">
-        <div class="card-body text-center">
-          <h5 class="card-title">{{ $book['title'] }}</h5>
-          <p class="card-text">Oleh: {{ $book['author'] }}</p>
-          <form method="POST" action="{{ route('hapus.favorit') }}">
-            @csrf
-            <input type="hidden" name="title" value="{{ $book['title'] }}">
-            <button type="submit" class="btn btn-danger">Hapus</button>
-          </form>
-        </div>
-      </div>
-    @empty
-      <p>Tidak ada buku favorit.</p>
-    @endforelse
-  </div>
+                        <form action="{{ route('favorite.hapus') }}" method="POST">
+                            @csrf
+                            <input type="hidden" name="book_id" value="{{ $fav->book->id }}">
+                            <button class="btn btn-danger btn-sm">
+                                ❌ Hapus dari Favorit
+                            </button>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+        @empty
+            <p class="text-muted text-center">Belum ada buku favorit.</p>
+        @endforelse
+    </div>
 
 </div>
 @endsection

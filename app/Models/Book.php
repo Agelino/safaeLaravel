@@ -10,14 +10,15 @@ class Book extends Model
     use HasFactory;
 
     protected $fillable = [
-        'title',
-        'author',
-        'genre',
-        'year',
-        'content',
-        'image_path',
-        'status',
-    ];
+    'title',
+    'author',
+    'genre',
+    'year',
+    'description',
+    'image_path',
+    'status',
+];
+
 
     public function readingHistories()
     {

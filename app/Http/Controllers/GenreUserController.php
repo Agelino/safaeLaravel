@@ -4,13 +4,15 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Book;
+use App\Models\FavoriteBook;
+use Illuminate\Support\Facades\Auth;
 
 class GenreUserController extends Controller
 {
     public function index(Request $request)
     {
         // ambil input dari URL (?genre=...&search=...)
-        $genre = $request->genre;
+        $genre  = $request->genre;
         $search = $request->search;
 
         // ambil semua genre (buat filter)
@@ -18,19 +20,30 @@ class GenreUserController extends Controller
             ->pluck('genre')
             ->unique();
 
-        // ambil semua buku yang sudah approved
-        $books_to_show = Book::where('status', 'approved')->get();
+        // query awal buku approved
+        $query = Book::where('status', 'approved');
 
-        // kalau user pilih genre
+        // filter genre
         if ($genre) {
-            $books_to_show = $books_to_show->where('genre', $genre);
+            $query->where('genre', $genre);
         }
 
-        // kalau user search judul
+        // search judul
         if ($search) {
-            $books_to_show = $books_to_show->filter(function ($book) use ($search) {
-                return stripos($book->title, $search) !== false;
-            });
+            $query->where('title', 'like', "%{$search}%");
+        }
+
+        $books_to_show = $query->get();
+
+        // =========================
+        // FAVORITE BOOK ID USER
+        // =========================
+        $favorites = [];
+
+        if (Auth::check()) {
+            $favorites = FavoriteBook::where('user_id', Auth::id())
+                ->pluck('book_id')
+                ->toArray();
         }
 
         return view('books.genre', [
@@ -38,6 +51,7 @@ class GenreUserController extends Controller
             'all_genres'    => $allGenres,
             'genre'         => $genre,
             'search'        => $search,
+            'favorites'     => $favorites, // ⬅️ PENTING
         ]);
     }
 }

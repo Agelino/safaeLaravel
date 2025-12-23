@@ -2,67 +2,40 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Book;
+use App\Models\FavoriteBook;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class BukuFavoritController extends Controller
 {
-    // Menampilkan halaman daftar buku dan buku favorit
     public function index()
     {
-        // Data contoh (bisa diganti dari database nanti)
-        $books = [
-            ["title" => "The Chronicles Of Narnia", "author" => "C.S. Lewis", "image" => asset('images/narnia.jpg')],
-            ["title" => "Proposal For Wedding", "author" => "DesyMiladiana", "image" => asset('images/proposal-for-wedding.jpg')],
-            ["title" => "Laut Bercerita", "author" => "Leila S. Chudori", "image" => asset('images/laut-bercerita.png')],
-        ];
+        $books = Book::where('status', 'approved')->get();
 
-        // Ambil data favorit dari session
-        $favorites = session('favorite_books', []);
+        $favorites = FavoriteBook::with('book')
+            ->where('user_id', Auth::id())
+            ->get();
 
-        // Kirim ke view
-        return view('books.BukuFavorit', compact('books', 'favorites'));
+        return view('books.bukuFavorit', compact('books', 'favorites'));
     }
 
-    // Menambahkan buku ke daftar favorit
     public function tambah(Request $request)
     {
-        $favorites = session('favorite_books', []);
+        FavoriteBook::firstOrCreate([
+            'user_id' => Auth::id(),
+            'book_id' => $request->book_id
+        ]);
 
-        $bukuBaru = [
-            'title' => $request->title,
-            'author' => $request->author,
-            'image' => $request->image
-        ];
-
-        // Cek apakah buku sudah ada di favorit
-        $sudahAda = false;
-        foreach ($favorites as $fav) {
-            if ($fav['title'] === $bukuBaru['title']) {
-                $sudahAda = true;
-                break;
-            }
-        }
-
-        // Tambahkan jika belum ada
-        if (!$sudahAda) {
-            $favorites[] = $bukuBaru;
-            session(['favorite_books' => $favorites]);
-        }
-
-        return redirect('/bukufavorit');
+        return back();
     }
 
-    // Menghapus buku dari daftar favorit
     public function hapus(Request $request)
     {
-        $favorites = session('favorite_books', []);
+        FavoriteBook::where('user_id', Auth::id())
+            ->where('book_id', $request->book_id)
+            ->delete();
 
-        $favorites = array_filter($favorites, function ($book) use ($request) {
-            return $book['title'] !== $request->title;
-        });
-
-        session(['favorite_books' => array_values($favorites)]);
-
-        return redirect('/bukufavorit');
+        return back();
     }
 }

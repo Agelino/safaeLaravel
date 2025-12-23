@@ -4,7 +4,7 @@
 
 @section('content')
 <div class="container">
-    <h3 class="mb-4">About Safae kelompok 100</h3>
+    <h3 class="mb-4">About</h3>
 
     <p>
         Safae adalah platform baca dan tulis cerita digital yang dibuat
