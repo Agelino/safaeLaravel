@@ -3,37 +3,48 @@
 @section('title', 'Kelola User')
 
 @section('content')
-<main class="col-lg-10 col-md-9 ms-sm-auto px-4 pt-4">
+<main class="col-lg-10 col-md-9 ms-sm-auto px-4 pt-2">
 
-    <div class="container" style="max-width: 1000px;">
+    <div class="container" style="max-width: 1100px;">
 
-        <h2 class="mb-4 text-center">Daftar User</h2>
+        {{-- HEADER --}}
+        <div class="mb-3">
+            <h3 class="fw-bold mb-1">Kelola User</h3>
+            <small class="text-muted">
+                Daftar seluruh pengguna yang terdaftar di sistem
+            </small>
+        </div>
 
         {{-- ALERT --}}
         @if(session('success'))
-            <div class="alert alert-success text-center">
+            <div class="alert alert-success alert-dismissible fade show">
                 {{ session('success') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
         @endif
 
-        {{-- TABLE --}}
-        <div class="card shadow-sm mx-auto">
-            <div class="card-body p-0">
-                <table class="table table-bordered table-hover align-middle mb-0 text-center">
+        {{-- CARD TABLE --}}
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-white fw-semibold">
+                📋 Daftar User
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0 text-center">
                     <thead class="table-light">
                         <tr>
-                            <th style="width: 70px;">ID</th>
+                            <th style="width: 60px;">ID</th>
                             <th style="width: 90px;">Foto</th>
                             <th>Username</th>
                             <th>Email</th>
-                            <th style="width: 280px;">Aksi</th>
+                            <th style="width: 260px;">Aksi</th>
                         </tr>
                     </thead>
 
                     <tbody>
-                        @foreach($users as $user)
+                        @forelse($users as $user)
                         <tr>
-                            <td>{{ $user->id }}</td>
+                            <td class="fw-semibold">{{ $user->id }}</td>
 
                             {{-- FOTO PROFIL --}}
                             <td>
@@ -41,26 +52,32 @@
                                     <img
                                         src="{{ asset('storage/' . $user->profile_image) }}"
                                         alt="Foto Profil"
-                                        class="rounded-circle"
+                                        class="rounded-circle border"
                                         style="width: 45px; height: 45px; object-fit: cover;">
                                 @else
-                                    <span class="text-muted">-</span>
+                                    <div
+                                        class="rounded-circle bg-light d-flex align-items-center justify-content-center mx-auto"
+                                        style="width: 45px; height: 45px;">
+                                        <i class="fas fa-user text-muted"></i>
+                                    </div>
                                 @endif
                             </td>
 
-                            <td>{{ $user->username }}</td>
-                            <td>{{ $user->email }}</td>
+                            <td class="fw-semibold">{{ $user->username }}</td>
+                            <td class="text-muted">{{ $user->email }}</td>
 
+                            {{-- AKSI --}}
                             <td>
                                 <div class="d-flex justify-content-center gap-2">
+
                                     <a href="{{ route('admin.users.show', $user->id) }}"
-                                       class="btn btn-info btn-sm text-white">
-                                        Detail
+                                       class="btn btn-outline-info btn-sm">
+                                        <i class="fas fa-eye"></i>
                                     </a>
 
                                     <a href="{{ route('admin.users.edit', $user->id) }}"
-                                       class="btn btn-warning btn-sm text-white">
-                                        Edit
+                                       class="btn btn-outline-warning btn-sm">
+                                        <i class="fas fa-edit"></i>
                                     </a>
 
                                     <form action="{{ route('admin.users.destroy', $user->id) }}"
@@ -68,14 +85,21 @@
                                           onsubmit="return confirm('Yakin hapus user ini?')">
                                         @csrf
                                         @method('DELETE')
-                                        <button class="btn btn-danger btn-sm">
-                                            Hapus
+                                        <button class="btn btn-outline-danger btn-sm">
+                                            <i class="fas fa-trash"></i>
                                         </button>
                                     </form>
+
                                 </div>
                             </td>
                         </tr>
-                        @endforeach
+                        @empty
+                        <tr>
+                            <td colspan="5" class="text-muted py-4">
+                                Tidak ada data user
+                            </td>
+                        </tr>
+                        @endforelse
                     </tbody>
 
                 </table>

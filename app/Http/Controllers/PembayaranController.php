@@ -3,21 +3,20 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 
 class PembayaranController extends Controller
 {
-    // tampil halaman pembayaran
     public function index()
     {
-        $user = auth()->user();
+        $user = Auth::user();
 
         return view('pembayaran.index', [
             'saldoPoin' => $user->points
         ]);
     }
 
-    // simpan pembayaran (tambah poin)
     public function proses(Request $request)
     {
         $request->validate([
@@ -26,10 +25,14 @@ class PembayaranController extends Controller
             'metode' => 'required'
         ]);
 
-        $user = auth()->user();
+        // ambil id user yang sedang login
+        $userId = Auth::id();
 
-        $user->points = $user->points + $request->points;
-        $user->save();
+        // update poin pakai where
+        User::where('id', $userId)
+            ->update([
+                'points' => $request->points + Auth::user()->points
+            ]);
 
         return redirect('/pembayaran')
             ->with('success', 'Pembayaran berhasil!');
