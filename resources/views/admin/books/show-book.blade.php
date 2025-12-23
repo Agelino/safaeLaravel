@@ -27,7 +27,6 @@
 <main class="col-lg-10 col-md-9 ms-sm-auto px-4 py-4">
     <div class="container">
         
-        {{-- Tombol Kembali --}}
         <a href="{{ url('/genre') }}" class="btn btn-outline-secondary mb-4">
             <i class="fas fa-arrow-left me-2"></i> Kembali ke Daftar Buku
         </a>
@@ -35,7 +34,6 @@
         <div class="card border-0 shadow-sm">
             <div class="card-body p-4">
                 <div class="row">
-                    {{-- Kolom Kiri: Cover Buku --}}
                     <div class="col-md-4 text-center mb-4 mb-md-0">
                         @if($book->image_path)
                             <img src="{{ asset($book->image_path) }}" alt="{{ $book->title }}" class="book-cover-detail">
@@ -73,13 +71,11 @@
                         <div class="book-content">
                             <h5 class="fw-bold mb-3">Sinopsis / Isi Buku:</h5>
                             
-                            {{-- TAMPILKAN KONTEN PER HALAMAN --}}
                             <div class="content-text text-justify mb-4" style="min-height: 200px;">
                         
                                 {!! $finalContent !!}
                             </div>
 
-                            {{-- TOMBOL NAVIGASI HALAMAN (1, 2, 3...) --}}
                             @if($paginatedData->hasPages())
                                 <div class="d-flex justify-content-center mt-4 pt-3 border-top">
                                     {{ $paginatedData->links() }}
