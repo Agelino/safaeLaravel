@@ -21,7 +21,7 @@ use App\Http\Controllers\AdminReviewController;
 use App\Http\Controllers\BookSubmissionController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\AboutController;
-
+use App\Http\Controllers\PembayaranController;
 
 // =====================================================
 // AUTH PUBLIC
@@ -84,6 +84,16 @@ Route::middleware('auth')->group(function () {
     // REWARD USER
     // =====================================================
     Route::get('/reward', [RewardController::class, 'index'])->name('reward.index');
+
+
+    // =====================================================
+    // PEMBAYARAN / BELI POIN (USER)
+    // =====================================================
+    Route::get('/pembayaran', [PembayaranController::class, 'index'])
+        ->name('pembayaran.index');
+
+    Route::post('/pembayaran/proses', [PembayaranController::class, 'proses'])
+        ->name('pembayaran.proses');
 
 
     // =====================================================

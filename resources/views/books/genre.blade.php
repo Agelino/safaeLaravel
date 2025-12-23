@@ -6,25 +6,25 @@
 
 <link rel="stylesheet" href="{{ asset('css/genre.css') }}">
 
-<!-- Filter dan Search -->
+<!-- ================= FILTER & SEARCH ================= -->
 <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap">
-    <div class="filter-bar">
 
+    <div class="filter-bar">
         <a href="{{ route('genre.index') }}"
-           class="btn btn-outline-primary {{ empty($genre) ? 'active' : '' }}">
+           class="btn btn-outline-primary {{ empty($current_genre) ? 'active' : '' }}">
             Semua
         </a>
 
         @foreach($all_genres as $g)
             <a href="{{ route('genre.index', ['genre' => $g]) }}"
-               class="btn btn-outline-primary {{ $genre == $g ? 'active' : '' }}">
+               class="btn btn-outline-primary {{ ($current_genre ?? null) == $g ? 'active' : '' }}">
                 {{ $g }}
             </a>
         @endforeach
-
     </div>
 
     <form method="GET" action="{{ route('genre.index') }}" class="search-bar">
+        <input type="hidden" name="genre" value="{{ $current_genre }}">
         <input type="text"
                name="search"
                class="form-control"
@@ -36,15 +36,16 @@
     </form>
 </div>
 
-<!-- Grid Buku -->
+<!-- ================= GRID BUKU ================= -->
 <div class="row g-2">
+
     @forelse($books_to_show as $book)
         <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6">
             <div class="card h-100">
 
                 {{-- COVER BUKU --}}
-                @if (!empty($book->image_path))
-                    <img src="{{ $book->image_path }}"
+                @if ($book->image_url)
+                    <img src="{{ $book->image_url }}"
                          class="card-img-top"
                          alt="{{ $book->title }}">
                 @else
@@ -72,6 +73,7 @@
     @empty
         <p class="text-center text-muted">Tidak ada buku ditemukan.</p>
     @endforelse
+
 </div>
 
 @endsection
