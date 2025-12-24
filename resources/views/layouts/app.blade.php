@@ -151,7 +151,7 @@
     <h4>Safae</h4>
 
     <a href="#"><i class="fa fa-home me-2"></i> Home</a>
-    <a href="#"><i class="fa fa-pen me-2"></i> Tulis Cerita</a>
+    <a href="#"><i class="fa fa-pen me-2"></i> Tulis Buku</a>
 
     <a href="{{ route('genre.index') }}" class="{{ request()->is('genre*') ? 'active' : '' }}">
         <i class="fa fa-book me-2"></i> Genre Buku
