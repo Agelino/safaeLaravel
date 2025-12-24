@@ -34,11 +34,12 @@ class AuthController extends Controller
             'email' => $request->email,
             'telepon' => $request->telepon,
             'password' => Hash::make($request->password),
+            'role' => 'user', // DEFAULT USER
         ]);
 
-        return redirect()->route('login')->with('success', 'Registrasi berhasil, silakan login!');
+        return redirect()->route('login')
+            ->with('success', 'Registrasi berhasil, silakan login!');
     }
-
 
     // FORM LOGIN
     public function showLoginForm()
@@ -54,7 +55,6 @@ class AuthController extends Controller
             'password' => 'required|string',
         ]);
 
-        // LOGIN 
         $credentials = [
             'username' => $request->username,
             'password' => $request->password,
@@ -62,7 +62,13 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
-            return redirect('/genre');
+
+            // CEK ROLE
+            if (Auth::user()->role === 'admin') {
+                return redirect('/admin');
+            }
+
+            return redirect('/genre'); // USER BIASA
         }
 
         return back()->withErrors([
@@ -71,12 +77,12 @@ class AuthController extends Controller
     }
 
     public function logout(Request $request)
-{
-    Auth::logout();
-    $request->session()->invalidate();
-    $request->session()->regenerateToken();
+    {
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
 
-    return redirect()->route('login')->with('success', 'Berhasil logout.');
-}
-
+        return redirect()->route('login')
+            ->with('success', 'Berhasil logout.');
+    }
 }

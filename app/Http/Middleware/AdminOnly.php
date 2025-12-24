@@ -9,8 +9,8 @@ class AdminOnly
 {
     public function handle($request, Closure $next)
     {
-        if (!Auth::check() || Auth::user()->username !== 'adzraaditama') {
-            return redirect('/')->with('error', 'Akses terbatas!');
+        if (!Auth::check() || Auth::user()->role !== 'admin') {
+            abort(403);
         }
 
         return $next($request);

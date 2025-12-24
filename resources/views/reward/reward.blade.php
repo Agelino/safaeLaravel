@@ -45,7 +45,10 @@
 
         <h5>{{ $currentUser->username }}</h5>
         
-        <a href="#" class="btn btn-light btn-sm mt-2">Beli poin →</a>
+        <a href="{{ route('pembayaran.index') }}" 
+   class="btn btn-light btn-sm mt-2">
+    Beli poin →
+</a>
     </div>
     @endif
 

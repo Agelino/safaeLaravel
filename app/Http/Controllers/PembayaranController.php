@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use App\Models\User;
 
 class PembayaranController extends Controller
 {
+    // HALAMAN PEMBAYARAN
     public function index()
     {
         $user = Auth::user();
@@ -17,24 +19,22 @@ class PembayaranController extends Controller
         ]);
     }
 
+    // PROSES PEMBAYARAN
     public function proses(Request $request)
-    {
-        $request->validate([
-            'points' => 'required',
-            'price' => 'required',
-            'metode' => 'required'
+{
+    $request->validate([
+        'points' => 'required|integer|min:1',
+        'price' => 'required|integer|min:0',
+        'metode' => 'required'
+    ]);
+
+    DB::table('users')
+        ->where('id', Auth::id())
+        ->update([
+            'points' => DB::raw('points + ' . (int) $request->points)
         ]);
 
-        // ambil id user yang sedang login
-        $userId = Auth::id();
-
-        // update poin pakai where
-        User::where('id', $userId)
-            ->update([
-                'points' => $request->points + Auth::user()->points
-            ]);
-
-        return redirect('/pembayaran')
-            ->with('success', 'Pembayaran berhasil!');
-    }
+    return redirect('/pembayaran')
+        ->with('success', 'Pembayaran berhasil! Poin kamu bertambah 🎉');
+}
 }
