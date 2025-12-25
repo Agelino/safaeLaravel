@@ -59,6 +59,13 @@
     </a>
 </li>
 
+{{-- kelola reward --}}
+<li class="{{ request()->is('admin/reward') ? 'active' : '' }}">
+    <a href="{{ route('admin.rewards.index') }}">
+        <i class="fa-solid fa-gift"></i> Kelola Reward
+    </a>
+</li>
+
 
         {{-- RIWAYAT --}}
         <li class="{{ request()->is('kelola-riwayat*') ? 'active' : '' }}">

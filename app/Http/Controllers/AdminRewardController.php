@@ -1,26 +1,71 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\Book;
+use App\Models\PointHistory;
+use Illuminate\Http\Request;
 
 class AdminRewardController extends Controller
 {
-    // HALAMAN KELOLA REWARD
-    public function index()
-    {
-        $users = User::orderBy('points', 'desc')->get();
+ public function index()
+{
+    $users = User::where('role', 'user') 
+                 ->orderBy('points', 'desc')
+                 ->get();
 
-        return view('admin.reward.index', compact('users'));
-    }
+    return view('admin.rewards.index', compact('users'));
+}
 
-    // RESET POINT USER
-    public function reset(User $user)
+    // ➕ TAMBAH POINT
+    public function add(Request $request, User $user)
     {
-        $user->points = 0;
+        $request->validate([
+            'points' => 'required|integer|min:1'
+        ]);
+
+        // tambah point user
+        $user->points += $request->points;
         $user->save();
 
-        return back()->with('success', 'Poin user berhasil direset.');
+        $book = Book::first(); // BOOK WAJIB ADA
+
+        PointHistory::updateOrCreate(
+            [
+                'user_id' => $user->id,
+                'book_id' => $book->id,
+            ],
+            [
+                'points' => ($request->points),
+            ]
+        );
+
+        return back()->with('success', 'Poin berhasil ditambahkan');
+    }
+
+    // ➖ KURANGI POINT
+    public function remove(Request $request, User $user)
+    {
+        $request->validate([
+            'points' => 'required|integer|min:1'
+        ]);
+
+        $user->points = max(0, $user->points - $request->points);
+        $user->save();
+
+        $book = Book::first();
+
+        PointHistory::updateOrCreate(
+            [
+                'user_id' => $user->id,
+                'book_id' => $book->id,
+            ],
+            [
+                'points' => -$request->points,
+            ]
+        );
+
+        return back()->with('success', 'Poin berhasil dikurangi');
     }
 }
