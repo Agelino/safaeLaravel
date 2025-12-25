@@ -1,6 +1,13 @@
 .reward-wrapper {
-    position: relative;
     padding: 30px;
+}
+
+/* GRID LAYOUT */
+.reward-layout {
+    display: grid;
+    grid-template-columns: 1fr 260px;
+    gap: 40px;
+    align-items: start;
 }
 
 /* TOP 3 */
@@ -80,17 +87,15 @@
     margin: 0 10px;
 }
 
-/* USER CARD */
+/* USER CARD (FIXED – NO FLOATING) */
 .user-point-card {
-    position: absolute;
-    top: 120px;
-    right: 40px;
-    width: 200px;
     background: #6fa8dc;
     color: #fff;
-    padding: 15px;
+    padding: 20px;
     border-radius: 15px;
     text-align: center;
+    position: sticky;
+    top: 90px;
 }
 
 .avatar-lg {
@@ -98,4 +103,16 @@
     height: 80px;
     border-radius: 50%;
     margin: 10px 0;
+}
+
+/* RESPONSIVE */
+@media (max-width: 992px) {
+    .reward-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .user-point-card {
+        margin-top: 30px;
+        position: static;
+    }
 }

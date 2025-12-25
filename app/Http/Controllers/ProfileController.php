@@ -3,123 +3,85 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use App\Models\User;
 
 class ProfileController extends Controller
 {
-    private $users = [
-        1 => [
-            'id' => 1,
-            'username' => 'Sharone Wonmally',
-            'foto_profil' => 'images/sharone.jpg',
-            'social_media' => '@sharonejp',
-            'bio' => "Halo! aku suka membaca manga."
-        ],
-        2 => [
-            'id' => 2,
-            'username' => 'Adzra',
-            'foto_profil' => 'images/sharone.jpg',
-            'social_media' => '@adzranurul',
-            'bio' => "Beer"
-        ],
-               3 => [
-            'id' => 3,
-            'username' => 'Sharone',
-            'foto_profil' => 'images/sharone.jpg',
-            'social_media' => '@sharonejp',
-            'bio' => "Halo! aku suka membaca manga."
-        ],
-                4 => [
-            'id' => 4,
-            'username' => 'Sharone',
-            'foto_profil' => 'images/sharone.jpg',
-            'social_media' => '@sharonejp',
-            'bio' => "Halo! aku suka membaca manga."
-        ],
-    ];
-
-            public function create()
-        {
-            return view('profile.create');
-        }
-
-    public function show($id)
+    // =====================
+    // LIHAT PROFIL
+    // =====================
+    public function show()
     {
-        if (!isset($this->users[$id])) { 
-            return "Profil tidak ditemukan.";
-        }
+        $user = Auth::user();
 
-        $profile = $this->users[$id]; 
-        return view('profile.show', ['profile' => $profile]);
-    }
-    public function edit($id)
-    {
-        if (!isset($this->users[$id])) {
-            return "Profil tidak ditemukan.";
-        }
-
-        $profile = $this->users[$id];
-        return view('profile.edit', ['profile' => $profile]);
-    }
-    public function delete($id) 
-    {
-        if (!isset($this->users[$id])) {
-            return "Profil tidak ditemukan.";
-        }
-
-        unset($this->users[$id]);
-        return redirect('/home')->with('success', 'Profil berhasil dihapus (percobaan).');
+        return view('profile.show', [
+            'profile' => $user
+        ]);
     }
 
-    public function update(Request $request, $id)
+    // =====================
+    // FORM EDIT PROFIL
+    // =====================
+    public function edit()
     {
-        if (!isset($this->users[$id])) {
-            return redirect('/profile/' . $id)->with('error', 'Profil tidak ditemukan.');
+        $user = Auth::user();
+
+        return view('profile.edit', [
+            'profile' => $user
+        ]);
+    }
+
+    // =====================
+    // UPDATE PROFIL
+    // =====================
+    public function update(Request $request)
+    {
+        $user = User::find(Auth::id());
+
+        if (!$user) {
+            return redirect('/profile');
         }
 
-        $data = $request->validate([
-            'username' => 'required|string|max:255',
-            'social_media' => 'required|string|max:255',
-            'bio' => 'required|string',
-            'profile_pic' => 'nullable|image|max:2048',
+        $request->validate([
+            'username'      => 'required',
+            'social_media'  => 'nullable',
+            'bio'           => 'nullable',
+            'foto_profil'   => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
-        if ($request->hasFile('profile_pic')) {
-            $folder = 'uploads/foto_profil/';
-        } else {
-            $data['foto_profil'] = $this->users[$id]['foto_profil'];
+        $user->username     = $request->username;
+        $user->social_media = $request->social_media;
+        $user->bio          = $request->bio;
+
+        if ($request->hasFile('foto_profil')) {
+            $file = $request->file('foto_profil');
+            $name = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('uploads/foto_profil'), $name);
+
+            $user->foto_profil = 'uploads/foto_profil/' . $name;
         }
 
-        $this->users[$id] = array_merge($this->users[$id], $data);
+        $user->save();
 
-        return redirect('/profile/' . $id)->with('success', 'Profil berhasil diperbarui (sementara)');
+        return redirect('/profile')
+            ->with('success', 'Profil berhasil diperbarui');
     }
 
-    public function store(Request $request)
-{
-    $data = $request->validate([
-        'username' => 'required|string|max:255',
-        'social_media' => 'required|string|max:255',
-        'bio' => 'required|string',
-        'profile_pic' => 'nullable|image|max:2048',
-    ]);
+    // =====================
+    // HAPUS AKUN SENDIRI
+    // =====================
+    public function destroy()
+    {
+        $user = User::find(Auth::id());
 
-    if ($request->hasFile('profile_pic')) {
-        $folder = 'uploads/foto_profil/';
-        if (!is_dir($folder)) mkdir($folder, 0777, true);
+        Auth::logout();
 
-        $filename = time() . '_' . $request->file('profile_pic')->getClientOriginalName();
-        $request->file('profile_pic')->move($folder, $filename);
-        $data['foto_profil'] = $folder . $filename;
-    } else {
-        $data['foto_profil'] = 'images/default.jpg'; 
+        if ($user) {
+            $user->delete();
+        }
+
+        return redirect('/')
+            ->with('success', 'Akun berhasil dihapus');
     }
-
-    $newId = count($this->users) + 1;
-    $data['id'] = $newId;
-
-    $this->users[$newId] = $data;
-
-    return redirect('/profile/' . $newId)->with('success', 'Profil berhasil ditambahkan (sementara)');
-}
-
 }

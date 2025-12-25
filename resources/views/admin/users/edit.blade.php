@@ -48,9 +48,9 @@
             <div class="mb-3">
                 <label class="form-label">Foto Profil</label><br>
 
-                @if ($user->profile_image)
+                @if ($user->foto_profil)
                     <img
-                        src="{{ asset('storage/' . $user->profile_image) }}"
+                        src="{{ asset('storage/' . $user->foto_profil) }}"
                         alt="Foto Profil"
                         class="rounded mb-2"
                         style="width: 80px; height: 80px; object-fit: cover;">
@@ -60,7 +60,7 @@
 
                 <input
                     type="file"
-                    name="profile_image"
+                    name="foto_profil"
                     class="form-control"
                     accept="image/*">
             </div>

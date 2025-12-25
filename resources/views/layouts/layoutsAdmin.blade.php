@@ -58,17 +58,24 @@
             </a>
         </li>
 
-        {{-- RIWAYAT --}}
-        <li class="{{ request()->is('kelola-riwayat*') ? 'active' : '' }}">
-            <a href="{{ url('/kelola-riwayat') }}">
-                <i class="fa-solid fa-clock-rotate-left"></i> Kelola Riwayat Baca
-            </a>
+        {{-- RIWAYAT BACA --}}
+        <li class="{{ request()->is('admin/riwayat-baca*') ? 'active' : '' }}">
+             <a href="{{ route('admin.kelolariwayat.index') }}">
+             <i class="fa-solid fa-clock-rotate-left"></i> Kelola Riwayat Baca
+             </a>
         </li>
 
         {{-- ULASAN (INI YANG BIKIN ERROR SEBELUMNYA) --}}
         <li class="{{ request()->is('admin/reviews*') ? 'active' : '' }}">
             <a href="{{ route('admin.reviews.index') }}">
                 <i class="fa-solid fa-star"></i> Kelola Ulasan
+            </a>
+        </li>
+
+        {{--Kelola pembayaran) --}}
+        <li class="{{ request()->is('admin/pembayaran*') ? 'active' : '' }}">
+            <a href="{{ route('admin.pembayaran.index') }}">
+                <i class="fa-solid fa-star"></i> Kelola Pembayaran
             </a>
         </li>
 

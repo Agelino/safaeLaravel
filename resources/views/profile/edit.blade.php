@@ -1,57 +1,152 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Profil {{ $profile['username'] }}</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body>
-<div class="container py-4">
-    <div class="card shadow-sm mx-auto" style="max-width: 500px;">
-        <div class="card-header bg-primary text-white text-center">
-            <h4>Edit Profil</h4>
+@extends('layouts.app')
+
+@section('title', 'Edit Profil')
+
+@section('content')
+
+<style>
+    .edit-wrapper {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 40px 20px;
+    }
+
+    .edit-card {
+        background: #fff;
+        border-radius: 20px;
+        padding: 40px;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+    }
+
+    .edit-avatar {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        margin-bottom: 30px;
+    }
+
+    .edit-avatar img {
+        width: 110px;
+        height: 110px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 4px solid #f1f3f5;
+    }
+
+    .form-label {
+        font-weight: 600;
+        font-size: 14px;
+    }
+
+    .form-control {
+        border-radius: 12px;
+        padding: 10px 14px;
+        font-size: 14px;
+    }
+
+    .btn-rounded {
+        border-radius: 30px;
+        padding: 10px 22px;
+        font-size: 14px;
+    }
+
+    @media (max-width: 768px) {
+        .edit-avatar {
+            flex-direction: column;
+            text-align: center;
+        }
+    }
+</style>
+
+<div class="edit-wrapper">
+
+    <div class="edit-card">
+
+        {{-- HEADER --}}
+        <div class="mb-4">
+            <h4 class="fw-bold mb-1">Edit Profil</h4>
+            <p class="text-muted mb-0">
+                Perbarui informasi akun Safae kamu
+            </p>
         </div>
 
-        <div class="card-body">
-            <form method="POST" enctype="multipart/form-data" action="{{ url('/profile/update/'.$profile['id']) }}">
-                @csrf
+        {{-- AVATAR --}}
+        <div class="edit-avatar">
+            <img src="{{ $profile->foto_profil
+                ? asset($profile->foto_profil)
+                : 'https://ui-avatars.com/api/?name='.$profile->username.'&background=0d6efd&color=fff' }}"
+                 alt="Foto Profil">
 
-                <div class="mb-3 text-center">
-                    <img src="{{ asset($profile['foto_profil']) }}" 
-                         class="rounded-circle" width="120" height="120" 
-                         style="object-fit:cover;" alt="Foto Profil">
-                </div>
+            <div>
+                <p class="fw-semibold mb-1">{{ $profile->username }}</p>
+                <small class="text-muted">
+                    Ukuran disarankan 1:1 (jpg, png)
+                </small>
+            </div>
+        </div>
 
-                <div class="mb-3">
+        {{-- FORM --}}
+        <form method="POST"
+              enctype="multipart/form-data"
+              action="{{ url('/profile/update') }}">
+            @csrf
+
+            <div class="row">
+
+                {{-- USERNAME --}}
+                <div class="col-md-6 mb-3">
                     <label class="form-label">Nama Pengguna</label>
-                    <input type="text" name="username" class="form-control" value="{{ $profile['username'] }}">
+                    <input type="text"
+                           name="username"
+                           class="form-control"
+                           value="{{ $profile->username }}"
+                           required>
                 </div>
 
-                <div class="mb-3">
+                {{-- SOCIAL MEDIA --}}
+                <div class="col-md-6 mb-3">
                     <label class="form-label">Social Media</label>
-                    <input type="text" name="social_media" class="form-control" value="{{ $profile['social_media'] }}">
+                    <input type="text"
+                           name="social_media"
+                           class="form-control"
+                           placeholder="Instagram / Twitter / LinkedIn"
+                           value="{{ $profile->social_media }}">
                 </div>
 
-                <div class="mb-3">
+                {{-- BIO --}}
+                <div class="col-12 mb-3">
                     <label class="form-label">Bio</label>
-                    <textarea name="bio" class="form-control" rows="3">{{ $profile['bio'] }}</textarea>
+                    <textarea name="bio"
+                              rows="4"
+                              class="form-control"
+                              placeholder="Ceritakan sedikit tentang dirimu">{{ $profile->bio }}</textarea>
                 </div>
 
-                <div class="mb-3">
+                {{-- FOTO --}}
+                <div class="col-12 mb-4">
                     <label class="form-label">Foto Profil Baru</label>
-                    <input type="file" name="profile_pic" class="form-control">
+                    <input type="file"
+                           name="foto_profil"
+                           class="form-control">
                 </div>
+            </div>
 
-                <div class="d-flex justify-content-between">
-                    <a href="{{ url('/profile/'.$profile['id']) }}" class="btn btn-secondary">Batal</a>
-                    <button type="submit" class="btn btn-success">Simpan</button>
-                </div>
-            </form>
-        </div>
+            {{-- ACTION --}}
+            <div class="d-flex justify-content-between flex-wrap gap-2">
+                <a href="{{ url('/profile') }}"
+                    class="btn btn-secondary btn-rounded">
+                    <i class="bi bi-arrow-left"></i> Batal
+                </a>
+
+                <button type="submit"
+                        class="btn btn-primary btn-rounded">
+                    <i class="bi bi-check-circle"></i> Simpan Perubahan
+                </button>
+            </div>
+
+        </form>
+
     </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+@endsection

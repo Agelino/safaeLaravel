@@ -5,7 +5,7 @@
 
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="fw-bold">Kelola Riwayat Baca</h2>
-        <a href="{{ route('kelolariwayat.create') }}" class="btn btn-primary">
+        <a href="{{ route('admin.kelolariwayat.create') }}" class="btn btn-primary">
             + Tambah Riwayat
         </a>
     </div>
@@ -46,12 +46,12 @@
                             <td>{{ $history->last_read_at }}</td>
 
                             <td>
-                                <a href="{{ route('kelolariwayat.edit', $history->id) }}" 
+                                <a href="{{ route('admin.kelolariwayat.edit', $history->id) }}" 
                                    class="btn btn-warning btn-sm">
                                     Edit
                                 </a>
 
-                                <form action="{{ route('kelolariwayat.delete', $history->id) }}" 
+                                <form action="{{ route('admin.kelolariwayat.destroy', $history->id) }}" 
                                       method="POST" 
                                       style="display:inline-block"
                                       onsubmit="return confirm('Yakin ingin menghapus?')">

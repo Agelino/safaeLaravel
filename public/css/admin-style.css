@@ -20,17 +20,19 @@
   
   /* Sidebar Styles */
   .sidebar {
-    width: var(--sidebar-width);
-    height: 100vh;
-    position: fixed;
-    left: 0;
-    top: 0;
-    background: linear-gradient(180deg, var(--primary-color) 0%, #224abe 100%);
-    color: white;
-    transition: all 0.3s;
-    z-index: 1000;
-    box-shadow: 4px 0 10px rgba(0,0,0,0.1);
-  }
+  width: var(--sidebar-width);
+  height: 100vh;
+  position: fixed;
+  left: 0;
+  top: 0;
+  background: linear-gradient(180deg, var(--primary-color) 0%, #224abe 100%);
+  color: white;
+  transition: all 0.3s;
+  z-index: 1000;
+  box-shadow: 4px 0 10px rgba(0,0,0,0.1);
+  overflow-y: auto; 
+}
+
   
   .sidebar-header {
     padding: 1.5rem;

@@ -12,14 +12,16 @@ return new class extends Migration
     public function up()
 {
     Schema::table('users', function (Blueprint $table) {
-        $table->string('profile_image')->nullable();
+        $table->string('social_media')->nullable()->after('username');
+        $table->text('bio')->nullable()->after('social_media');
+        $table->string('foto_profil')->nullable()->after('bio');
     });
 }
 
 public function down()
 {
     Schema::table('users', function (Blueprint $table) {
-        $table->dropColumn('profile_image');
+        $table->dropColumn(['social_media', 'bio', 'foto_profil']);
     });
 }
 };

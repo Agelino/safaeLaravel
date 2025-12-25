@@ -48,9 +48,9 @@
 
                             {{-- FOTO PROFIL --}}
                             <td>
-                                @if($user->profile_image)
+                                @if($user->foto_profil)
                                     <img
-                                        src="{{ asset('storage/' . $user->profile_image) }}"
+                                        src="{{ asset($user->foto_profil) }}"
                                         alt="Foto Profil"
                                         class="rounded-circle border"
                                         style="width: 45px; height: 45px; object-fit: cover;">

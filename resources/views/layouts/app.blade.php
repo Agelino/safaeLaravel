@@ -16,10 +16,9 @@
             font-family: 'Poppins', sans-serif;
         }
 
-        /* Navbar */
+        /* ===== NAVBAR ===== */
         .navbar-custom {
             background: linear-gradient(90deg, #002147, #0d6efd);
-            color: #fff;
             padding: 10px 25px;
             height: 56px;
             display: flex;
@@ -29,14 +28,28 @@
             width: 100%;
             top: 0;
             z-index: 1000;
+            color: #fff;
         }
 
-        .navbar-custom span {
-            font-weight: 600;
-            font-size: 18px;
+        .navbar-custom a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 14px;
         }
 
-        /* Sidebar */
+        .navbar-custom a:hover {
+            opacity: 0.9;
+        }
+
+        .dropdown-menu .dropdown-item {
+            color: #212529 !important;
+        }
+
+        .dropdown-menu .dropdown-item:hover {
+            color: #0d6efd;
+        }
+
+        /* ===== SIDEBAR ===== */
         .sidebar {
             position: fixed;
             top: 56px;
@@ -46,6 +59,7 @@
             background-color: #002147;
             color: #fff;
             padding: 20px 10px;
+            overflow-y: auto;
         }
 
         .sidebar h4 {
@@ -71,7 +85,7 @@
             color: #fff;
         }
 
-        /* Main */
+        /* ===== MAIN ===== */
         main {
             margin-left: 240px;
             margin-top: 70px;
@@ -80,12 +94,12 @@
             background-color: #f8f9fa;
         }
 
-        /* Footer */
+        /* ===== FOOTER ===== */
         .footer {
             background-color: #002147;
             color: #ddd;
             padding: 30px 40px;
-            width: calc(100% - 220px); /* SISAIN RUANG SIDEBAR */
+            width: calc(100% - 220px);
             margin-left: 220px;
         }
 
@@ -123,6 +137,7 @@
             .footer {
                 margin-left: 0;
                 padding: 20px;
+                width: 100%;
             }
         }
     </style>
@@ -131,22 +146,70 @@
 </head>
 <body>
 
-<!-- NAVBAR -->
+<!-- ================= NAVBAR ================= -->
 <nav class="navbar-custom">
-    <span>Helloo, {{ Auth::user()->username }} !!</span>
 
-    <a href="{{ route('logout') }}"
-       class="text-white text-decoration-none"
-       onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-        <i class="fa fa-user"></i> Logout
-    </a>
+    {{-- LEFT --}}
+    <div class="d-flex align-items-center gap-3">
+        <span class="fw-semibold fs-5">Safae</span>
+    </div>
 
-    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display:none;">
-        @csrf
+    {{-- CENTER --}}
+    <form class="d-none d-md-block" style="width: 320px;">
+        <input type="text"
+               class="form-control form-control-sm rounded-pill"
+               placeholder="Search buku atau penulis">
     </form>
+
+    {{-- RIGHT --}}
+    <div class="dropdown">
+        <a href="#"
+           class="d-flex align-items-center text-decoration-none dropdown-toggle text-white"
+           data-bs-toggle="dropdown">
+
+            {{-- FOTO PROFIL HEADER --}}
+            @if(Auth::user()->foto_profil)
+                <img src="{{ asset(Auth::user()->foto_profil) }}"
+                     class="rounded-circle me-2"
+                     width="32"
+                     height="32"
+                     style="object-fit: cover;">
+            @else
+                <img src="https://ui-avatars.com/api/?name={{ Auth::user()->username }}&background=ffffff&color=0d6efd"
+                     class="rounded-circle me-2"
+                     width="32"
+                     height="32">
+            @endif
+
+            <span class="fw-medium">
+                {{ Auth::user()->username }}
+            </span>
+        </a>
+
+        <ul class="dropdown-menu dropdown-menu-end shadow-sm">
+            <li>
+                <a class="dropdown-item" href="{{ url('/profile') }}">
+                    <i class="fa fa-user me-2"></i> Profile
+                </a>
+            </li>
+            <li><hr class="dropdown-divider"></li>
+            <li>
+                <a class="dropdown-item text-danger"
+                   href="{{ route('logout') }}"
+                   onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                    <i class="fa fa-sign-out-alt me-2"></i> Logout
+                </a>
+            </li>
+        </ul>
+    </div>
+
 </nav>
 
-<!-- SIDEBAR -->
+<form id="logout-form" action="{{ route('logout') }}" method="POST" style="display:none;">
+    @csrf
+</form>
+
+<!-- ================= SIDEBAR ================= -->
 <aside class="sidebar">
     <h4>Safae</h4>
 
@@ -157,9 +220,9 @@
         <i class="fa fa-book me-2"></i> Genre Buku
     </a>
 
- <a href="{{ route('favorite.index') }}" class="{{ request()->is('buku-favorit*') ? 'active' : '' }}">
-    <i class="fa fa-heart me-2"></i> Buku Favorit
-</a>
+    <a href="{{ route('favorite.index') }}" class="{{ request()->is('buku-favorit*') ? 'active' : '' }}">
+        <i class="fa fa-heart me-2"></i> Buku Favorit
+    </a>
 
     <a href="{{ route('reading.history') }}" class="{{ request()->is('riwayat-baca*') ? 'active' : '' }}">
         <i class="fa fa-clock me-2"></i> Riwayat Baca
@@ -174,12 +237,12 @@
     </a>
 </aside>
 
-<!-- CONTENT -->
+<!-- ================= CONTENT ================= -->
 <main>
     @yield('content')
 </main>
 
-<!-- FOOTER -->
+<!-- ================= FOOTER ================= -->
 <footer class="footer">
     <div class="row">
         <div class="col-md-6 mb-3">

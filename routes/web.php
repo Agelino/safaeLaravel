@@ -16,13 +16,14 @@ use App\Http\Controllers\AdminForumController;
 use App\Http\Controllers\ForumController;
 use App\Http\Controllers\KomentarController;
 use App\Http\Controllers\ReadingHistoryController;
-use App\Http\Controllers\KelolaRiwayatBacaController;
 use App\Http\Controllers\AdminReviewController;
 use App\Http\Controllers\BookSubmissionController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\AboutController;
 use App\Http\Controllers\PembayaranController;
 use App\Http\Controllers\AdminKomentarController;
+use App\Http\Controllers\PembayaranAdminController;
+use App\Http\Controllers\KelolaRiwayatBacaController;
 use App\Http\Middleware\AdminOnly;
 
 /*
@@ -54,12 +55,11 @@ Route::get('/about-us', [AboutController::class, 'index'])->name('about.index');
 Route::middleware('auth')->group(function () {
 
     // ===================== PROFILE =====================
-    Route::get('/profile/create', [ProfileController::class, 'create']);
-    Route::post('/profile/store', [ProfileController::class, 'store']);
-    Route::get('/profile/{id}', [ProfileController::class, 'show'])->name('profile.show');
-    Route::get('/profile/edit/{id}', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::post('/profile/update/{id}', [ProfileController::class, 'update'])->name('profile.update');
-    Route::get('/profile/delete/{id}', [ProfileController::class, 'delete'])->name('profile.delete');
+    Route::get('/profile', [ProfileController::class, 'show'])->name('profile');
+    Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::post('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
+    Route::post('/profile/delete', [ProfileController::class, 'destroy'])->name('profile.delete');
+
 
     // ===================== GENRE USER =====================
     Route::get('/genre', [GenreUserController::class, 'index'])->name('genre.index');
@@ -76,11 +76,11 @@ Route::middleware('auth')->group(function () {
     // ===================== REWARD =====================
     Route::get('/reward', [RewardController::class, 'index'])->name('reward.index');
 
-    // ===================== PEMBAYARAN =====================
+    // ===================== PEMBAYARAN USER =====================
     Route::get('/pembayaran', [PembayaranController::class, 'index'])->name('pembayaran.index');
     Route::post('/pembayaran/proses', [PembayaranController::class, 'proses'])->name('pembayaran.proses');
 
-    // ===================== RIWAYAT BACA =====================
+    // ===================== RIWAYAT BACA USER =====================
     Route::get('/riwayat-baca', [ReadingHistoryController::class, 'index'])->name('reading.history');
     Route::delete('/riwayat-baca/{id}', [ReadingHistoryController::class, 'destroy'])->name('reading.history.delete');
 
@@ -117,6 +117,20 @@ Route::middleware('auth')->group(function () {
         ->group(function () {
 
             Route::get('/', [AdminController::class, 'index'])->name('dashboard');
+
+            // ===================== PEMBAYARAN ADMIN =====================
+            Route::get('/pembayaran', [PembayaranAdminController::class, 'index'])
+                ->name('pembayaran.index');
+
+            // ===================== KELOLA RIWAYAT BACA (ADMIN) =====================
+            Route::prefix('riwayat-baca')->name('kelolariwayat.')->group(function () {
+                Route::get('/', [KelolaRiwayatBacaController::class, 'index'])->name('index');
+                Route::get('/create', [KelolaRiwayatBacaController::class, 'create'])->name('create');
+                Route::post('/', [KelolaRiwayatBacaController::class, 'store'])->name('store');
+                Route::get('/{id}/edit', [KelolaRiwayatBacaController::class, 'edit'])->name('edit');
+                Route::post('/{id}', [KelolaRiwayatBacaController::class, 'update'])->name('update');
+                Route::delete('/{id}', [KelolaRiwayatBacaController::class, 'destroy'])->name('destroy');
+            });
 
             // KELOLA USER
             Route::get('/users', [UserController::class, 'index'])->name('users.index');

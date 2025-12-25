@@ -20,9 +20,9 @@
             <div class="card-body text-center">
 
                 {{-- FOTO PROFIL --}}
-                @if($user->profile_image)
+                @if($user->foto_profil)
                     <img
-                        src="{{ asset('storage/' . $user->profile_image) }}"
+                        src="{{ asset($user->foto_profil) }}"
                         alt="Foto Profil"
                         class="rounded-circle mb-3 border"
                         style="width: 120px; height: 120px; object-fit: cover;">
@@ -33,6 +33,7 @@
                         <i class="fas fa-user fa-3x text-muted"></i>
                     </div>
                 @endif
+
 
                 {{-- INFO USER --}}
                 <div class="text-start mt-3">
