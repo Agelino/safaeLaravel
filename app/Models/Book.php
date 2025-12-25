@@ -10,24 +10,27 @@ class Book extends Model
     use HasFactory;
 
     protected $fillable = [
-    'title',
-    'author',
-    'genre',
-    'year',
-    'description',
-    'image_path',
-    'status',
-];
-
+        'title',
+        'author',
+        'genre',
+        'year',
+        'description',
+        'image_path',
+        'status',
+    ];
 
     public function readingHistories()
     {
         return $this->hasMany(ReadingHistory::class);
     }
 
-    // RELASI YANG BENAR UNTUK AMBIL REVIEW
     public function reviews()
     {
         return $this->hasMany(Review::class, 'book_id'); 
+    }
+
+    public function komentar()
+    {
+        return $this->hasMany(Komentar::class, 'book_id', 'id');
     }
 }

@@ -51,12 +51,14 @@
             </a>
         </li>
 
-        {{-- KOMENTAR --}}
-        <li class="{{ request()->is('admin/komentar*') ? 'active' : '' }}">
-            <a href="{{ route('admin.komentar') }}">
-                <i class="fa-solid fa-comment-dots"></i> Kelola Komentar
-            </a>
-        </li>
+        
+        {{-- KELOLA KOMENTAR --}}
+<li class="{{ request()->is('admin/komentar*') ? 'active' : '' }}">
+    <a href="{{ route('admin.komentar.index') }}">
+        <i class="fa-solid fa-comments"></i> Kelola Komentar
+    </a>
+</li>
+
 
         {{-- RIWAYAT --}}
         <li class="{{ request()->is('kelola-riwayat*') ? 'active' : '' }}">

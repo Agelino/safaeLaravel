@@ -150,8 +150,9 @@ Route::middleware('auth')->group(function () {
             Route::post('/validasi/{id}/approve', [BookSubmissionController::class, 'approve'])->name('validasi.approve');
             Route::post('/validasi/{id}/reject', [BookSubmissionController::class, 'reject'])->name('validasi.reject');
 
-            // KOMENTAR ADMIN
-            Route::get('/komentar', [AdminKomentarController::class, 'index'])->name('komentar');
-            Route::post('/komentar/hapus/{id}', [AdminKomentarController::class, 'hapus'])->name('komentar.hapus');
+           // KOMENTAR ADMIN
+            Route::get('/komentar', [AdminKomentarController::class, 'index'])->name('komentar.index');
+            Route::delete('/komentar/{id}', [AdminKomentarController::class, 'hapus'])->name('komentar.hapus');
+
         });
 });

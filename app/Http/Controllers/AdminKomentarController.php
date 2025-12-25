@@ -3,20 +3,28 @@
 namespace App\Http\Controllers;
 
 use App\Models\Komentar;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 
 class AdminKomentarController extends Controller
 {
-    // Tampilkan semua komentar
+    // LIST KOMENTAR
     public function index()
     {
-        $komentar = Komentar::latest()->get();
-        return view('admin.books.komentar', compact('komentar'));
+        $komentar = Komentar::with(['user', 'book'])
+            ->latest()
+            ->paginate(10);
+
+        return view('admin.komentar.index', compact('komentar'));
     }
 
-    
+    // METHOD SESUAI ROUTE (JANGAN DIHAPUS)
     public function hapus($id)
+    {
+        return $this->destroy($id);
+    }
+
+    // LOGIKA HAPUS SEBENARNYA
+    public function destroy($id)
     {
         $komentar = Komentar::findOrFail($id);
 
@@ -29,6 +37,8 @@ class AdminKomentarController extends Controller
 
         $komentar->delete();
 
-        return back()->with('success', 'Komentar berhasil dihapus');
+        return redirect()
+            ->route('admin.komentar.index')
+            ->with('success', 'Komentar berhasil dihapus');
     }
 }
