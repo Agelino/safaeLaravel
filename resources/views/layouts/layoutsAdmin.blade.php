@@ -51,12 +51,21 @@
             </a>
         </li>
 
-        {{-- KOMENTAR --}}
-        <li class="{{ request()->is('admin/komentar*') ? 'active' : '' }}">
-            <a href="{{ route('admin.komentar') }}">
-                <i class="fa-solid fa-comment-dots"></i> Kelola Komentar
-            </a>
-        </li>
+        
+        {{-- KELOLA KOMENTAR --}}
+<li class="{{ request()->is('admin/komentar*') ? 'active' : '' }}">
+    <a href="{{ route('admin.komentar.index') }}">
+        <i class="fa-solid fa-comments"></i> Kelola Komentar
+    </a>
+</li>
+
+{{-- kelola reward --}}
+<li class="{{ request()->is('admin/reward') ? 'active' : '' }}">
+    <a href="{{ route('admin.rewards.index') }}">
+        <i class="fa-solid fa-gift"></i> Kelola Reward
+    </a>
+</li>
+
 
         {{-- RIWAYAT BACA --}}
         <li class="{{ request()->is('admin/riwayat-baca*') ? 'active' : '' }}">

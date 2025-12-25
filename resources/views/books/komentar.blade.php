@@ -6,6 +6,12 @@
 
 <div class="komentar-container">
 
+    {{-- 🔙 TOMBOL BACK KE CHAPTER TERAKHIR --}}
+  <a href="{{ route('book.show', [$bookId, $page]) }}" class="btn-back">
+    ← Kembali ke Bacaan
+</a>
+
+
     <!-- FORM KOMENTAR -->
     <div class="komentar-card">
         <h1>Komentar</h1>
@@ -38,7 +44,7 @@
                     <img src="{{ asset('uploads/' . $c->image_path) }}" class="komentar-img">
                 @endif
 
-                {{-- 🔒 TOMBOL HAPUS: HANYA PEMILIK --}}
+                {{-- 🔒 HAPUS KOMENTAR (HANYA PEMILIK) --}}
                 @if(Auth::check() && Auth::id() === $c->user_id)
                     <form action="{{ route('komentar.hapus', $c->id) }}"
                           method="POST"

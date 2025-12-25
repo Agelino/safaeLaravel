@@ -13,6 +13,7 @@ use App\Http\Controllers\GenreAdminController;
 use App\Http\Controllers\RewardController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AdminForumController;
+use App\Http\Controllers\AdminRewardController;
 use App\Http\Controllers\ForumController;
 use App\Http\Controllers\KomentarController;
 use App\Http\Controllers\ReadingHistoryController;
@@ -25,6 +26,7 @@ use App\Http\Controllers\AdminKomentarController;
 use App\Http\Controllers\PembayaranAdminController;
 use App\Http\Controllers\KelolaRiwayatBacaController;
 use App\Http\Middleware\AdminOnly;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -164,8 +166,17 @@ Route::middleware('auth')->group(function () {
             Route::post('/validasi/{id}/approve', [BookSubmissionController::class, 'approve'])->name('validasi.approve');
             Route::post('/validasi/{id}/reject', [BookSubmissionController::class, 'reject'])->name('validasi.reject');
 
-            // KOMENTAR ADMIN
-            Route::get('/komentar', [AdminKomentarController::class, 'index'])->name('komentar');
-            Route::post('/komentar/hapus/{id}', [AdminKomentarController::class, 'hapus'])->name('komentar.hapus');
+           // kelola komentar
+            Route::get('/komentar', [AdminKomentarController::class, 'index'])->name('komentar.index');
+            Route::delete('/komentar/{id}', [AdminKomentarController::class, 'hapus'])->name('komentar.hapus');
+
+            // kelola reward
+
+        Route::get('/rewards', [AdminRewardController::class, 'index'])->name('rewards.index');
+
+        Route::post('/rewards/{user}/add', [AdminRewardController::class, 'add'])->name('reward.add');
+
+        Route::post('/rewards/{user}/remove', [AdminRewardController::class, 'remove'])->name('reward.remove');
+
         });
 });

@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\User;
+use App\Models\Book;
 
 class Komentar extends Model
 {
@@ -12,7 +14,7 @@ class Komentar extends Model
         'user_id',
         'book_id',
         'page',
-        'username',
+        'username', 
         'komentar',
         'image_path',
     ];
@@ -21,4 +23,10 @@ class Komentar extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function book()
+    {
+        return $this->belongsTo(Book::class, 'book_id');
+    }
+
 }
