@@ -17,6 +17,7 @@ class Book extends Model
         'description',
         'image_path',
         'status',
+        'content',
     ];
 
     public function readingHistories()

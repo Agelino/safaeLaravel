@@ -13,7 +13,7 @@ class BookSubmissionController extends Controller
      */
     public function create()
     {
-        return view('php.tulis-buku');
+        return view('user.tulis-buku');
     }
 
     /**

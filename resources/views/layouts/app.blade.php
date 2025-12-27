@@ -213,8 +213,13 @@
 <aside class="sidebar">
     <h4>Safae</h4>
 
-    <a href="#"><i class="fa fa-home me-2"></i> Home</a>
-    <a href="#"><i class="fa fa-pen me-2"></i> Tulis Buku</a>
+    <a href="{{ route('dashboard') }}" class="{{ request()->is('dashboard') ? 'active' : '' }}">
+        <i class="fa fa-tachometer-alt me-2"></i> Dashboard
+    </a>
+
+    <a href="{{ url('/tulis-buku') }}" class="{{ request()->is('tulis-buku*') ? 'active' : '' }}">
+        <i class="fa fa-pen me-2"></i> Tulis Buku
+    </a>
 
     <a href="{{ route('genre.index') }}" class="{{ request()->is('genre*') ? 'active' : '' }}">
         <i class="fa fa-book me-2"></i> Genre Buku

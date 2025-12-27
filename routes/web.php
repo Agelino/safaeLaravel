@@ -25,6 +25,7 @@ use App\Http\Controllers\PembayaranController;
 use App\Http\Controllers\AdminKomentarController;
 use App\Http\Controllers\PembayaranAdminController;
 use App\Http\Controllers\KelolaRiwayatBacaController;
+use App\Http\Controllers\UserDashboardController;
 use App\Http\Middleware\AdminOnly;
 
 
@@ -55,6 +56,9 @@ Route::get('/about-us', [AboutController::class, 'index'])->name('about.index');
 |--------------------------------------------------------------------------
 */
 Route::middleware('auth')->group(function () {
+
+    // ===================== USER DASHBOARD =====================
+    Route::get('/dashboard', [UserDashboardController::class, 'index'])->name('dashboard');
 
     // ===================== PROFILE =====================
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile');
