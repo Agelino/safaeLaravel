@@ -75,12 +75,13 @@
 
     <div class="profile-card">
 
-        {{-- FOTO PROFIL --}}
+        {{-- FOTO PROFIL (STORAGE LINK) --}}
         <div class="profile-avatar">
-            <img src="{{ $profile->foto_profil
-                ? asset($profile->foto_profil)
-                : 'https://ui-avatars.com/api/?name='.$profile->username.'&background=0d6efd&color=fff' }}"
-                 alt="Foto Profil">
+            <img
+                src="{{ $profile->foto_profil
+                    ? asset('storage/' . $profile->foto_profil)
+                    : 'https://ui-avatars.com/api/?name='.$profile->username.'&background=0d6efd&color=fff' }}"
+                alt="Foto Profil">
         </div>
 
         {{-- HEADER PROFIL --}}
@@ -128,7 +129,7 @@
                 </button>
             </form>
 
-            <a href="{{ route('profile') }}" class="btn btn-secondary btn-rounded">
+            <a href="{{ route('dashboard') }}" class="btn btn-secondary btn-rounded">
                 <i class="bi bi-arrow-left"></i> Kembali
             </a>
         </div>

@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
@@ -14,9 +16,36 @@ class UserController extends Controller
     {
         $users = User::all();
 
-        return view('admin.users.index', [
-            'users' => $users
+        return view('admin.users.index', compact('users'));
+    }
+
+    // =====================
+    // FORM TAMBAH USER
+    // =====================
+    public function create()
+    {
+        return view('admin.users.create');
+    }
+
+    // =====================
+    // SIMPAN USER BARU
+    // =====================
+    public function store(Request $request)
+    {
+        $request->validate([
+            'username' => 'required|string|max:50|unique:users,username',
+            'email'    => 'required|email|unique:users,email',
+            'password' => 'required|min:6',
         ]);
+
+        User::create([
+            'username' => $request->username,
+            'email'    => $request->email,
+            'password' => Hash::make($request->password),
+        ]);
+
+        return redirect()->route('admin.users.index')
+            ->with('success', 'User berhasil ditambahkan');
     }
 
     // =====================
@@ -26,9 +55,7 @@ class UserController extends Controller
     {
         $user = User::findOrFail($id);
 
-        return view('admin.users.show', [
-            'user' => $user
-        ]);
+        return view('admin.users.show', compact('user'));
     }
 
     // =====================
@@ -38,18 +65,16 @@ class UserController extends Controller
     {
         $user = User::findOrFail($id);
 
-        return view('admin.users.edit', [
-            'user' => $user
-        ]);
+        return view('admin.users.edit', compact('user'));
     }
 
     // =====================
-    // UPDATE USER (ADMIN)
+    // UPDATE USER (ADMIN) - STORAGE LINK
     // =====================
     public function update(Request $request, $id)
     {
         $request->validate([
-            'username'    => 'required',
+            'username'    => 'required|string|max:50|unique:users,username,' . $id,
             'foto_profil' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
@@ -57,17 +82,22 @@ class UserController extends Controller
 
         $user->username = $request->username;
 
+        // UPLOAD FOTO PROFIL (STORAGE)
         if ($request->hasFile('foto_profil')) {
-            $file = $request->file('foto_profil');
-            $name = time() . '_' . $file->getClientOriginalName();
-            $file->move(public_path('uploads/foto_profil'), $name);
 
-            $user->foto_profil = 'uploads/foto_profil/' . $name;
+            // hapus foto lama (jika ada)
+            if ($user->foto_profil && Storage::disk('public')->exists($user->foto_profil)) {
+                Storage::disk('public')->delete($user->foto_profil);
+            }
+
+            // simpan foto baru
+            $path = $request->file('foto_profil')->store('foto_profil', 'public');
+            $user->foto_profil = $path; // contoh: foto_profil/abc.jpg
         }
 
         $user->save();
 
-        return redirect('/admin/users')
+        return redirect()->route('admin.users.index')
             ->with('success', 'User berhasil diperbarui');
     }
 
@@ -77,9 +107,15 @@ class UserController extends Controller
     public function destroy($id)
     {
         $user = User::findOrFail($id);
+
+        // hapus foto profil dari storage (jika ada)
+        if ($user->foto_profil && Storage::disk('public')->exists($user->foto_profil)) {
+            Storage::disk('public')->delete($user->foto_profil);
+        }
+
         $user->delete();
 
-        return redirect('/admin/users')
+        return redirect()->route('admin.users.index')
             ->with('success', 'User berhasil dihapus');
     }
 }

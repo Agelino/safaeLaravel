@@ -14,7 +14,9 @@ class ReadingHistory extends Model
         'last_read_at',
         'bukti_progress',
     ];
-
+       protected $casts = [
+        'last_read_at' => 'datetime',
+    ];
     public function user()
     {
         return $this->belongsTo(User::class);

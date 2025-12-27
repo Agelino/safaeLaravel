@@ -70,10 +70,10 @@
             </p>
         </div>
 
-        {{-- AVATAR --}}
+        {{-- AVATAR (STORAGE LINK) --}}
         <div class="edit-avatar">
             <img src="{{ $profile->foto_profil
-                ? asset($profile->foto_profil)
+                ? asset('storage/' . $profile->foto_profil)
                 : 'https://ui-avatars.com/api/?name='.$profile->username.'&background=0d6efd&color=fff' }}"
                  alt="Foto Profil">
 
@@ -88,7 +88,7 @@
         {{-- FORM --}}
         <form method="POST"
               enctype="multipart/form-data"
-              action="{{ url('/profile/update') }}">
+              action="{{ route('profile.update') }}">
             @csrf
 
             <div class="row">
@@ -99,7 +99,7 @@
                     <input type="text"
                            name="username"
                            class="form-control"
-                           value="{{ $profile->username }}"
+                           value="{{ old('username', $profile->username) }}"
                            required>
                 </div>
 
@@ -110,7 +110,7 @@
                            name="social_media"
                            class="form-control"
                            placeholder="Instagram / Twitter / LinkedIn"
-                           value="{{ $profile->social_media }}">
+                           value="{{ old('social_media', $profile->social_media) }}">
                 </div>
 
                 {{-- BIO --}}
@@ -119,7 +119,7 @@
                     <textarea name="bio"
                               rows="4"
                               class="form-control"
-                              placeholder="Ceritakan sedikit tentang dirimu">{{ $profile->bio }}</textarea>
+                              placeholder="Ceritakan sedikit tentang dirimu">{{ old('bio', $profile->bio) }}</textarea>
                 </div>
 
                 {{-- FOTO --}}
@@ -127,14 +127,15 @@
                     <label class="form-label">Foto Profil Baru</label>
                     <input type="file"
                            name="foto_profil"
-                           class="form-control">
+                           class="form-control"
+                           accept="image/*">
                 </div>
             </div>
 
             {{-- ACTION --}}
             <div class="d-flex justify-content-between flex-wrap gap-2">
-                <a href="{{ url('/profile') }}"
-                    class="btn btn-secondary btn-rounded">
+                <a href="{{ route('profile') }}"
+                   class="btn btn-secondary btn-rounded">
                     <i class="bi bi-arrow-left"></i> Batal
                 </a>
 
