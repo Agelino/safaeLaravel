@@ -71,6 +71,7 @@ class UserController extends Controller
         //ngambil  user dengan id itu dari database
         $user = User::findOrFail($id);
 
+        //ngambil username lama dari db, trs diganti sama username baru yg diisi dari form
         $user->username = $request->username;
         $user->role     = $request->role;
 
@@ -93,9 +94,6 @@ class UserController extends Controller
             ->with('success', 'User berhasil diperbarui');
     }
 
-    // =====================
-    // HAPUS USER
-    // =====================
     public function destroy($id)
     {
         $user = User::findOrFail($id);
