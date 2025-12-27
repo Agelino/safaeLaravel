@@ -68,9 +68,12 @@
                             <label class="form-label fw-semibold">Username</label>
                             <input type="text"
                                    name="username"
-                                   class="form-control form-control-lg"
+                                   class="form-control form-control-lg @error('username') is-invalid @enderror"
                                    value="{{ old('username', $user->username) }}"
                                    required>
+                            @error('username')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
                         </div>
 
                         {{-- EMAIL (READ ONLY) --}}
@@ -82,16 +85,37 @@
                                    disabled>
                         </div>
 
+                        {{-- ROLE --}}
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Role</label>
+                            <select name="role"
+                                    class="form-select form-select-lg @error('role') is-invalid @enderror"
+                                    required>
+                                <option value="user" {{ old('role', $user->role) == 'user' ? 'selected' : '' }}>
+                                    User
+                                </option>
+                                <option value="admin" {{ old('role', $user->role) == 'admin' ? 'selected' : '' }}>
+                                    Admin
+                                </option>
+                            </select>
+                            @error('role')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
                         {{-- FOTO PROFIL --}}
-                        <div class="col-12">
+                        <div class="col-md-6">
                             <label class="form-label fw-semibold">Foto Profil</label>
                             <input type="file"
                                    name="foto_profil"
-                                   class="form-control form-control-lg"
+                                   class="form-control form-control-lg @error('foto_profil') is-invalid @enderror"
                                    accept="image/*">
                             <small class="text-muted">
                                 Format JPG / PNG, maksimal 2MB
                             </small>
+                            @error('foto_profil')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
                         </div>
 
                     </div>

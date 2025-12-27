@@ -8,15 +8,14 @@ use App\Models\User;
 
 class ProfileController extends Controller
 {
-    // =====================
-    // LIHAT PROFIL
-    // =====================
     public function show()
-    {
-        return view('profile.show', [
-            'profile' => Auth::user()
-        ]);
-    }
+{
+    $user = Auth::user();
+
+    return view('profile.show', [
+        'profile' => $user
+    ]);
+}
 
     // =====================
     // FORM EDIT PROFIL

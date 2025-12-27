@@ -7,7 +7,6 @@
 
     <div class="container-fluid" style="max-width: 1300px;">
 
-        {{-- HEADER --}}
         <div class="d-flex justify-content-between align-items-center mb-4">
             <div>
                 <h2 class="fw-bold mb-1">Kelola User</h2>
@@ -23,7 +22,6 @@
             </a>
         </div>
 
-        {{-- ALERT --}}
         @if(session('success'))
             <div class="alert alert-success rounded-4 shadow-sm">
                 <i class="fas fa-check-circle me-1"></i>
