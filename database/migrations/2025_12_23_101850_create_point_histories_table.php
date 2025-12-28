@@ -13,8 +13,7 @@ return new class extends Migration
 
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('book_id');
-
-            $table->integer('points'); // poin reward
+            $table->integer('points'); 
             $table->timestamps();
 
             // relasi ke users

@@ -1,55 +1,47 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="komentar-container">
 
-<link rel="stylesheet" href="{{ asset('css/edit_komentar.css') }}">
+<div class="container" style="max-width:600px; margin-top:40px;">
 
-    <div class="komentar-card">
-        <h1>Edit Komentar</h1>
+    <h3>Edit Komentar</h3>
 
-        @if(session('success'))
-            <div class="alert-success">{{ session('success') }}</div>
-        @endif
+    <form action="{{ route('komentar.update', $komentar->id) }}"
+          method="POST"
+          enctype="multipart/form-data">
+        @csrf
 
-        @if(session('error'))
-            <div class="alert-error">{{ session('error') }}</div>
-        @endif
+        {{-- kirim data agar bisa redirect balik --}}
+        <input type="hidden" name="book_id" value="{{ $komentar->book_id }}">
+        <input type="hidden" name="page" value="{{ $komentar->page }}">
 
-        <form action="{{ route('komentar.update', $komentar->id) }}" method="POST" enctype="multipart/form-data">
-            @csrf
+        <div class="form-group mb-3">
+            <textarea name="komentar" class="form-control" required>{{ $komentar->komentar }}</textarea>
+        </div>
 
-            <div class="form-group">
-                <label>Komentar:</label>
-                <textarea name="komentar" required>{{ $komentar->komentar }}</textarea>
-            </div>
-
-            <div class="form-group file-group">
-                <label class="file-label">
-                    <input type="file" name="image" hidden>
-                    Ganti Gambar (Opsional)
-                </label>
-                <span class="file-info">Tidak ada file yang dipilih</span>
-            </div>
-
-            @if($komentar->image_path)
+        @if($komentar->image_path)
+            <div class="mb-3">
                 <p>Gambar saat ini:</p>
-                <img src="{{ asset('uploads/'.$komentar->image_path) }}" width="150">
-            @endif
-
-            <div style="margin-top:10px;">
-                <button type="submit" class="btn btn-primary">Update Komentar</button>
-                <a href="/komentar" class="btn btn-secondary">Batal</a>
+                <img src="{{ asset('uploads/' . $komentar->image_path) }}"
+                     style="max-width:200px;">
             </div>
-        </form>
-    </div>
+        @endif
+
+        <div class="form-group mb-3">
+            <label>Ganti Gambar (opsional)</label>
+            <input type="file" name="image" class="form-control">
+        </div>
+
+        <button type="submit" class="btn btn-primary">
+            💾 Simpan Perubahan
+        </button>
+
+        <a href="{{ route('komentar.index', [$komentar->book_id, $komentar->page]) }}"
+           class="btn btn-secondary">
+            Batal
+        </a>
+    </form>
 
 </div>
 
-<script>
-document.querySelector('input[name="image"]').addEventListener('change', function(){
-    const info = document.querySelector('.file-info');
-    info.textContent = this.files[0] ? this.files[0].name : "Tidak ada file yang dipilih";
-});
-</script>
 @endsection

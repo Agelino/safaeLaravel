@@ -10,29 +10,23 @@ use Illuminate\Support\Facades\Auth;
 
 class RewardController extends Controller
 {
-    // LEADERBOARD
     public function index()
     {
-        // TOP 3 / CARD
-        $ranking = User::orderBy('points', 'desc')
-            ->take(3)
-            ->get();
+        $ranking = User::orderBy('points', 'desc')->take(3)->get();
 
-        // LIST 5 USER POINT TERBANYAK
-        $topUsers = User::orderBy('points', 'desc')
-            ->take(5)
-            ->get();
+        $topUsers = User::orderBy('points', 'desc')->take(5)->get();
 
+      
         $currentUser = Auth::user();
 
-        return view('reward.reward', compact(
-            'ranking',
-            'topUsers',
-            'currentUser'
-        ));
+        return view('reward.reward', [
+            'ranking' => $ranking,
+            'topUsers' => $topUsers,
+            'currentUser' => $currentUser
+        ]);
     }
 
-    // SIMPAN DURASI BACA
+   
     public function saveDuration(Book $book)
     {
         $user = Auth::user();
@@ -43,36 +37,37 @@ class RewardController extends Controller
                 'book_id' => $book->id
             ],
             [
-                'duration' => 600 // 10 menit
+                'duration' => 600 
             ]
         );
 
         return response()->json(['status' => 'ok']);
     }
 
-    // SELESAI MEMBACA → CEK 10 MENIT → DAPAT POINT
+    
     public function finishReading(Book $book)
     {
         $user = Auth::user();
 
-        $progress = ReadingProgress::where('user_id', $user->id)
-            ->where('book_id', $book->id)
-            ->first();
+        $progress = ReadingProgress::where('user_id', $user->id)->where('book_id', $book->id)->first();
 
-        if (!$progress || $progress->duration < 600) {
+        if (!$progress) {
             return back()->with('error', 'Baca minimal 10 menit dulu!');
         }
 
-        $already = PointHistory::where('user_id', $user->id)
-            ->where('book_id', $book->id)
-            ->exists();
+        if ($progress->duration < 600) {
+            return back()->with('error', 'Baca minimal 10 menit dulu!');
+        }
 
-        if ($already) {
+        
+        $sudahDapat = PointHistory::where('user_id', $user->id)->where('book_id', $book->id)->exists();
+
+        if ($sudahDapat) {
             return back()->with('info', 'Poin sudah pernah didapat.');
         }
 
-        // TAMBAH POINT
-        $user->increment('points', 5);
+        $user->points = $user->points + 5;
+        $user->save();
 
         PointHistory::create([
             'user_id' => $user->id,

@@ -9,33 +9,56 @@ use Illuminate\Support\Facades\Auth;
 
 class BukuFavoritController extends Controller
 {
+    /**
+     * Tampilkan daftar buku favorit user
+     */
     public function index()
     {
+        // Ambil semua buku approved (jika masih dipakai di view)
         $books = Book::where('status', 'approved')->get();
 
+        // Ambil favorit user login + relasi buku
         $favorites = FavoriteBook::with('book')
             ->where('user_id', Auth::id())
+            ->latest()
             ->get();
 
-        return view('books.bukuFavorit', compact('books', 'favorites'));
+        return view('books.bukuFavorit', [
+            'books'     => $books,
+            'favorites' => $favorites
+        ]);
     }
 
+    /**
+     * Tambah buku ke favorit
+     */
     public function tambah(Request $request)
     {
+        $request->validate([
+            'book_id' => 'required|exists:books,id'
+        ]);
+
         FavoriteBook::firstOrCreate([
             'user_id' => Auth::id(),
             'book_id' => $request->book_id
         ]);
 
-        return back();
+        return back()->with('success', 'Buku berhasil ditambahkan ke favorit');
     }
 
+    /**
+     * Hapus buku dari favorit
+     */
     public function hapus(Request $request)
     {
+        $request->validate([
+            'book_id' => 'required|exists:books,id'
+        ]);
+
         FavoriteBook::where('user_id', Auth::id())
             ->where('book_id', $request->book_id)
             ->delete();
 
-        return back();
+        return back()->with('success', 'Buku berhasil dihapus dari favorit');
     }
 }
