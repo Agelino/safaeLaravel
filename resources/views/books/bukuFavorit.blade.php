@@ -12,21 +12,29 @@
             <div class="col-md-3 mb-3">
                 <div class="card h-100 border-danger">
 
-                    {{-- COVER --}}
-                    @if (!empty($fav->book->image_path))
-                        <img src="{{ asset($fav->book->image_path) }}"
-                             class="card-img-top"
-                             alt="{{ $fav->book->title }}">
-                    @else
-                        <img src="https://via.placeholder.com/300x200?text=No+Image"
-                             class="card-img-top"
-                             alt="No Image">
-                    @endif
+                    {{-- LINK KE FULL BACAAN --}}
+                    <a href="{{ route('fullbacaan.show', $fav->book->id) }}"
+                       class="text-decoration-none text-dark">
 
-                    <div class="card-body text-center">
-                        <h6>{{ $fav->book->title }}</h6>
-                        <p class="text-muted">{{ $fav->book->author }}</p>
+                        {{-- COVER --}}
+                        @if (!empty($fav->book->image_path))
+                            <img src="{{ asset($fav->book->image_path) }}"
+                                 class="card-img-top"
+                                 alt="{{ $fav->book->title }}">
+                        @else
+                            <img src="https://via.placeholder.com/300x200?text=No+Image"
+                                 class="card-img-top"
+                                 alt="No Image">
+                        @endif
 
+                        <div class="card-body text-center">
+                            <h6>{{ $fav->book->title }}</h6>
+                            <p class="text-muted">{{ $fav->book->author }}</p>
+                        </div>
+                    </a>
+
+                    {{-- HAPUS FAVORIT --}}
+                    <div class="card-footer bg-white text-center">
                         <form action="{{ route('favorite.hapus') }}" method="POST">
                             @csrf
                             <input type="hidden" name="book_id" value="{{ $fav->book->id }}">

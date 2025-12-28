@@ -26,6 +26,7 @@ use App\Http\Controllers\AdminKomentarController;
 use App\Http\Controllers\PembayaranAdminController;
 use App\Http\Controllers\KelolaRiwayatBacaController;
 use App\Http\Controllers\UserDashboardController;
+use App\Http\Controllers\AdminBukuFavoritController;
 use App\Http\Middleware\AdminOnly;
 
 
@@ -96,13 +97,14 @@ Route::middleware('auth')->group(function () {
     Route::get('/forum/create/{genre_id}', [ForumController::class, 'create'])->name('forum.create');
     Route::post('/forum/store', [ForumController::class, 'store'])->name('forum.store');
     Route::post('/forum/comment', [ForumController::class, 'comment'])->name('forum.comment');
-
+    
     // ===================== KOMENTAR USER =====================
-    Route::get('/books/{book}/page/{page}/komentar', [KomentarController::class, 'index']);
-    Route::post('/komentar/simpan', [KomentarController::class, 'simpan']);
+    Route::get('/books/{book}/page/{page}/komentar', [KomentarController::class, 'index'])->name('komentar.index');
+    Route::post('/komentar/simpan', [KomentarController::class, 'simpan'])->name('komentar.simpan');
     Route::get('/komentar/edit/{id}', [KomentarController::class, 'edit'])->name('komentar.edit');
     Route::post('/komentar/update/{id}', [KomentarController::class, 'update'])->name('komentar.update');
     Route::post('/komentar/hapus/{id}', [KomentarController::class, 'hapus'])->name('komentar.hapus');
+
 
     // ===================== ULASAN =====================
     Route::get('/ulasan/{id}', [FullBacaanController::class, 'ulasan'])->name('ulasan.index');
@@ -180,12 +182,15 @@ Route::middleware('auth')->group(function () {
             Route::delete('/komentar/{id}', [AdminKomentarController::class, 'hapus'])->name('komentar.hapus');
 
             // kelola reward
-
         Route::get('/rewards', [AdminRewardController::class, 'index'])->name('rewards.index');
-
         Route::post('/rewards/{user}/add', [AdminRewardController::class, 'add'])->name('reward.add');
-
         Route::post('/rewards/{user}/remove', [AdminRewardController::class, 'remove'])->name('reward.remove');
+
+
+        // kelola buku favorit
+        Route::get('/favorit', [AdminBukuFavoritController::class, 'index'])->name('favorit.index');
+        Route::get('/favorit/{id}', [AdminBukuFavoritController::class, 'show'])->name('favorit.show');
+        Route::delete('/favorit/{id}', [AdminBukuFavoritController::class, 'destroy'])->name('favorit.destroy');
 
         });
 });

@@ -9,27 +9,23 @@ use Illuminate\Http\Request;
 
 class AdminRewardController extends Controller
 {
- public function index()
-{
-    $users = User::where('role', 'user') 
-                 ->orderBy('points', 'desc')
-                 ->get();
+  
+    public function index()
+    {
+        $users = User::where('role', 'user')->orderBy('points', 'desc')->get();
 
-    return view('admin.rewards.index', compact('users'));
-}
+        return view('admin.rewards.index', ['users' => $users]);
+    }
 
-    // ➕ TAMBAH POINT
+    // tambah point
+
     public function add(Request $request, User $user)
     {
-        $request->validate([
-            'points' => 'required|integer|min:1'
-        ]);
+        $request->validate(['points' => 'required|integer|min:1']);
 
-        // tambah point user
-        $user->points += $request->points;
+        $user->points = $user->points + $request->points;
         $user->save();
-
-        $book = Book::first(); // BOOK WAJIB ADA
+        $book = Book::first();
 
         PointHistory::updateOrCreate(
             [
@@ -37,21 +33,25 @@ class AdminRewardController extends Controller
                 'book_id' => $book->id,
             ],
             [
-                'points' => ($request->points),
+                'points' => $request->points,
             ]
         );
 
         return back()->with('success', 'Poin berhasil ditambahkan');
     }
 
-    // ➖ KURANGI POINT
+   // kurangi point
     public function remove(Request $request, User $user)
     {
-        $request->validate([
-            'points' => 'required|integer|min:1'
-        ]);
+        $request->validate(['points' => 'required|integer|min:1']);
 
-        $user->points = max(0, $user->points - $request->points);
+       
+        $user->points = $user->points - $request->points;
+
+        if ($user->points < 0) {
+            $user->points = 0;
+        }
+
         $user->save();
 
         $book = Book::first();
