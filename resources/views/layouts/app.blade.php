@@ -169,11 +169,11 @@
 
             {{-- FOTO PROFIL HEADER --}}
             @if(Auth::user()->foto_profil)
-                <img src="{{ asset(Auth::user()->foto_profil) }}"
-                     class="rounded-circle me-2"
-                     width="32"
-                     height="32"
-                     style="object-fit: cover;">
+            <img src="{{ asset('storage/' . Auth::user()->foto_profil) }}"
+            class="rounded-circle me-2"
+            width="32"
+            height="32"
+            style="object-fit: cover;">
             @else
                 <img src="https://ui-avatars.com/api/?name={{ Auth::user()->username }}&background=ffffff&color=0d6efd"
                      class="rounded-circle me-2"

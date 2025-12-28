@@ -75,18 +75,20 @@ class UserController extends Controller
         $user->username = $request->username;
         $user->role     = $request->role;
 
-        // FOTO PROFIL
+        //upload foto profil
         if ($request->hasFile('foto_profil')) {
 
-            if ($user->foto_profil && Storage::disk('public')->exists($user->foto_profil)) {
-                Storage::disk('public')->delete($user->foto_profil);
+            if ($user->foto_profil && file_exists(public_path('storage/' . $user->foto_profil))) {
+                unlink(storage_path('app/public/' . $user->foto_profil));
             }
 
-            $path = $request->file('foto_profil')
-                            ->store('foto_profil', 'public');
-
-            $user->foto_profil = $path;
-        }
+            $file = $request->file('foto_profil');
+            $name = time() . '.' . $file->getClientOriginalExtension();
+            $file->move(storage_path('app/public/foto_profil'), $name);
+            
+        //ni nyimpen path foto profil ke database sesuai nama file yang sudah ditentukan sebelumnya
+            $user->foto_profil = 'foto_profil/' . $name;
+            }
 
         $user->save();
 
@@ -97,11 +99,9 @@ class UserController extends Controller
     public function destroy($id)
     {
         $user = User::findOrFail($id);
-
-        if ($user->foto_profil && Storage::disk('public')->exists($user->foto_profil)) {
-            Storage::disk('public')->delete($user->foto_profil);
-        }
-
+            if ($user->foto_profil && file_exists(public_path('storage/' . $user->foto_profil))) {
+                unlink(storage_path('app/public/' . $user->foto_profil));
+            }
         $user->delete();
 
         return redirect()->route('admin.users.index')

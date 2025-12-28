@@ -9,17 +9,12 @@ use App\Models\User;
 class ProfileController extends Controller
 {
     public function show()
-{
-    $user = Auth::user();
+    {
+        return view('profile.show', [
+            'profile' => Auth::user()
+        ]);
+    }
 
-    return view('profile.show', [
-        'profile' => $user
-    ]);
-}
-
-    // =====================
-    // FORM EDIT PROFIL
-    // =====================
     public function edit()
     {
         return view('profile.edit', [
@@ -27,9 +22,6 @@ class ProfileController extends Controller
         ]);
     }
 
-    // =====================
-    // UPDATE PROFIL (PALING BASIC)
-    // =====================
     public function update(Request $request)
     {
         $request->validate([
@@ -39,38 +31,40 @@ class ProfileController extends Controller
             'foto_profil' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
-        $data = [
+        $fotoPath = Auth::user()->foto_profil;
+
+        // upload foto profil
+        if ($request->hasFile('foto_profil')) {
+
+            // hapus foto lama
+            if ($fotoPath && file_exists(public_path('storage/' . $fotoPath))) {
+                unlink(public_path('storage/' . $fotoPath));
+            }
+
+            $file = $request->file('foto_profil');
+            $name = time() . '.' . $file->getClientOriginalExtension();
+            $file->move(public_path('storage/foto_profil'), $name);
+
+            $fotoPath = 'foto_profil/' . $name;
+        }
+
+        User::where('id', Auth::id())->update([
             'username'     => $request->username,
             'social_media' => $request->social_media,
             'bio'          => $request->bio,
-        ];
+            'foto_profil'  => $fotoPath,
+        ]);
 
-        // FOTO PROFIL (STORAGE LINK BASIC)
-        if ($request->hasFile('foto_profil')) {
-            $path = $request->file('foto_profil')
-                            ->store('foto_profil', 'public');
-
-            $data['foto_profil'] = $path;
-        }
-
-        User::where('id', Auth::id())->update($data);
-
-        return redirect('/profile')
-            ->with('success', 'Profil berhasil diperbarui');
+        return redirect('/profile')->with('success', 'Profil berhasil diperbarui');
     }
 
-    // =====================
-    // HAPUS AKUN (TANPA delete())
-    // =====================
     public function destroy()
     {
         $userId = Auth::id();
 
         Auth::logout();
-
         User::where('id', $userId)->delete();
 
-        return redirect('/')
-            ->with('success', 'Akun berhasil dihapus');
+        return redirect('/')->with('success', 'Akun berhasil dihapus');
     }
 }
