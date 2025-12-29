@@ -31,7 +31,7 @@ class ProfileController extends Controller
             'bio'         => 'nullable',
             'foto_profil' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
-
+        //buat nyimpen path foto lama milik user yang sedang login dari database, supaya kalau user tidak meng-update foto profil, data foto lamanya tetap dipakai dan tidak ke-reset.
         $fotoPath = Auth::user()->foto_profil;
 
         // upload foto profil
@@ -46,6 +46,7 @@ class ProfileController extends Controller
             $name = time() . '.' . $file->getClientOriginalExtension();
             $file->move(public_path('storage/foto_profil'), $name);
 
+            //ngeganti dengan foto baru yg dmn fotonya itu diambil dr folder foto_profil
             $fotoPath = 'foto_profil/' . $name;
         }
 

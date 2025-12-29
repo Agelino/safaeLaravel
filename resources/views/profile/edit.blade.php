@@ -62,7 +62,6 @@
 
     <div class="edit-card">
 
-        {{-- HEADER --}}
         <div class="mb-4">
             <h4 class="fw-bold mb-1">Edit Profil</h4>
             <p class="text-muted mb-0">
@@ -70,7 +69,6 @@
             </p>
         </div>
 
-        {{-- AVATAR (STORAGE LINK) --}}
         <div class="edit-avatar">
             <img src="{{ $profile->foto_profil
                 ? asset('storage/' . $profile->foto_profil)
@@ -85,7 +83,6 @@
             </div>
         </div>
 
-        {{-- FORM --}}
         <form method="POST"
               enctype="multipart/form-data"
               action="{{ route('profile.update') }}">
@@ -93,7 +90,6 @@
 
             <div class="row">
 
-                {{-- USERNAME --}}
                 <div class="col-md-6 mb-3">
                     <label class="form-label">Nama Pengguna</label>
                     <input type="text"
@@ -103,7 +99,6 @@
                            required>
                 </div>
 
-                {{-- SOCIAL MEDIA --}}
                 <div class="col-md-6 mb-3">
                     <label class="form-label">Social Media</label>
                     <input type="text"
@@ -113,7 +108,6 @@
                            value="{{ old('social_media', $profile->social_media) }}">
                 </div>
 
-                {{-- BIO --}}
                 <div class="col-12 mb-3">
                     <label class="form-label">Bio</label>
                     <textarea name="bio"
@@ -122,7 +116,6 @@
                               placeholder="Ceritakan sedikit tentang dirimu">{{ old('bio', $profile->bio) }}</textarea>
                 </div>
 
-                {{-- FOTO --}}
                 <div class="col-12 mb-4">
                     <label class="form-label">Foto Profil Baru</label>
                     <input type="file"
@@ -132,7 +125,6 @@
                 </div>
             </div>
 
-            {{-- ACTION --}}
             <div class="d-flex justify-content-between flex-wrap gap-2">
                 <a href="{{ route('profile') }}"
                    class="btn btn-secondary btn-rounded">
