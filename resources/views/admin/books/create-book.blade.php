@@ -33,8 +33,8 @@
                     </div>
                     <div class="card-body">
                         {{-- Ubah form ke route Laravel --}}
-                        <form method="POST" action="{{ url('/books/store') }}" enctype="multipart/form-data">
-                            @csrf {{-- Token Keamanan Laravel --}}
+                        <form method="POST" action="{{ route('admin.books.store') }}" enctype="multipart/form-data">
+                        @csrf
 
                             <div class="row">
                                 <div class="col-md-6">
@@ -75,7 +75,7 @@
                             </div>
                             
                             <button type="submit" name="add" class="btn btn-primary">Add Book</button>
-                            <a href="{{ url('/genre') }}" class="btn btn-secondary">Cancel</a>
+                             <a href="{{ route('admin.genre.index') }}" class="btn btn-secondary">Cancel</a>
                         </form>
                     </div>
                 </div>
