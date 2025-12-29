@@ -212,11 +212,11 @@
 <!-- ================= SIDEBAR ================= -->
 <aside class="sidebar">
     <h4>Safae</h4>
-
-    <a href="{{ route('dashboard') }}" class="{{ request()->is('dashboard') ? 'active' : '' }}">
-        <i class="fa fa-tachometer-alt me-2"></i> Dashboard
-    </a>
-
+            <a href="{{ route('user.dashboard') }}"
+        class="{{ request()->is('user/dashboard') ? 'active' : '' }}">
+            <i class="fa fa-tachometer-alt me-2"></i> Dashboard
+        </a>
+        
     <a href="{{ url('/tulis-buku') }}" class="{{ request()->is('tulis-buku*') ? 'active' : '' }}">
         <i class="fa fa-pen me-2"></i> Tulis Buku
     </a>

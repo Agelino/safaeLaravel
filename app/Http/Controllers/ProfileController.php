@@ -8,11 +8,12 @@ use App\Models\User;
 
 class ProfileController extends Controller
 {
+    
     public function show()
     {
         return view('profile.show', [
             'profile' => Auth::user()
-        ]);
+        ]); 
     }
 
     public function edit()
@@ -58,13 +59,4 @@ class ProfileController extends Controller
         return redirect('/profile')->with('success', 'Profil berhasil diperbarui');
     }
 
-    public function destroy()
-    {
-        $userId = Auth::id();
-
-        Auth::logout();
-        User::where('id', $userId)->delete();
-
-        return redirect('/')->with('success', 'Akun berhasil dihapus');
-    }
 }

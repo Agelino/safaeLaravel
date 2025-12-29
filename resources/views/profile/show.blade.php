@@ -120,16 +120,7 @@
             <a href="{{ route('profile.edit') }}" class="btn btn-primary btn-rounded">
                 <i class="bi bi-pencil-square"></i> Edit Profil
             </a>
-
-            <form action="{{ route('profile.delete') }}" method="POST"
-                  onsubmit="return confirm('Yakin ingin menghapus akun?')">
-                @csrf
-                <button class="btn btn-danger btn-rounded">
-                    <i class="bi bi-trash"></i> Hapus Akun
-                </button>
-            </form>
-
-            <a href="{{ route('dashboard') }}" class="btn btn-secondary btn-rounded">
+            <a href="{{ route('user.dashboard') }}" class="btn btn-secondary btn-rounded">
                 <i class="bi bi-arrow-left"></i> Kembali
             </a>
         </div>

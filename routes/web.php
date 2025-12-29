@@ -59,7 +59,8 @@ Route::get('/about-us', [AboutController::class, 'index'])->name('about.index');
 Route::middleware('auth')->group(function () {
 
     // ===================== USER DASHBOARD =====================
-    Route::get('/dashboard', [UserDashboardController::class, 'index'])->name('dashboard');
+    Route::get('/user/dashboard', [UserDashboardController::class, 'index'])
+    ->name('user.dashboard');
 
     // ===================== PROFILE =====================
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile');
