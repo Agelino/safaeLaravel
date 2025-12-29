@@ -161,7 +161,46 @@
                placeholder="Search buku atau penulis">
     </form>
 
+    
     {{-- RIGHT --}}
+<div class="d-flex align-items-center">
+
+    {{-- 🔔 NOTIFIKASI --}}
+    @php
+    $notifCount = \App\Models\Notification::where('user_id', Auth::id())
+        ->where('is_read', 0)
+        ->count();
+
+    $notifications = \App\Models\Notification::where('user_id', Auth::id())
+        ->orderBy('created_at', 'desc')
+        ->take(5)
+        ->get();
+    @endphp
+
+    <div class="dropdown me-3">
+        <a href="#" class="text-white position-relative" data-bs-toggle="dropdown">
+            <i class="fa fa-bell fs-5"></i>
+
+            @if($notifCount > 0)
+            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                {{ $notifCount }}
+            </span>
+            @endif
+        </a>
+
+        <ul class="dropdown-menu dropdown-menu-end shadow" style="width:300px;">
+            @forelse($notifications as $notif)
+                <li class="dropdown-item small {{ $notif->is_read ? '' : 'fw-semibold' }}">
+                    {{ $notif->message }}
+                </li>
+            @empty
+                <li class="dropdown-item text-muted small">
+                    Tidak ada notifikasi
+                </li>
+            @endforelse
+        </ul>
+    </div>
+    
     <div class="dropdown">
         <a href="#"
            class="d-flex align-items-center text-decoration-none dropdown-toggle text-white"

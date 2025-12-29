@@ -7,6 +7,7 @@ use App\Models\FavoriteBook;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+
 class BukuFavoritController extends Controller
 {
     /**
@@ -38,12 +39,24 @@ class BukuFavoritController extends Controller
             'book_id' => 'required|exists:books,id'
         ]);
 
-        FavoriteBook::firstOrCreate([
-            'user_id' => Auth::id(),
-            'book_id' => $request->book_id
-        ]);
+        $fav = FavoriteBook::firstOrCreate([
+    'user_id' => Auth::id(),
+    'book_id' => $request->book_id
+]);
 
-        return back()->with('success', 'Buku berhasil ditambahkan ke favorit');
+// 🔔 notif hanya kalau baru
+if ($fav->wasRecentlyCreated) {
+    \App\Models\Notification::create([
+        'user_id' => Auth::id(),
+        'message' => 'Buku "' . $fav->book->judul . '" ditambahkan ke favorit',
+        'url' => route('favorite.index')
+    ]);
+}
+
+
+
+return back()->with('success', 'Buku berhasil ditambahkan ke favorit');
+
     }
 
     /**
