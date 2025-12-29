@@ -11,7 +11,6 @@
           enctype="multipart/form-data">
         @csrf
 
-        {{-- kirim data agar bisa redirect balik --}}
         <input type="hidden" name="book_id" value="{{ $komentar->book_id }}">
         <input type="hidden" name="page" value="{{ $komentar->page }}">
 

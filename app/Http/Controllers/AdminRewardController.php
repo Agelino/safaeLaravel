@@ -25,19 +25,16 @@ class AdminRewardController extends Controller
 
         $user->points = $user->points + $request->points;
         $user->save();
-        $book = Book::first();
+        
+        PointHistory::Create(
+    [
+        'user_id' => $user->id,
+        'points' => $request->points,
+    ]
+);
 
-        PointHistory::updateOrCreate(
-            [
-                'user_id' => $user->id,
-                'book_id' => $book->id,
-            ],
-            [
-                'points' => $request->points,
-            ]
-        );
 
-        return back()->with('success', 'Poin berhasil ditambahkan');
+        return redirect('/rewards')->with('success', 'Poin berhasil ditambahkan');
     }
 
    // kurangi point
@@ -54,17 +51,13 @@ class AdminRewardController extends Controller
 
         $user->save();
 
-        $book = Book::first();
+        PointHistory::Create(
+    [
+        'user_id' => $user->id,
+        'points' => $request->points,
+    ]
+);
 
-        PointHistory::updateOrCreate(
-            [
-                'user_id' => $user->id,
-                'book_id' => $book->id,
-            ],
-            [
-                'points' => -$request->points,
-            ]
-        );
 
         return back()->with('success', 'Poin berhasil dikurangi');
     }
