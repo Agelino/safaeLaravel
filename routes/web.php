@@ -109,15 +109,16 @@ Route::middleware('auth')->group(function () {
     Route::post('/ulasan/{id}', [FullBacaanController::class, 'storeReview'])->name('ulasan.store');
 
     // ===================== USER TULIS BUKU =====================
-    Route::get('/tulis-buku', [BookSubmissionController::class, 'create']);
-    Route::post('/tulis-buku/store', [BookSubmissionController::class, 'store']);
+    Route::get('/tulis-buku', [BookSubmissionController::class, 'halamanTulis'])->name('tulis-buku.create');
+    Route::post('/tulis-buku/store', [BookSubmissionController::class, 'simpanBuku'])->name('tulis-buku.store');
+});
 
-    /*
-    |--------------------------------------------------------------------------
-    | ADMIN AREA (AUTH + ADMIN ONLY)
-    |--------------------------------------------------------------------------
-    */
-    Route::middleware(AdminOnly::class)
+/*
+|--------------------------------------------------------------------------
+| ADMIN AREA (AUTH + ADMIN ONLY)
+|--------------------------------------------------------------------------
+*/
+    Route::middleware(['auth', AdminOnly::class])
         ->prefix('admin')
         ->name('admin.')
         ->group(function () {
@@ -158,12 +159,13 @@ Route::middleware('auth')->group(function () {
             Route::get('/forum/komentar/{id}/delete', [AdminForumController::class, 'hapusKomentar'])->name('forum.komentar.hapus');
 
             // GENRE & BUKU
-            Route::get('/genre', [GenreAdminController::class, 'index'])->name('genre.index');
-            Route::get('/books/create', [GenreAdminController::class, 'create'])->name('books.create');
-            Route::post('/books/store', [GenreAdminController::class, 'store'])->name('books.store');
-            Route::get('/books/{id}/edit', [GenreAdminController::class, 'edit'])->name('books.edit');
-            Route::post('/books/{id}/update', [GenreAdminController::class, 'update'])->name('books.update');
-            Route::post('/books/delete', [GenreAdminController::class, 'destroy'])->name('books.delete');
+            Route::get('/genre', [GenreAdminController::class, 'daftarBuku'])->name('genre.index');
+            Route::get('/buku/tambah', [GenreAdminController::class, 'halamanTambah'])->name('buku.tambah');
+            Route::post('/buku/simpan', [GenreAdminController::class, 'simpanBuku'])->name('buku.simpan');
+            Route::get('/buku/{id}', [GenreAdminController::class, 'lihatBuku'])->name('show-book');
+            Route::get('/buku/{id}/edit', [GenreAdminController::class, 'halamanEdit'])->name('buku.edit');
+            Route::post('/buku/{id}/perbarui', [GenreAdminController::class, 'perbaruiBuku'])->name('buku.perbarui');
+            Route::post('/buku/hapus', [GenreAdminController::class, 'hapusBuku'])->name('buku.hapus');
 
             // VALIDASI BUKU
             Route::get('/validasi', [BookSubmissionController::class, 'indexAdmin'])->name('validasi.index');
@@ -175,12 +177,7 @@ Route::middleware('auth')->group(function () {
             Route::delete('/komentar/{id}', [AdminKomentarController::class, 'hapus'])->name('komentar.hapus');
 
             // kelola reward
-
-        Route::get('/rewards', [AdminRewardController::class, 'index'])->name('rewards.index');
-
-        Route::post('/rewards/{user}/add', [AdminRewardController::class, 'add'])->name('reward.add');
-
-        Route::post('/rewards/{user}/remove', [AdminRewardController::class, 'remove'])->name('reward.remove');
-
+            Route::get('/rewards', [AdminRewardController::class, 'index'])->name('rewards.index');
+            Route::post('/rewards/{user}/add', [AdminRewardController::class, 'add'])->name('reward.add');
+            Route::post('/rewards/{user}/remove', [AdminRewardController::class, 'remove'])->name('reward.remove');
         });
-});

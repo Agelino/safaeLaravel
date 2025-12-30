@@ -36,6 +36,23 @@
         </div>
     </div>
 
+    {{-- Alert Messages --}}
+    @if(session('success'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle me-2"></i>
+            {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
+
+    @if(session('error'))
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-circle me-2"></i>
+            {{ session('error') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
+
     {{-- Stats Cards --}}
     <div class="row mb-4">
         <div class="col-xl-3 col-md-6 mb-4">
@@ -106,7 +123,7 @@
                                 <div class="d-flex justify-content-center gap-1">
                                     
                                     {{-- 1. Tombol DETAIL (Selalu Muncul) --}}
-                                    <a href="{{ url('/books/read/'.$book->id) }}" class="btn btn-sm btn-info text-white" title="Lihat Detail">
+                                    <a href="{{ route('admin.show-book', $book->id) }}" class="btn btn-sm btn-info text-white" title="Lihat Detail">
                                         <i class="fas fa-eye"></i>
                                     </a>
 

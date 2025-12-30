@@ -243,10 +243,11 @@
                                 @if($history->book)
                                 <a href="{{ route('book.show', $history->book->id) }}" class="list-group-item list-group-item-action border-0 px-0">
                                     <div class="d-flex align-items-center">
-                                        <img src="{{ asset($history->book->image_path ?? 'images/default-book.jpg') }}" 
+                                        <img src="{{ $history->book->image_path ? asset($history->book->image_path) : asset('images/default-book.jpg') }}" 
                                              alt="{{ $history->book->title }}" 
                                              class="rounded me-3" 
-                                             style="width: 50px; height: 70px; object-fit: cover;">
+                                             style="width: 50px; height: 70px; object-fit: cover;"
+                                             onerror="this.onerror=null; this.src='{{ asset('images/default-book.jpg') }}';">
                                         <div class="flex-grow-1">
                                             <h6 class="mb-1">{{ Str::limit($history->book->title, 40) }}</h6>
                                             <small class="text-muted">
@@ -275,7 +276,7 @@
         </div>
 
         <!-- Buku Terpopuler -->
-        <div class="col-xl-6">
+        {{-- <div class="col-xl-6">
             <div class="card shadow-sm dashboard-card">
                 <div class="card-header bg-white border-0 py-3">
                     <h5 class="section-title mb-0">
@@ -288,10 +289,11 @@
                             @foreach($popularBooks as $book)
                             <a href="{{ route('book.show', $book->id) }}" class="list-group-item list-group-item-action border-0 px-0">
                                 <div class="d-flex align-items-center">
-                                    <img src="{{ asset($book->image_path ?? 'images/default-book.jpg') }}" 
+                                    <img src="{{ $book->image_path ? asset($book->image_path) : asset('images/default-book.jpg') }}" 
                                          alt="{{ $book->title }}" 
                                          class="rounded me-3" 
-                                         style="width: 50px; height: 70px; object-fit: cover;">
+                                         style="width: 50px; height: 70px; object-fit: cover;"
+                                         onerror="this.onerror=null; this.src='{{ asset('images/default-book.jpg') }}';">
                                     <div class="flex-grow-1">
                                         <h6 class="mb-1">{{ Str::limit($book->title, 40) }}</h6>
                                         <small class="text-muted">
@@ -313,7 +315,7 @@
                     @endif
                 </div>
             </div>
-        </div>
+        </div> --}}
     </div>
 
     <!-- Another Row -->
@@ -407,10 +409,11 @@
                             <div class="col-md-2-4 col-sm-4 col-6">
                                 <a href="{{ route('book.show', $book->id) }}" class="text-decoration-none">
                                     <div class="book-card-mini">
-                                        <img src="{{ asset($book->image_path ?? 'images/default-book.jpg') }}" 
+                                        <img src="{{ $book->image_path ? asset($book->image_path) : asset('images/default-book.jpg') }}" 
                                              alt="{{ $book->title }}" 
                                              class="w-100 rounded shadow-sm" 
-                                             style="height: 200px; object-fit: cover;">
+                                             style="height: 200px; object-fit: cover;"
+                                             onerror="this.onerror=null; this.src='{{ asset('images/default-book.jpg') }}';">
                                         <h6 class="mt-2 mb-1 text-dark">{{ Str::limit($book->title, 30) }}</h6>
                                         <small class="text-muted">{{ $book->author }}</small>
                                     </div>
