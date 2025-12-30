@@ -12,22 +12,11 @@ return new class extends Migration
             $table->id();
 
             $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('book_id');
-            $table->integer('points'); 
+            $table->integer('points');
             $table->timestamps();
 
             // relasi ke users
-            $table->foreign('user_id')
-                  ->references('id')->on('users')
-                  ->onDelete('cascade');
-
-            // relasi ke books
-            $table->foreign('book_id')
-                  ->references('id')->on('books')
-                  ->onDelete('cascade');
-
-            // cegah poin dobel untuk buku yang sama
-            $table->unique(['user_id', 'book_id']);
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

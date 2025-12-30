@@ -23,7 +23,9 @@ class AdminBukuFavoritController extends Controller
 
     public function destroy($id)
     {
-        FavoriteBook::findOrFail($id)->delete();
+        $bukufav = FavoriteBook::findOrFail($id);
+
+        $bukufav->delete();
 
         return redirect()->route('admin.favorit.index')->with('success', 'Buku favorit user berhasil dihapus');
     }

@@ -9,16 +9,13 @@
 
     <div class="reward-layout">
 
-        <!-- ================= LEADERBOARD ================= -->
         <div class="leaderboard">
 
-            <!-- ===== TOP 3 ===== -->
             <div class="top-three">
                 @foreach($ranking->take(3) as $index => $user)
                     <div class="top-card rank-{{ $index + 1 }}">
                         <span class="badge-rank">{{ $index + 1 }}</span>
 
-                        {{-- FOTO PROFIL USER (TOP 3) --}}
                         @if($user->foto_profil)
                             <img src="{{ asset('storage/' . $user->foto_profil) }}"
                                  class="rounded-circle mb-2"
@@ -38,13 +35,11 @@
                 @endforeach
             </div>
 
-            <!-- ===== RANK 4+ ===== -->
             <div class="rank-list">
                 @foreach($ranking->skip(3) as $index => $user)
                     <div class="rank-item">
                         <span class="rank-number">{{ $index + 4 }}</span>
 
-                        {{-- FOTO PROFIL USER (LIST) --}}
                         @if($user->foto_profil)
                             <img src="{{ asset('storage/' . $user->foto_profil) }}"
                                  class="avatar-sm"
@@ -62,13 +57,11 @@
 
         </div>
 
-        <!-- ================= USER LOGIN CARD ================= -->
         @if($currentUser)
         <div class="user-point-card">
 
             <p>⭐ {{ $currentUser->points }} pts</p>
 
-            {{-- FOTO PROFIL USER LOGIN --}}
             @if(Auth::user()->foto_profil)
                 <img src="{{ asset('storage/' . Auth::user()->foto_profil) }}"
                      class="rounded-circle mb-2"

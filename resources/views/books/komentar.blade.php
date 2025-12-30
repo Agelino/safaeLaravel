@@ -6,14 +6,10 @@
 
 <div class="komentar-container">
 
-    {{-- 🔙 KEMBALI KE BACAAN --}}
     <a href="{{ route('book.show', [$bookId, $page]) }}" class="btn-back">
         ← Kembali ke Bacaan
     </a>
 
-    <!-- ===================== -->
-    <!-- FORM TAMBAH KOMENTAR -->
-    <!-- ===================== -->
     <div class="komentar-card">
         <h1>Komentar</h1>
 
@@ -33,9 +29,6 @@
         </form>
     </div>
 
-    <!-- ===================== -->
-    <!-- LIST KOMENTAR -->
-    <!-- ===================== -->
     <div class="komentar-list">
         @forelse($komentar as $c)
             <div class="komentar-item">
@@ -47,17 +40,15 @@
                     <img src="{{ asset('uploads/' . $c->image_path) }}" class="komentar-img">
                 @endif
 
-                {{-- 🔒 AKSI KHUSUS PEMILIK --}}
+           
                 @if(Auth::check() && Auth::id() == $c->user_id)
                     <div style="margin-top:10px; display:flex; gap:10px;">
 
-                        {{-- ✏️ EDIT --}}
                         <a href="{{ route('komentar.edit', $c->id) }}"
                            class="btn btn-warning btn-sm">
                             ✏️ Edit
                         </a>
 
-                        {{-- 🗑 HAPUS --}}
                         <form action="{{ route('komentar.hapus', $c->id) }}"
                               method="POST"
                               onsubmit="return confirm('Yakin ingin menghapus komentar ini?')">

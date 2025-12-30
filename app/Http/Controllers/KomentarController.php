@@ -22,9 +22,9 @@ class KomentarController extends Controller
     }
 
   
-    public function simpan(Request $request)
+    public function simpan(Request $r)
     {
-        $request->validate([
+        $r->validate([
             'book_id' => 'required',
             'page' => 'required',
             'komentar' => 'required',
@@ -33,35 +33,29 @@ class KomentarController extends Controller
 
         $namaFile = null;
 
-        if ($request->hasFile('image')) {
-            $file = $request->file('image');
+        if ($r->hasFile('image')) {
+            $file = $r->file('image');
             $namaFile = time() . '_' . $file->getClientOriginalName();
             $file->move(public_path('uploads'), $namaFile);
         }
 
-      
-        $user = Auth::user();
-
-        if ($user->username) {
-            $username = $user->username;
-        } else {
-            $username = $user->name;
-        }
-
-        if (!$username) {
-            $username = 'Anonymous';
-        }
+       $user = Auth::user();
+    $username = $user->username ?? $user->name ?? 'Anonymous';
 
         Komentar::create([
             'user_id' => $user->id,
-            'book_id' => $request->book_id,
-            'page' => $request->page,
+            'book_id' => $r->book_id,
+            'page' => $r->page,
             'username' => $username,
-            'komentar' => $request->komentar,
+            'komentar' => $r->komentar,
             'image_path' => $namaFile
         ]);
 
-        return back();
+       return redirect()->route('komentar.index', [
+        'book' => $r->book_id,
+        'page' => $r->page
+    ]);
+
     }
 
     
@@ -77,21 +71,21 @@ class KomentarController extends Controller
     }
 
    
-    public function update(Request $request, $id)
+    public function update(Request $r, $id)
 {
     $komentar = Komentar::findOrFail($id);
     
     if (Auth::id() != $komentar->user_id) {
         abort(403, 'Kamu tidak berhak mengedit komentar ini');
     }
-    $request->validate([
+    $r->validate([
         'komentar' => 'required',
         'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048'
     ]);
 
     $namaFile = $komentar->image_path;
 
-    if ($request->hasFile('image')) {
+    if ($r->hasFile('image')) {
 
         if ($namaFile) {
             $path = public_path('uploads/' . $namaFile);
@@ -100,21 +94,21 @@ class KomentarController extends Controller
             }
         }
 
-        $file = $request->file('image');
+        $file = $r->file('image');
         $namaFile = time() . '_' . $file->getClientOriginalName();
         $file->move(public_path('uploads'), $namaFile);
     }
 
     $komentar->update([
-        'komentar' => $request->komentar,
+        'komentar' => $r->komentar,
         'image_path' => $namaFile
     ]);
 
     
     return redirect()->route('komentar.index', [
-        $request->book_id,
-        $request->page
-    ])->with('success', 'Komentar berhasil diperbarui');
+        $r->book_id,
+        $r->page
+    ]);
 }
 
 
@@ -136,6 +130,10 @@ class KomentarController extends Controller
 
         $komentar->delete();
 
-        return back()->with('success', 'Komentar berhasil dihapus');
+      return redirect()->route('komentar.index', [
+    'book' => $komentar->book_id,
+    'page' => $komentar->page
+]);
+
     }
 }
