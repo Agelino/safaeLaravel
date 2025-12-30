@@ -34,7 +34,7 @@
 
     {{-- TAMBAH BUKU --}}
     <div class="mb-4 ms-5">
-        <a href="{{ route('admin.books.create') }}" class="btn btn-success">
+        <a href="{{ route('admin.buku.tambah') }}" class="btn btn-success">
             <i class="fas fa-plus"></i> Tambah Buku
         </a>
     </div>
@@ -83,20 +83,20 @@
 
                     <div class="card-footer action-buttons">
                         {{-- VIEW --}}
-                        <a href="{{ route('book.show', $book->id) }}"
+                        <a href="{{ route('admin.show-book', $book->id) }}"
                            class="btn btn-info btn-sm">
                             <i class="fas fa-eye"></i>
                         </a>
 
                         {{-- EDIT --}}
-                        <a href="{{ route('admin.books.edit', $book->id) }}"
+                        <a href="{{ route('admin.buku.edit', $book->id) }}"
                            class="btn btn-primary btn-sm">
                             <i class="fas fa-edit"></i>
                         </a>
 
                         {{-- DELETE --}}
                         <form method="POST"
-                              action="{{ route('admin.books.delete') }}"
+                              action="{{ route('admin.buku.hapus') }}"
                               style="display:inline;">
                             @csrf
                             <input type="hidden" name="id" value="{{ $book->id }}">
@@ -149,20 +149,20 @@
 
                     <div class="card-footer action-buttons">
                         {{-- VIEW --}}
-                        <a href="{{ route('book.show', $book->id) }}"
+                        <a href="{{ route('admin.show-book', $book->id) }}"
                            class="btn btn-info btn-sm">
                             <i class="fas fa-eye"></i>
                         </a>
 
                         {{-- EDIT --}}
-                        <a href="{{ route('admin.books.edit', $book->id) }}"
+                        <a href="{{ route('admin.buku.edit', $book->id) }}"
                            class="btn btn-primary btn-sm">
                             <i class="fas fa-edit"></i>
                         </a>
 
                         {{-- DELETE --}}
                         <form method="POST"
-                              action="{{ route('admin.books.delete') }}"
+                              action="{{ route('admin.buku.hapus') }}"
                               style="display:inline;">
                             @csrf
                             <input type="hidden" name="id" value="{{ $book->id }}">

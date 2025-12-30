@@ -195,6 +195,19 @@
                                required>
                     </div>
 
+                    <!-- Deskripsi Buku -->
+                    <div class="col-12">
+                        <label class="form-label">
+                            <i class="fas fa-align-left me-2 text-primary"></i>Deskripsi Singkat
+                        </label>
+                        <textarea name="description" 
+                                  class="form-control" 
+                                  rows="3"
+                                  placeholder="Tulis ringkasan singkat tentang buku Anda (sinopsis, tema utama, dll)..."
+                                  required>{{ old('description') }}</textarea>
+                        <small class="text-muted">Deskripsi ini akan muncul sebagai ringkasan buku</small>
+                    </div>
+
                     <!-- Cover Buku -->
                     <div class="col-12">
                         <label class="form-label">

@@ -217,16 +217,15 @@ Route::middleware('auth')->group(function () {
         Route::delete('/favorit/{id}', [AdminBukuFavoritController::class, 'destroy'])->name('favorit.destroy');
 
         
-//kelola notifikasi
-Route::middleware(['auth', AdminOnly::class])->group(function () {
-    Route::get('/admin/notifications', [AdminNotificationController::class, 'index'])
-        ->name('notifications.index');
+//kelola
+Route::get('/notifications', [AdminNotificationController::class, 'index'])
+    ->name('notifications.index');
 
-    Route::post('/admin/notifications/{id}/read', [AdminNotificationController::class, 'markAsRead'])
-        ->name('notifications.read');
+Route::post('/notifications/{id}/read', [AdminNotificationController::class, 'markAsRead'])
+    ->name('notifications.read');
 
-    Route::delete('/admin/notifications/{id}', [AdminNotificationController::class, 'destroy'])
-        ->name('notifications.destroy');
-        });
+Route::delete('/notifications/{id}', [AdminNotificationController::class, 'destroy'])
+    ->name('notifications.destroy');
+
     });
 });

@@ -60,6 +60,11 @@
                                         <input type="number" class="form-control" id="year" name="year" value="{{ $book['year'] }}" required>
                                     </div>
                                     <div class="mb-3">
+                                        <label for="description" class="form-label">Description</label>
+                                        <textarea class="form-control" id="description" name="description" rows="3" required>{{ $book['description'] }}</textarea>
+                                        <small class="text-muted">Ringkasan singkat tentang buku</small>
+                                    </div>
+                                    <div class="mb-3">
                                         <label for="content" class="form-label">Content</label>
                                         <textarea class="form-control" id="content" name="content" rows="3" required>{{ $book['content'] }}</textarea>
                                     </div>
