@@ -11,6 +11,13 @@ use Illuminate\Support\Facades\Auth;
 
 class ForumController extends Controller
 {
+    public function __construct()
+{
+    // Semua method kecuali index & detail harus login
+    $this->middleware('auth')->except(['index', 'detail']);
+}
+
+
     public function index(Request $r)
 {
     $genres = Genre::all();
@@ -47,26 +54,36 @@ class ForumController extends Controller
 
 
     public function store(Request $r)
-    {
-        $r->validate([
-            'genre_id' => 'required',
-            'judul' => 'required',
-            'isi' => 'required',
-            'gambar' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-            'file' => 'nullable|mimes:pdf,doc,docx|max:5120'
-        ]);
+{
+    $r->validate([
+        'genre_id' => 'required',
+        'judul' => 'required',
+        'isi' => 'required',
+        'gambar' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+        'file' => 'nullable|mimes:pdf,doc,docx|max:5120'
+    ]);
 
-        $data = $r->only(['genre_id', 'judul', 'isi']);
-        $data['user_id'] = Auth::id();
+    $data = $r->only(['genre_id', 'judul', 'isi']);
+    $data['user_id'] = Auth::id();
 
-        $data['gambar'] = $this->uploadFile($r, 'gambar');
-        $data['file'] = $this->uploadFile($r, 'file');
+    $data['gambar'] = $this->uploadFile($r, 'gambar');
+    $data['file'] = $this->uploadFile($r, 'file');
 
-        Topic::create($data);
+    // 🔥 SIMPAN KE VARIABEL
+    $topic = Topic::create($data);
 
-        return redirect()->route('forum.index', ['genre_id' => $r->genre_id])
-            ->with('success', 'Topik berhasil dibuat!');
-    }
+    // 🔔 BUAT NOTIFIKASI
+    \App\Models\Notification::create([
+    'user_id' => Auth::id(),
+    'title'   => 'Forum',
+    'message' => 'Topik "' . $topic->judul . '" berhasil dibuat',
+    'url'     => route('forum.detail', $topic->id)
+]);
+
+    return redirect()->route('forum.index', ['genre_id' => $r->genre_id])
+        ->with('success', 'Topik berhasil dibuat!');
+}
+
 
     public function comment(Request $r)
     {

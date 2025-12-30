@@ -71,7 +71,6 @@ class RewardController extends Controller
 
         PointHistory::create([
             'user_id' => $user->id,
-            'book_id' => $book->id,
             'points' => 5
         ]);
 
