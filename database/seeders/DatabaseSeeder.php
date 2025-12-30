@@ -10,6 +10,20 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
+        // ADMIN USER
+        User::updateOrCreate(
+            ['username' => 'admin'],
+            [
+                'nama_depan' => 'Admin',
+                'nama_belakang' => 'Safae',
+                'email' => 'admin@safae.com',
+                'telepon' => '08123456789',
+                'password' => Hash::make('admin123'),
+                'role' => 'admin',
+            ]
+        );
+
+        // REGULAR USERS
         User::updateOrCreate(
             ['username' => 'adzraaditama'],
             [
@@ -18,6 +32,7 @@ class DatabaseSeeder extends Seeder
                 'email' => 'adzra@mail.com',
                 'telepon' => '08123456789',
                 'password' => Hash::make('1234'),
+                'role' => 'user',
             ]
         );
 
@@ -29,6 +44,7 @@ class DatabaseSeeder extends Seeder
                 'email' => 'sharone@mail.com',
                 'telepon' => '08123450000',
                 'password' => Hash::make('12345'),
+                'role' => 'user',
             ]
         );
 
@@ -40,6 +56,7 @@ class DatabaseSeeder extends Seeder
                 'email' => 'feby@mail.com',
                 'telepon' => '08123459999',
                 'password' => Hash::make('123456'),
+                'role' => 'user',
             ]
         );
 

@@ -10,7 +10,9 @@
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         transition: transform 0.3s;
     }
-    .stats-card:hover { transform: translateY(-5px); }
+    .stats-card:hover {
+        transform: translateY(-5px);
+    }
     .stats-card.primary {
         background: linear-gradient(45deg, #4e73df, #224abe);
         color: white;
@@ -25,26 +27,32 @@
 @section('content')
 <main class="col-lg-10 col-md-9 ms-sm-auto px-4 py-4">
 
-    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-        <h1 class="h2">Book Management</h1>
+    {{-- HEADER --}}
+    <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2">
+        <h1 class="h3 fw-bold">Book Management</h1>
     </div>
 
-    {{-- STAT --}}
+    {{-- ALERT --}}
+    @if(session('success'))
+        <div class="alert alert-success">
+            {{ session('success') }}
+        </div>
+    @endif
+
+    {{-- STATS --}}
     <div class="row mb-4">
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card stats-card primary h-100 py-2">
-                <div class="card-body">
-                    <div class="text-uppercase mb-1 small fw-bold">Total Books</div>
-                    <div class="stats-value">{{ $books->count() }}</div>
-                </div>
+        <div class="col-md-4">
+            <div class="card stats-card primary p-3">
+                <div class="stats-value">{{ $books->count() }}</div>
+                <div class="text-uppercase small">Total Buku</div>
             </div>
         </div>
     </div>
 
     {{-- TABLE --}}
-    <div class="card shadow mb-4">
-        <div class="card-header py-3 bg-white">
-            <h6 class="m-0 fw-bold text-primary">Daftar Buku</h6>
+    <div class="card shadow-sm">
+        <div class="card-header bg-white">
+            <h6 class="fw-bold text-primary mb-0">Daftar Buku</h6>
         </div>
 
         <div class="card-body">
@@ -57,29 +65,29 @@
                             <th>Penulis</th>
                             <th>Genre</th>
                             <th>Status</th>
-                            <th width="15%" class="text-center">Aksi</th>
+                            <th width="20%" class="text-center">Aksi</th>
                         </tr>
                     </thead>
 
                     <tbody>
-                    @forelse($books as $book)
+                    @forelse ($books as $book)
                         <tr>
                             <td>{{ $loop->iteration }}</td>
 
-                            {{-- JUDUL + COVER (BALIK LAGI) --}}
+                            {{-- COVER + JUDUL --}}
                             <td>
                                 <div class="d-flex align-items-center">
                                     @if($book->image_path)
                                         <img src="{{ asset($book->image_path) }}"
-                                             class="rounded me-2"
-                                             style="width:40px;height:60px;object-fit:cover;">
+                                             style="width:40px;height:60px;object-fit:cover"
+                                             class="rounded me-2">
                                     @else
                                         <div class="bg-light rounded me-2 d-flex align-items-center justify-content-center"
-                                             style="width:40px;height:60px;">
+                                             style="width:40px;height:60px">
                                             <i class="fas fa-book text-muted"></i>
                                         </div>
                                     @endif
-                                    <span class="fw-bold">{{ $book->title }}</span>
+                                    <strong>{{ $book->title }}</strong>
                                 </div>
                             </td>
 
@@ -90,10 +98,10 @@
                             </td>
 
                             <td>
-                                @if ($book->status === 'approved')
-                                    <span class="badge bg-success">Disetujui</span>
-                                @elseif ($book->status === 'rejected')
-                                    <span class="badge bg-danger">Ditolak</span>
+                                @if($book->status === 'approved')
+                                    <span class="badge bg-success">Approved</span>
+                                @elseif($book->status === 'rejected')
+                                    <span class="badge bg-danger">Rejected</span>
                                 @else
                                     <span class="badge bg-warning text-dark">Pending</span>
                                 @endif
@@ -103,14 +111,6 @@
                             <td class="text-center">
                                 <div class="d-flex justify-content-center gap-1">
 
-                                    {{-- LIHAT DETAIL (FIX, NO 404) --}}
-                                    <a href="{{ route('book.show', $book->id) }}"
-                                       class="btn btn-sm btn-info text-white"
-                                       title="Lihat Detail">
-                                        <i class="fas fa-eye"></i>
-                                    </a>
-
-                                    {{-- JIKA PENDING --}}
                                     @if($book->status === 'pending')
 
                                         {{-- APPROVE --}}
@@ -135,7 +135,10 @@
                                             </button>
                                         </form>
 
+                                    @else
+                                        <span class="text-muted small">Sudah diproses</span>
                                     @endif
+
                                 </div>
                             </td>
                         </tr>
@@ -152,5 +155,6 @@
             </div>
         </div>
     </div>
+
 </main>
 @endsection

@@ -51,6 +51,12 @@
                     </div>
 
                     <div class="mb-3">
+                        <label class="form-label">Deskripsi Singkat</label>
+                        <textarea name="description" class="form-control" rows="3" required placeholder="Tulis ringkasan singkat tentang buku..."></textarea>
+                        <small class="text-muted">Deskripsi ini akan muncul sebagai ringkasan buku</small>
+                    </div>
+
+                    <div class="mb-3">
                         <label class="form-label">Cover Buku</label>
                         <input type="file" name="image" class="form-control" accept="image/*">
                     </div>

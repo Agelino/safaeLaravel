@@ -8,38 +8,38 @@ use Illuminate\Support\Facades\Storage;
 
 class BookSubmissionController extends Controller
 {
-    /**
-     * 1. HALAMAN TULIS BUKU (Untuk Penulis)
-     */
-    public function create()
+    private $opsi_genre = [
+        'Romance', 'Fantasi', 'Misteri', 'Thriller', 'Sci-Fi', 
+        'Horor', 'Petualangan', 'Komedi', 'Drama', 'Sejarah'
+    ];
+
+    public function halamanTulis()
     {
-        return view('user.tulis-buku');
+        return view('user.tulis-buku', [
+            'opsi_genre' => $this->opsi_genre
+        ]);
     }
 
-    /**
-     * 2. PROSES SIMPAN BUKU (Status: Pending)
-     */
-    public function store(Request $request)
+    public function simpanBuku(Request $request)
     {
-        $validated = $request->validate([
+        $data_valid = $request->validate([
             'title' => 'required|string|max:255',
             'author' => 'required|string|max:255',
             'genre' => 'required|string',
             'year' => 'required|integer',
+            'description' => 'required|string',
             'content' => 'required|string',
             'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
-        // Upload Gambar
         if ($request->hasFile('image')) {
-            $path = $request->file('image')->store('covers', 'public');
-            $validated['image_path'] = '/storage/' . $path;
+            $jalur_gambar = $request->file('image')->store('covers', 'public');
+            $data_valid['image_path'] = '/storage/' . $jalur_gambar;
         }
 
-        // SET STATUS OTOMATIS 'PENDING'
-        $validated['status'] = 'pending'; 
+        $data_valid['status'] = 'pending';
         
-        Book::create($validated);
+        Book::create($data_valid);
 
         return redirect('/tulis-buku')->with('success', 'Buku berhasil dikirim! Mohon tunggu validasi dari Admin.');
     }
@@ -49,24 +49,29 @@ class BookSubmissionController extends Controller
     /**
      * 4. AKSI APPROVE (Setujui)
      */
+    public function indexAdmin()
+    {
+        $semua_buku = Book::where('status', 'pending')
+                        ->orderBy('created_at', 'desc')
+                        ->get();
+
+        return view('admin.validasi.index', [
+            'pending_books' => $semua_buku
+        ]);
+    }
+
     public function approve($id)
     {
-        $book = Book::findOrFail($id);
-        $book->update(['status' => 'approved']);
+        $buku = Book::findOrFail($id);
+        $buku->update(['status' => 'approved']);
 
         return redirect()->back()->with('success', 'Buku berhasil disetujui dan tayang!');
     }
 
-    /**
-     * 5. AKSI REJECT (Tolak)
-     */
     public function reject($id)
     {
-        $book = Book::findOrFail($id);
-        
-
-
-        $book->update(['status' => 'rejected']);
+        $buku = Book::findOrFail($id);
+        $buku->update(['status' => 'rejected']);
 
         return redirect()->back()->with('error', 'Buku telah ditolak.');
     }

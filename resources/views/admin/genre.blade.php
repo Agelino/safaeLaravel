@@ -81,13 +81,13 @@
                             </div>
                             <div class="card-footer action-buttons">
 
-                                {{-- FIX UTAMA: EDIT PAKAI ROUTE ADMIN --}}
-                                <button class="btn btn-info btn-sm" data-bs-toggle="modal" 
-                                        data-bs-target="#viewModal{{ $book['id'] }}">
+                                {{-- VIEW BUTTON --}}
+                                <a href="{{ route('admin.buku.lihat', $book['id']) }}" 
+                                   class="btn btn-info btn-sm">
                                     <i class="fas fa-eye"></i>
-                                </button>
+                                </a>
 
-                                <a href="{{ route('admin.books.edit', $book['id']) }}" 
+                                <a href="{{ route('admin.buku.edit', $book['id']) }}" 
                                    class="btn btn-primary btn-sm">
                                     <i class="fas fa-edit"></i>
                                 </a>
@@ -147,13 +147,13 @@
                                     </div>
                                     <div class="card-footer action-buttons">
                                         
-                                        <button class="btn btn-info btn-sm" data-bs-toggle="modal" 
-                                                data-bs-target="#viewModal{{ $book['id'] }}">
+                                        <a href="{{ route('admin.show-book', $book['id']) }}" 
+                                           class="btn btn-info btn-sm">
                                             <i class="fas fa-eye"></i>
-                                        </button>
+                                        </a>
 
-                                        {{-- FIX UTAMA --}}
-                                        <a href="{{ route('admin.books.edit', $book['id']) }}" 
+                                        {{-- EDIT BUTTON --}}
+                                        <a href="{{ route('admin.buku.edit', $book['id']) }}" 
                                            class="btn btn-primary btn-sm">
                                             <i class="fas fa-edit"></i>
                                         </a>
