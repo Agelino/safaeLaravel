@@ -31,14 +31,8 @@
                         <h4>Add New Book</h4>
                     </div>
                     <div class="card-body">
-<<<<<<< HEAD
-                        {{-- Ubah form ke route Laravel --}}
-                        <form method="POST" action="{{ route('admin.books.store') }}" enctype="multipart/form-data">
+                        <form method="POST" action="{{ route('admin.buku.simpan') }}" enctype="multipart/form-data">
                             @csrf {{-- Token Keamanan Laravel --}}
-=======
-                        <form method="POST" action="{{ url('/books/store') }}" enctype="multipart/form-data">
-                            @csrf 
->>>>>>> 26c77087437da507f3f2334fefb60743c2dd88db
 
                             <div class="row">
                                 <div class="col-md-6">

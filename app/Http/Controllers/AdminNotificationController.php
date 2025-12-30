@@ -11,7 +11,7 @@ class AdminNotificationController extends Controller
     public function index()
     {
         $notifications = AdminNotification::latest()->get(); 
-        return view('notifications.index', compact('notifications'));
+        return view('admin.notifications.index', compact('notifications'));
     }
 
     public function markAsRead($id)

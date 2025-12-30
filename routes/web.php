@@ -228,4 +228,8 @@ Route::delete('/notifications/{id}', [AdminNotificationController::class, 'destr
     ->name('notifications.destroy');
 
     });
+<<<<<<< HEAD
 });
+=======
+});
+>>>>>>> bbda879896ab266e2d7f070e923ef5d8c410c420
