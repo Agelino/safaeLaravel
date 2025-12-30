@@ -92,7 +92,7 @@
             </a>
         </li>
 
-        {{--Kelola pembayaran) --}}
+        {{--Kelola pembayaran --}}
         <li class="{{ request()->is('admin/pembayaran*') ? 'active' : '' }}">
             <a href="{{ route('admin.pembayaran.index') }}">
                 <i class="fa-solid fa-star"></i> Kelola Pembayaran
@@ -105,6 +105,14 @@
                 <i class="fas fa-fw fa-pen"></i> Tulis Buku
             </a>
         </li>
+
+        {{-- kelola notifikasi --}}
+        <li class="{{ request()->is('admin/notifications*') ? 'active' : '' }}">
+    <a href="{{ route('admin.notifications.index') }}">
+    <i class="fa-solid fa-bell"></i> Kelola Notifikasi
+</a>
+
+</li>
 
     </ul>
 </nav>

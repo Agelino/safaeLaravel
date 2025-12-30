@@ -28,6 +28,7 @@ use App\Http\Controllers\KelolaRiwayatBacaController;
 use App\Http\Controllers\UserDashboardController;
 use App\Http\Controllers\AdminBukuFavoritController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\AdminNotificationController;
 use App\Http\Middleware\AdminOnly;
 
 
@@ -215,7 +216,23 @@ Route::middleware('auth')->group(function () {
         Route::get('/favorit/{id}', [AdminBukuFavoritController::class, 'show'])->name('favorit.show');
         Route::delete('/favorit/{id}', [AdminBukuFavoritController::class, 'destroy'])->name('favorit.destroy');
 
-            
+        //kelola notifikasi
+        
+
+Route::middleware(['auth', 'admin'])->group(function () {
+    Route::get('/admin/notifications', [AdminNotificationController::class, 'index'])
+        ->name('notifications.index');
+
+    Route::post('/admin/notifications/{id}/read', [AdminNotificationController::class, 'markAsRead'])
+        ->name('notifications.read');
+
+    Route::delete('/admin/notifications/{id}', [AdminNotificationController::class, 'destroy'])
+        ->name('notifications.destroy');
+});
+
+
+
+
             
 
 
