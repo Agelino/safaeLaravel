@@ -109,7 +109,7 @@ class KelolaRiwayatBacaController extends Controller
             'last_read_at' => $request->last_read_at,
         ]);
 
-            return redirect()->route('kelolariwayat.index')
+            return redirect()->route('admin.kelolariwayat.index')
             ->with('success', 'Riwayat baca berhasil diperbarui!');
     }
 
@@ -125,7 +125,7 @@ class KelolaRiwayatBacaController extends Controller
 
         $history->delete();
 
-            return redirect()->route('kelolariwayat.index')
+            return redirect()->route('admin.kelolariwayat.index')
             ->with('success', 'Riwayat baca berhasil dihapus!');
     }
 }

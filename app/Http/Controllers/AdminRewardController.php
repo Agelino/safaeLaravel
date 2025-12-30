@@ -3,62 +3,70 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use App\Models\Book;
 use App\Models\PointHistory;
 use Illuminate\Http\Request;
 
 class AdminRewardController extends Controller
 {
-  
+    /**
+     * Halaman kelola reward (admin)
+     */
     public function index()
     {
-        $users = User::where('role', 'user')->orderBy('points', 'desc')->get();
+        $users = User::where('role', 'user')
+            ->orderBy('points', 'desc')
+            ->get();
 
-        return view('admin.rewards.index', ['users' => $users]);
+        return view('admin.rewards.index', compact('users'));
     }
 
-    // tambah point
-
+    /**
+     * Tambah poin user
+     */
     public function add(Request $request, User $user)
     {
-        $request->validate(['points' => 'required|integer|min:1']);
+        $request->validate([
+            'points' => 'required|integer|min:1',
+        ]);
 
-        $user->points = $user->points + $request->points;
+        // tambah poin
+        $user->points += $request->points;
         $user->save();
-        
-        PointHistory::Create(
-    [
-        'user_id' => $user->id,
-        'points' => $request->points,
-    ]
-);
 
+        // simpan riwayat poin (+)
+        PointHistory::create([
+            'user_id' => $user->id,
+            'points'  => $request->points,
+        ]);
 
-        return redirect('/rewards')->with('success', 'Poin berhasil ditambahkan');
+        // 🔥 WAJIB ke route admin.rewards.index
+        return redirect()->route('admin.rewards.index')
+            ->with('success', 'Poin berhasil ditambahkan');
     }
 
-   // kurangi point
+    /**
+     * Kurangi poin user
+     */
     public function remove(Request $request, User $user)
     {
-        $request->validate(['points' => 'required|integer|min:1']);
+        $request->validate([
+            'points' => 'required|integer|min:1',
+        ]);
 
-       
-        $user->points = $user->points - $request->points;
-
+        // kurangi poin (tidak boleh minus)
+        $user->points -= $request->points;
         if ($user->points < 0) {
             $user->points = 0;
         }
-
         $user->save();
 
-        PointHistory::Create(
-    [
-        'user_id' => $user->id,
-        'points' => $request->points,
-    ]
-);
+        // simpan riwayat poin (-)
+        PointHistory::create([
+            'user_id' => $user->id,
+            'points'  => -$request->points,
+        ]);
 
-
-        return back()->with('success', 'Poin berhasil dikurangi');
+        return redirect()->route('admin.rewards.index')
+            ->with('success', 'Poin berhasil dikurangi');
     }
 }

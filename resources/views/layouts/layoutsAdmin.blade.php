@@ -99,13 +99,6 @@
             </a>
         </li>
 
-        {{-- TULIS BUKU --}}
-        <li class="{{ request()->is('tulis-buku') ? 'active' : '' }}">
-            <a href="{{ url('/tulis-buku') }}">
-                <i class="fas fa-fw fa-pen"></i> Tulis Buku
-            </a>
-        </li>
-
     </ul>
 </nav>
 
