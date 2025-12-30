@@ -216,10 +216,9 @@ Route::middleware('auth')->group(function () {
         Route::get('/favorit/{id}', [AdminBukuFavoritController::class, 'show'])->name('favorit.show');
         Route::delete('/favorit/{id}', [AdminBukuFavoritController::class, 'destroy'])->name('favorit.destroy');
 
-        //kelola notifikasi
         
-
-Route::middleware(['auth', 'admin'])->group(function () {
+//kelola notifikasi
+Route::middleware(['auth', AdminOnly::class])->group(function () {
     Route::get('/admin/notifications', [AdminNotificationController::class, 'index'])
         ->name('notifications.index');
 
@@ -228,13 +227,6 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
     Route::delete('/admin/notifications/{id}', [AdminNotificationController::class, 'destroy'])
         ->name('notifications.destroy');
-});
-
-
-
-
-            
-
-
         });
+    });
 });
