@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\Auth;
 class AdminOnly
 {
     public function handle($request, Closure $next)
-<<<<<<< HEAD
     {
         if (!Auth::check()) {
             return redirect('/login')->with('error', 'Silakan login terlebih dahulu');
@@ -19,11 +18,9 @@ class AdminOnly
         }
 
         return $next($request);
-=======
 {
     if (!Auth::check()) {
         abort(403);
->>>>>>> 26c77087437da507f3f2334fefb60743c2dd88db
     }
 
     if (Auth::user()->role !== 'admin') {
@@ -33,4 +30,5 @@ class AdminOnly
     return $next($request);
 }
 
+}
 }
