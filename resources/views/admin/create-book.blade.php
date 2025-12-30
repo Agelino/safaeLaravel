@@ -15,7 +15,6 @@
             <div class="container mt-5">
                 <h2>Add New Book</h2>
                 
-                {{-- Tampilkan Error Validasi Laravel --}}
                 @if ($errors->any())
                     <div class="alert alert-danger">
                         <strong>Whoops! Ada beberapa masalah:</strong>
@@ -32,9 +31,8 @@
                         <h4>Add New Book</h4>
                     </div>
                     <div class="card-body">
-                        {{-- Ubah form ke route Laravel --}}
                         <form method="POST" action="{{ url('/books/store') }}" enctype="multipart/form-data">
-                            @csrf {{-- Token Keamanan Laravel --}}
+                            @csrf 
 
                             <div class="row">
                                 <div class="col-md-6">
@@ -46,11 +44,10 @@
                                         <label for="author" class="form-label">Author</label>
                                         <input type="text" class="form-control" id="author" name="author" value="{{ old('author') }}" required>
                                     </div>
-                                    <div class="mb-3"> {{-- Perbaikan HTML (div c lass) --}}
+                                    <div class="mb-3"> 
                                         <label for="genre" class="form-label">Genre</label>
                                         <select class="form-select" id="genre" name="genre" required>
                                             <option value="" disabled selected>Select a genre</option>
-                                            {{-- Loop dari $genre_options di Controller --}}
                                             @foreach($genre_options as $option)
                                                 <option value="{{ $option }}" {{ old('genre') == $option ? 'selected' : '' }}>{{ $option }}</option>
                                             @endforeach
@@ -86,7 +83,6 @@
 @endsection
 
 @push('scripts')
-  {{-- Script JS Anda --}}
   <script>
     document.querySelector('.sidebar-toggle').addEventListener('click', function() {
       document.querySelector('.sidebar').classList.toggle('active');
