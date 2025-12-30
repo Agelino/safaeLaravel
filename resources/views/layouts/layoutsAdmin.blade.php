@@ -52,19 +52,30 @@
         </li>
 
         
-        {{-- KELOLA KOMENTAR --}}
-<li class="{{ request()->is('admin/komentar*') ? 'active' : '' }}">
-    <a href="{{ route('admin.komentar.index') }}">
-        <i class="fa-solid fa-comments"></i> Kelola Komentar
-    </a>
-</li>
+                {{-- KELOLA KOMENTAR --}}
+        <li class="{{ request()->is('admin/komentar*') ? 'active' : '' }}">
+            <a href="{{ route('admin.komentar.index') }}">
+                <i class="fa-solid fa-comments"></i> Kelola Komentar
+            </a>
+        </li>
 
-{{-- kelola reward --}}
-<li class="{{ request()->is('admin/reward') ? 'active' : '' }}">
-    <a href="{{ route('admin.rewards.index') }}">
-        <i class="fa-solid fa-gift"></i> Kelola Reward
-    </a>
-</li>
+        {{-- kelola reward --}}
+        <li class="{{ request()->is('admin/reward') ? 'active' : '' }}">
+            <a href="{{ route('admin.rewards.index') }}">
+                <i class="fa-solid fa-gift"></i> Kelola Reward
+            </a>
+        </li>
+
+
+        {{-- kelola buku fav --}}
+        <li class="nav-item">
+            <a href="{{ route('admin.favorit.index') }}"
+        class="nav-link {{ request()->routeIs('admin.favorit.*') ? 'active' : '' }}">
+            <i class="fas fa-heart"></i>
+            <span>Kelola Buku Favorit</span>
+        </a>
+        </li>
+
 
 
         {{-- RIWAYAT BACA --}}
@@ -81,7 +92,7 @@
             </a>
         </li>
 
-        {{--Kelola pembayaran) --}}
+        {{--Kelola pembayaran --}}
         <li class="{{ request()->is('admin/pembayaran*') ? 'active' : '' }}">
             <a href="{{ route('admin.pembayaran.index') }}">
                 <i class="fa-solid fa-star"></i> Kelola Pembayaran
@@ -94,6 +105,14 @@
                 <i class="fas fa-fw fa-pen"></i> Tulis Buku
             </a>
         </li>
+
+        {{-- kelola notifikasi --}}
+        <li class="{{ request()->is('admin/notifications*') ? 'active' : '' }}">
+    <a href="{{ route('admin.notifications.index') }}">
+    <i class="fa-solid fa-bell"></i> Kelola Notifikasi
+</a>
+
+</li>
 
     </ul>
 </nav>

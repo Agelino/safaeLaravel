@@ -45,15 +45,14 @@
             <div class="card h-100">
 
                 {{-- COVER BUKU --}}
-                @if ($book->image_url)
-                    <img src="{{ $book->image_url }}"
-                         class="card-img-top"
-                         alt="{{ $book->title }}">
-                @else
-                    <img src="https://via.placeholder.com/300x200?text=No+Image"
-                         class="card-img-top"
-                         alt="No Image">
-                @endif
+                @if($book->image_path)
+            <img src="{{ $book->image_path }}"
+                class="card-img-top"
+                alt="{{ $book->title }}">
+            @else
+            <img src="https://via.placeholder.com/300x200?text=No+Image"
+                class="card-img-top">
+            @endif
 
                 <div class="card-body">
                     <h6 class="card-title">{{ $book->title }}</h6>

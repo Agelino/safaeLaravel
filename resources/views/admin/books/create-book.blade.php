@@ -32,9 +32,15 @@
                         <h4>Add New Book</h4>
                     </div>
                     <div class="card-body">
+<<<<<<< HEAD
                         
                         <form method="POST" action="{{ route('admin.buku.simpan') }}" enctype="multipart/form-data">
                             @csrf {{-- Token Keamanan Laravel --}}
+=======
+                        {{-- Ubah form ke route Laravel --}}
+                        <form method="POST" action="{{ route('admin.books.store') }}" enctype="multipart/form-data">
+                        @csrf
+>>>>>>> 26c77087437da507f3f2334fefb60743c2dd88db
 
                             <div class="row">
                                 <div class="col-md-6">
@@ -82,7 +88,7 @@
                             </div>
                             
                             <button type="submit" name="add" class="btn btn-primary">Add Book</button>
-                            <a href="{{ url('/genre') }}" class="btn btn-secondary">Cancel</a>
+                             <a href="{{ route('admin.genre.index') }}" class="btn btn-secondary">Cancel</a>
                         </form>
                     </div>
                 </div>

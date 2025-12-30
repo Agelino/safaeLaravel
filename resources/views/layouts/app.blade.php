@@ -161,7 +161,46 @@
                placeholder="Search buku atau penulis">
     </form>
 
+    
     {{-- RIGHT --}}
+<div class="d-flex align-items-center">
+
+    {{-- 🔔 NOTIFIKASI --}}
+    @php
+    $notifCount = \App\Models\Notification::where('user_id', Auth::id())
+        ->where('is_read', 0)
+        ->count();
+
+    $notifications = \App\Models\Notification::where('user_id', Auth::id())
+        ->orderBy('created_at', 'desc')
+        ->take(5)
+        ->get();
+    @endphp
+
+    <div class="dropdown me-3">
+        <a href="#" class="text-white position-relative" data-bs-toggle="dropdown">
+            <i class="fa fa-bell fs-5"></i>
+
+            @if($notifCount > 0)
+            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                {{ $notifCount }}
+            </span>
+            @endif
+        </a>
+
+        <ul class="dropdown-menu dropdown-menu-end shadow" style="width:300px;">
+            @forelse($notifications as $notif)
+                <li class="dropdown-item small {{ $notif->is_read ? '' : 'fw-semibold' }}">
+                    {{ $notif->message }}
+                </li>
+            @empty
+                <li class="dropdown-item text-muted small">
+                    Tidak ada notifikasi
+                </li>
+            @endforelse
+        </ul>
+    </div>
+    
     <div class="dropdown">
         <a href="#"
            class="d-flex align-items-center text-decoration-none dropdown-toggle text-white"
@@ -169,11 +208,11 @@
 
             {{-- FOTO PROFIL HEADER --}}
             @if(Auth::user()->foto_profil)
-                <img src="{{ asset(Auth::user()->foto_profil) }}"
-                     class="rounded-circle me-2"
-                     width="32"
-                     height="32"
-                     style="object-fit: cover;">
+            <img src="{{ asset('storage/' . Auth::user()->foto_profil) }}"
+            class="rounded-circle me-2"
+            width="32"
+            height="32"
+            style="object-fit: cover;">
             @else
                 <img src="https://ui-avatars.com/api/?name={{ Auth::user()->username }}&background=ffffff&color=0d6efd"
                      class="rounded-circle me-2"
@@ -212,11 +251,11 @@
 <!-- ================= SIDEBAR ================= -->
 <aside class="sidebar">
     <h4>Safae</h4>
-
-    <a href="{{ route('dashboard') }}" class="{{ request()->is('dashboard') ? 'active' : '' }}">
-        <i class="fa fa-tachometer-alt me-2"></i> Dashboard
-    </a>
-
+            <a href="{{ route('user.dashboard') }}"
+        class="{{ request()->is('user/dashboard') ? 'active' : '' }}">
+            <i class="fa fa-tachometer-alt me-2"></i> Dashboard
+        </a>
+        
     <a href="{{ url('/tulis-buku') }}" class="{{ request()->is('tulis-buku*') ? 'active' : '' }}">
         <i class="fa fa-pen me-2"></i> Tulis Buku
     </a>

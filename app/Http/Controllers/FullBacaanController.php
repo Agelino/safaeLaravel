@@ -2,26 +2,24 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Auth;
 use App\Models\Book;
 use App\Models\ReadingHistory;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class FullBacaanController extends Controller
 {
-    // ==========================================================
-    // HALAMAN BACA BUKU
-    // ==========================================================
+   
     public function show($id, $page = 1)
     {
+       
         $book = Book::findOrFail($id);
 
-        // Simpan / update riwayat baca
-        if (Auth::check()) {
-            ReadingHistory::updateOrCreate(
+        
+        if (Auth::check()) {ReadingHistory::updateOrCreate(
                 [
                     'user_id' => Auth::id(),
-                    'book_id' => $id,
+                    'book_id' => $book->id,
                 ],
                 [
                     'progress' => $page,
@@ -30,67 +28,79 @@ class FullBacaanController extends Controller
             );
         }
 
-        // Pecah teks full_text per baris
-        $teks = str_replace(["\r\n", "\r"], "\n", $book->full_text);
-        $halaman = explode("\n", $teks);
-        $halaman = array_filter($halaman, fn($line) => trim($line) !== '');
-        $halaman = array_values($halaman);
+        $text = $book->full_text;
+        $text = str_replace("\r\n", "\n", $text);
+        $text = str_replace("\r", "\n", $text);
+        $halaman = explode("\n", $text);
+        $hasil = [];
+        foreach ($halaman as $baris) {
+            if (trim($baris) !== '') {
+                $hasil[] = $baris;
+            }
+        }
 
-        $totalHalaman = count($halaman);
+        $totalHalaman = count($hasil);
 
-        if ($totalHalaman === 0) {
+        if ($totalHalaman == 0) {
             return view('books.fullbacaan', [
                 'buku' => $book,
-                'halaman' => "Belum ada konten.",
+                'halaman' => 'Belum ada konten.',
                 'page' => 1,
                 'totalHalaman' => 1
             ]);
         }
 
-        $page = max(1, min($page, $totalHalaman));
+      
+        if ($page < 1) {
+            $page = 1;
+        }
+
+        if ($page > $totalHalaman) {
+            $page = $totalHalaman;
+        }
 
         return view('books.fullbacaan', [
             'buku' => $book,
-            'halaman' => $halaman[$page - 1],
+            'halaman' => $hasil[$page - 1],
             'page' => $page,
             'totalHalaman' => $totalHalaman
         ]);
     }
 
-    // ==========================================================
-    // HALAMAN ULASAN
-    // ==========================================================
+  
     public function ulasan($id)
     {
-        $book = Book::with(['reviews.user'])->findOrFail($id);
+        $book = Book::with('reviews.user')->findOrFail($id);
 
         $reviews = $book->reviews;
         $totalReview = $reviews->count();
-        $avgRating = $totalReview > 0 ? round($reviews->avg('rating'), 1) : 0;
+
+        if ($totalReview > 0) {
+            $avgRating = round($reviews->avg('rating'), 1);
+        } else {
+            $avgRating = 0;
+        }
 
         return view('review.index', [
-            'book'        => $book,
-            'reviews'     => $reviews,
+            'book' => $book,
+            'reviews' => $reviews,
             'totalReview' => $totalReview,
-            'avgRating'   => $avgRating
+            'avgRating' => $avgRating
         ]);
     }
 
-    // ==========================================================
-    // SIMPAN ULASAN
-    // ==========================================================
     public function storeReview(Request $request, $id)
     {
         $request->validate([
-            'rating'   => 'required|integer|min:1|max:5',
+            'rating' => 'required|integer|min:1|max:5',
             'komentar' => 'required|string'
         ]);
 
         $book = Book::findOrFail($id);
 
         $book->reviews()->create([
-            'user_id'  => Auth::id(),
-            'rating'   => $request->rating,
+            'user_id' => Auth::id(),
+            'rating' => $request->rating,
             'komentar' => $request->komentar
         ]);
 
@@ -98,4 +108,3 @@ class FullBacaanController extends Controller
             ->with('success', 'Ulasan berhasil ditambahkan!');
     }
 }
-

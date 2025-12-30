@@ -8,6 +8,7 @@ use App\Models\FavoriteBook;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use App\Models\BukuFavorit;
 
 
 class User extends Authenticatable
@@ -22,7 +23,11 @@ class User extends Authenticatable
         'telepon',
         'password',
         'points',
+<<<<<<< HEAD
         'role'
+=======
+        'role',
+>>>>>>> 26c77087437da507f3f2334fefb60743c2dd88db
     ];
 
     protected $hidden = [
@@ -55,10 +60,12 @@ class User extends Authenticatable
     }
 
     // relasi ke favorite_books
+    
     public function favoriteBooks()
     {
-        return $this->hasMany(FavoriteBook::class);
+        return $this->hasMany(favoriteBook::class);
     }
+
 
     // helper nama lengkap
     public function getNamaLengkapAttribute()

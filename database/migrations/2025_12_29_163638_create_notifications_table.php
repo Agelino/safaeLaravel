@@ -11,14 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-    Schema::create('pembayarans', function (Blueprint $table) {
+        Schema::create('notifications', function (Blueprint $table) {
     $table->id();
     $table->foreignId('user_id')->constrained()->onDelete('cascade');
-    $table->integer('points');
-    $table->integer('price');
-    $table->string('metode');
+    $table->string('message');
+    $table->string('url')->nullable();
+    $table->string('title')->default('Notifikasi Baru');
+    $table->boolean('is_read')->default(false);
     $table->timestamps();
 });
+
+
     }
 
     /**
@@ -26,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('pembayarans');
+        Schema::dropIfExists('notifications');
     }
 };

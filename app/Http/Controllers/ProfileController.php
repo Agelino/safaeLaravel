@@ -8,80 +8,56 @@ use App\Models\User;
 
 class ProfileController extends Controller
 {
-    // =====================
-    // LIHAT PROFIL
-    // =====================
+    
     public function show()
     {
-        $user = Auth::user();
-
         return view('profile.show', [
-            'profile' => $user
-        ]);
+            'profile' => Auth::user()
+        ]); 
     }
 
-    // =====================
-    // FORM EDIT PROFIL
-    // =====================
     public function edit()
     {
-        $user = Auth::user();
-
         return view('profile.edit', [
-            'profile' => $user
+            'profile' => Auth::user()
         ]);
     }
 
-    // =====================
-    // UPDATE PROFIL
-    // =====================
     public function update(Request $request)
     {
-        $user = User::find(Auth::id());
+        $request->validate([
+            'username'    => 'required',
+            'social_media'=> 'nullable',
+            'bio'         => 'nullable',
+            'foto_profil' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+        ]);
+        //buat nyimpen path foto lama milik user yang sedang login dari database, supaya kalau user tidak meng-update foto profil, data foto lamanya tetap dipakai dan tidak ke-reset.
+        $fotoPath = Auth::user()->foto_profil;
 
-        if (!$user) {
-            return redirect('/profile');
+        // upload foto profil
+        if ($request->hasFile('foto_profil')) {
+
+            // hapus foto lama
+            if ($fotoPath && file_exists(public_path('storage/' . $fotoPath))) {
+                unlink(public_path('storage/' . $fotoPath));
+            }
+
+            $file = $request->file('foto_profil');
+            $name = time() . '.' . $file->getClientOriginalExtension();
+            $file->move(public_path('storage/foto_profil'), $name);
+
+            //ngeganti dengan foto baru yg dmn fotonya itu diambil dr folder foto_profil
+            $fotoPath = 'foto_profil/' . $name;
         }
 
-        $request->validate([
-            'username'      => 'required',
-            'social_media'  => 'nullable',
-            'bio'           => 'nullable',
-            'foto_profil'   => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+        User::where('id', Auth::id())->update([
+            'username'     => $request->username,
+            'social_media' => $request->social_media,
+            'bio'          => $request->bio,
+            'foto_profil'  => $fotoPath,
         ]);
 
-        $user->username     = $request->username;
-        $user->social_media = $request->social_media;
-        $user->bio          = $request->bio;
-
-        if ($request->hasFile('foto_profil')) {
-            $file = $request->file('foto_profil');
-            $name = time() . '_' . $file->getClientOriginalName();
-            $file->move(public_path('uploads/foto_profil'), $name);
-
-            $user->foto_profil = 'uploads/foto_profil/' . $name;
-        }
-
-        $user->save();
-
-        return redirect('/profile')
-            ->with('success', 'Profil berhasil diperbarui');
+        return redirect('/profile')->with('success', 'Profil berhasil diperbarui');
     }
 
-    // =====================
-    // HAPUS AKUN SENDIRI
-    // =====================
-    public function destroy()
-    {
-        $user = User::find(Auth::id());
-
-        Auth::logout();
-
-        if ($user) {
-            $user->delete();
-        }
-
-        return redirect('/')
-            ->with('success', 'Akun berhasil dihapus');
-    }
 }

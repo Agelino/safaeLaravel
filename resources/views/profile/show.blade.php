@@ -75,12 +75,13 @@
 
     <div class="profile-card">
 
-        {{-- FOTO PROFIL --}}
+        {{-- FOTO PROFIL (STORAGE LINK) --}}
         <div class="profile-avatar">
-            <img src="{{ $profile->foto_profil
-                ? asset($profile->foto_profil)
-                : 'https://ui-avatars.com/api/?name='.$profile->username.'&background=0d6efd&color=fff' }}"
-                 alt="Foto Profil">
+            <img
+                src="{{ $profile->foto_profil
+                    ? asset('storage/' . $profile->foto_profil)
+                    : 'https://ui-avatars.com/api/?name='.$profile->username.'&background=0d6efd&color=fff' }}"
+                alt="Foto Profil">
         </div>
 
         {{-- HEADER PROFIL --}}
@@ -119,16 +120,7 @@
             <a href="{{ route('profile.edit') }}" class="btn btn-primary btn-rounded">
                 <i class="bi bi-pencil-square"></i> Edit Profil
             </a>
-
-            <form action="{{ route('profile.delete') }}" method="POST"
-                  onsubmit="return confirm('Yakin ingin menghapus akun?')">
-                @csrf
-                <button class="btn btn-danger btn-rounded">
-                    <i class="bi bi-trash"></i> Hapus Akun
-                </button>
-            </form>
-
-            <a href="{{ route('profile') }}" class="btn btn-secondary btn-rounded">
+            <a href="{{ route('user.dashboard') }}" class="btn btn-secondary btn-rounded">
                 <i class="bi bi-arrow-left"></i> Kembali
             </a>
         </div>

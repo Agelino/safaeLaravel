@@ -9,15 +9,19 @@ use Illuminate\Support\Facades\File;
 
 class KomentarController extends Controller
 {
-   
+
     public function index($bookId, $page)
     {
-        $komentar = Komentar::where('book_id', $bookId)->where('page', $page)->latest()->get();
+        $komentar = Komentar::where('book_id', $bookId)->where('page', $page)->orderBy('created_at', 'desc')->get();
 
-        return view('books.komentar', compact('komentar', 'bookId', 'page'));
+        return view('books.komentar', [
+            'komentar' => $komentar,
+            'bookId' => $bookId,
+            'page' => $page
+        ]);
     }
 
-   
+  
     public function simpan(Request $r)
     {
         $r->validate([
@@ -35,8 +39,8 @@ class KomentarController extends Controller
             $file->move(public_path('uploads'), $namaFile);
         }
 
-        $user = Auth::user();
-        $username = $user->username ?? $user->name ?? 'Anonymous';
+       $user = Auth::user();
+    $username = $user->username ?? $user->name ?? 'Anonymous';
 
         Komentar::create([
             'user_id' => $user->id,
@@ -47,7 +51,11 @@ class KomentarController extends Controller
             'image_path' => $namaFile
         ]);
 
-        return back();
+       return redirect()->route('komentar.index', [
+        'book' => $r->book_id,
+        'page' => $r->page
+    ]);
+
     }
 
     
@@ -55,62 +63,77 @@ class KomentarController extends Controller
     {
         $komentar = Komentar::findOrFail($id);
 
-        if (Auth::id() !== $komentar->user_id) {
+        if (Auth::id() != $komentar->user_id) {
             abort(403);
         }
 
-        return view('books.edit_komentar', compact('komentar'));
+        return view('books.edit_komentar', ['komentar' => $komentar ]);
     }
 
    
     public function update(Request $r, $id)
-    {
-        $komentar = Komentar::findOrFail($id);
+{
+    $komentar = Komentar::findOrFail($id);
+    
+    if (Auth::id() != $komentar->user_id) {
+        abort(403, 'Kamu tidak berhak mengedit komentar ini');
+    }
+    $r->validate([
+        'komentar' => 'required',
+        'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048'
+    ]);
 
-        $r->validate([
-            'komentar' => 'required',
-            'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048'
-        ]);
+    $namaFile = $komentar->image_path;
 
-        $namaFile = $komentar->image_path;
+    if ($r->hasFile('image')) {
 
-        if ($r->hasFile('image')) {
-            if ($namaFile && File::exists(public_path('uploads/' . $namaFile))) {
-                File::delete(public_path('uploads/' . $namaFile));
+        if ($namaFile) {
+            $path = public_path('uploads/' . $namaFile);
+            if (File::exists($path)) {
+                File::delete($path);
             }
-
-            $file = $r->file('image');
-            $namaFile = time() . '_' . $file->getClientOriginalName();
-            $file->move(public_path('uploads'), $namaFile);
         }
 
-        $komentar->update([
-            'komentar' => $r->komentar,
-            'image_path' => $namaFile
-        ]);
-
-        return back();
+        $file = $r->file('image');
+        $namaFile = time() . '_' . $file->getClientOriginalName();
+        $file->move(public_path('uploads'), $namaFile);
     }
+
+    $komentar->update([
+        'komentar' => $r->komentar,
+        'image_path' => $namaFile
+    ]);
+
+    
+    return redirect()->route('komentar.index', [
+        $r->book_id,
+        $r->page
+    ]);
+}
+
 
     
     public function hapus($id)
-{
-    $komentar = Komentar::findOrFail($id);
+    {
+        $komentar = Komentar::findOrFail($id);
 
-    if (Auth::id() !== $komentar->user_id) {
-        abort(403, 'Kamu tidak berhak menghapus komentar ini');
-    }
-
-    if ($komentar->image_path) {
-        $path = public_path('uploads/' . $komentar->image_path);
-        if (File::exists($path)) {
-            File::delete($path);
+        if (Auth::id() != $komentar->user_id) {
+            abort(403, 'Kamu tidak berhak menghapus komentar ini');
         }
+
+        if ($komentar->image_path) {
+            $path = public_path('uploads/' . $komentar->image_path);
+            if (File::exists($path)) {
+                File::delete($path);
+            }
+        }
+
+        $komentar->delete();
+
+      return redirect()->route('komentar.index', [
+    'book' => $komentar->book_id,
+    'page' => $komentar->page
+]);
+
     }
-
-    $komentar->delete();
-
-    return back()->with('success', 'Komentar berhasil dihapus');
-}
-
 }

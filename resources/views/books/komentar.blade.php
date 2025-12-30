@@ -6,17 +6,14 @@
 
 <div class="komentar-container">
 
-    {{-- 🔙 TOMBOL BACK KE CHAPTER TERAKHIR --}}
-  <a href="{{ route('book.show', [$bookId, $page]) }}" class="btn-back">
-    ← Kembali ke Bacaan
-</a>
+    <a href="{{ route('book.show', [$bookId, $page]) }}" class="btn-back">
+        ← Kembali ke Bacaan
+    </a>
 
-
-    <!-- FORM KOMENTAR -->
     <div class="komentar-card">
         <h1>Komentar</h1>
 
-        <form action="/komentar/simpan" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('komentar.simpan') }}" method="POST" enctype="multipart/form-data">
             @csrf
 
             <input type="hidden" name="book_id" value="{{ $bookId }}">
@@ -32,7 +29,6 @@
         </form>
     </div>
 
-    <!-- LIST KOMENTAR -->
     <div class="komentar-list">
         @forelse($komentar as $c)
             <div class="komentar-item">
@@ -44,17 +40,25 @@
                     <img src="{{ asset('uploads/' . $c->image_path) }}" class="komentar-img">
                 @endif
 
-                {{-- 🔒 HAPUS KOMENTAR (HANYA PEMILIK) --}}
-                @if(Auth::check() && Auth::id() === $c->user_id)
-                    <form action="{{ route('komentar.hapus', $c->id) }}"
-                          method="POST"
-                          onsubmit="return confirm('Yakin ingin menghapus komentar ini?')"
-                          style="margin-top:10px;">
-                        @csrf
-                        <button type="submit" class="btn btn-danger btn-sm">
-                            🗑 Hapus
-                        </button>
-                    </form>
+           
+                @if(Auth::check() && Auth::id() == $c->user_id)
+                    <div style="margin-top:10px; display:flex; gap:10px;">
+
+                        <a href="{{ route('komentar.edit', $c->id) }}"
+                           class="btn btn-warning btn-sm">
+                            ✏️ Edit
+                        </a>
+
+                        <form action="{{ route('komentar.hapus', $c->id) }}"
+                              method="POST"
+                              onsubmit="return confirm('Yakin ingin menghapus komentar ini?')">
+                            @csrf
+                            <button type="submit" class="btn btn-danger btn-sm">
+                                🗑 Hapus
+                            </button>
+                        </form>
+
+                    </div>
                 @endif
 
             </div>

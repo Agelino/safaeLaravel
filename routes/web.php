@@ -26,6 +26,9 @@ use App\Http\Controllers\AdminKomentarController;
 use App\Http\Controllers\PembayaranAdminController;
 use App\Http\Controllers\KelolaRiwayatBacaController;
 use App\Http\Controllers\UserDashboardController;
+use App\Http\Controllers\AdminBukuFavoritController;
+use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\AdminNotificationController;
 use App\Http\Middleware\AdminOnly;
 
 
@@ -58,7 +61,8 @@ Route::get('/about-us', [AboutController::class, 'index'])->name('about.index');
 Route::middleware('auth')->group(function () {
 
     // ===================== USER DASHBOARD =====================
-    Route::get('/dashboard', [UserDashboardController::class, 'index'])->name('dashboard');
+    Route::get('/user/dashboard', [UserDashboardController::class, 'index'])
+    ->name('user.dashboard');
 
     // ===================== PROFILE =====================
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile');
@@ -91,18 +95,26 @@ Route::middleware('auth')->group(function () {
     Route::delete('/riwayat-baca/{id}', [ReadingHistoryController::class, 'destroy'])->name('reading.history.delete');
 
     // ===================== FORUM USER =====================
-    Route::get('/forum', [ForumController::class, 'index'])->name('forum.index');
-    Route::get('/forum/topik/{id}', [ForumController::class, 'detail'])->name('forum.detail');
+Route::get('/forum', [ForumController::class, 'index'])->name('forum.index');
+Route::get('/forum/{id}', [ForumController::class, 'detail'])->name('forum.detail');
+
+Route::middleware('auth')->group(function () {
     Route::get('/forum/create/{genre_id}', [ForumController::class, 'create'])->name('forum.create');
     Route::post('/forum/store', [ForumController::class, 'store'])->name('forum.store');
     Route::post('/forum/comment', [ForumController::class, 'comment'])->name('forum.comment');
+    Route::get('/forum/{id}/edit', [ForumController::class, 'edit'])->name('forum.edit');
+    Route::post('/forum/{id}/update', [ForumController::class, 'update'])->name('forum.update');
+    Route::delete('/forum/{id}/delete', [ForumController::class, 'destroy'])->name('forum.destroy');
+});
+
 
     // ===================== KOMENTAR USER =====================
-    Route::get('/books/{book}/page/{page}/komentar', [KomentarController::class, 'index']);
-    Route::post('/komentar/simpan', [KomentarController::class, 'simpan']);
+    Route::get('/books/{book}/page/{page}/komentar', [KomentarController::class, 'index'])->name('komentar.index');
+    Route::post('/komentar/simpan', [KomentarController::class, 'simpan'])->name('komentar.simpan');
     Route::get('/komentar/edit/{id}', [KomentarController::class, 'edit'])->name('komentar.edit');
     Route::post('/komentar/update/{id}', [KomentarController::class, 'update'])->name('komentar.update');
     Route::post('/komentar/hapus/{id}', [KomentarController::class, 'hapus'])->name('komentar.hapus');
+
 
     // ===================== ULASAN =====================
     Route::get('/ulasan/{id}', [FullBacaanController::class, 'ulasan'])->name('ulasan.index');
@@ -113,12 +125,35 @@ Route::middleware('auth')->group(function () {
     Route::post('/tulis-buku/store', [BookSubmissionController::class, 'simpanBuku'])->name('tulis-buku.store');
 });
 
+<<<<<<< HEAD
 /*
 |--------------------------------------------------------------------------
 | ADMIN AREA (AUTH + ADMIN ONLY)
 |--------------------------------------------------------------------------
 */
     Route::middleware(['auth', AdminOnly::class])
+=======
+    //notifikasi
+
+Route::middleware('auth')->group(function () {
+
+    // halaman notifikasi
+    Route::get('/notifikasi', [NotificationController::class, 'index'])
+        ->name('notifikasi.index');
+
+    // tandai dibaca
+    Route::post('/notifikasi/read/{id}', [NotificationController::class, 'markAsRead'])
+        ->name('notifikasi.read');
+
+});
+
+    /*
+    |--------------------------------------------------------------------------
+    | ADMIN AREA (AUTH + ADMIN ONLY)
+    |--------------------------------------------------------------------------
+    */
+    Route::middleware(AdminOnly::class)
+>>>>>>> 26c77087437da507f3f2334fefb60743c2dd88db
         ->prefix('admin')
         ->name('admin.')
         ->group(function () {
@@ -141,6 +176,11 @@ Route::middleware('auth')->group(function () {
 
             // KELOLA USER
             Route::get('/users', [UserController::class, 'index'])->name('users.index');
+
+            // TAMBAH USER
+            Route::get('/users/create', [UserController::class, 'create'])->name('users.create');
+            Route::post('/users', [UserController::class, 'store'])->name('users.store');
+
             Route::get('/users/{id}', [UserController::class, 'show'])->name('users.show');
             Route::get('/users/{id}/edit', [UserController::class, 'edit'])->name('users.edit');
             Route::post('/users/{id}/update', [UserController::class, 'update'])->name('users.update');
@@ -159,6 +199,7 @@ Route::middleware('auth')->group(function () {
             Route::get('/forum/komentar/{id}/delete', [AdminForumController::class, 'hapusKomentar'])->name('forum.komentar.hapus');
 
             // GENRE & BUKU
+<<<<<<< HEAD
             Route::get('/genre', [GenreAdminController::class, 'daftarBuku'])->name('genre.index');
             Route::get('/buku/tambah', [GenreAdminController::class, 'halamanTambah'])->name('buku.tambah');
             Route::post('/buku/simpan', [GenreAdminController::class, 'simpanBuku'])->name('buku.simpan');
@@ -166,6 +207,14 @@ Route::middleware('auth')->group(function () {
             Route::get('/buku/{id}/edit', [GenreAdminController::class, 'halamanEdit'])->name('buku.edit');
             Route::post('/buku/{id}/perbarui', [GenreAdminController::class, 'perbaruiBuku'])->name('buku.perbarui');
             Route::post('/buku/hapus', [GenreAdminController::class, 'hapusBuku'])->name('buku.hapus');
+=======
+            Route::get('/genre', [GenreAdminController::class, 'index'])->name('genre.index');
+            Route::get('/books/create', [GenreAdminController::class, 'create'])->name('books.create');
+            Route::post('/books/store', [GenreAdminController::class, 'store'])->name('admin.books.store');
+            Route::get('/books/{id}/edit', [GenreAdminController::class, 'edit'])->name('books.edit');
+            Route::post('/books/{id}/update', [GenreAdminController::class, 'update'])->name('books.update');
+            Route::post('/books/delete', [GenreAdminController::class, 'destroy'])->name('books.delete');
+>>>>>>> 26c77087437da507f3f2334fefb60743c2dd88db
 
             // VALIDASI BUKU
             Route::get('/validasi', [BookSubmissionController::class, 'indexAdmin'])->name('validasi.index');
@@ -177,7 +226,40 @@ Route::middleware('auth')->group(function () {
             Route::delete('/komentar/{id}', [AdminKomentarController::class, 'hapus'])->name('komentar.hapus');
 
             // kelola reward
+<<<<<<< HEAD
             Route::get('/rewards', [AdminRewardController::class, 'index'])->name('rewards.index');
             Route::post('/rewards/{user}/add', [AdminRewardController::class, 'add'])->name('reward.add');
             Route::post('/rewards/{user}/remove', [AdminRewardController::class, 'remove'])->name('reward.remove');
+=======
+        Route::get('/rewards', [AdminRewardController::class, 'index'])->name('rewards.index');
+        Route::post('/rewards/{user}/add', [AdminRewardController::class, 'add'])->name('reward.add');
+        Route::post('/rewards/{user}/remove', [AdminRewardController::class, 'remove'])->name('reward.remove');
+
+
+        // kelola buku favorit
+        Route::get('/favorit', [AdminBukuFavoritController::class, 'index'])->name('favorit.index');
+        Route::get('/favorit/{id}', [AdminBukuFavoritController::class, 'show'])->name('favorit.show');
+        Route::delete('/favorit/{id}', [AdminBukuFavoritController::class, 'destroy'])->name('favorit.destroy');
+
+        //kelola notifikasi
+        
+
+Route::middleware(['auth', 'admin'])->group(function () {
+    Route::get('/admin/notifications', [AdminNotificationController::class, 'index'])
+        ->name('notifications.index');
+
+    Route::post('/admin/notifications/{id}/read', [AdminNotificationController::class, 'markAsRead'])
+        ->name('notifications.read');
+
+    Route::delete('/admin/notifications/{id}', [AdminNotificationController::class, 'destroy'])
+        ->name('notifications.destroy');
+});
+
+
+
+
+            
+
+
+>>>>>>> 26c77087437da507f3f2334fefb60743c2dd88db
         });

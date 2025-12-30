@@ -62,7 +62,6 @@
 
     <div class="edit-card">
 
-        {{-- HEADER --}}
         <div class="mb-4">
             <h4 class="fw-bold mb-1">Edit Profil</h4>
             <p class="text-muted mb-0">
@@ -70,10 +69,9 @@
             </p>
         </div>
 
-        {{-- AVATAR --}}
         <div class="edit-avatar">
             <img src="{{ $profile->foto_profil
-                ? asset($profile->foto_profil)
+                ? asset('storage/' . $profile->foto_profil)
                 : 'https://ui-avatars.com/api/?name='.$profile->username.'&background=0d6efd&color=fff' }}"
                  alt="Foto Profil">
 
@@ -85,56 +83,51 @@
             </div>
         </div>
 
-        {{-- FORM --}}
         <form method="POST"
               enctype="multipart/form-data"
-              action="{{ url('/profile/update') }}">
+              action="{{ route('profile.update') }}">
             @csrf
 
             <div class="row">
 
-                {{-- USERNAME --}}
                 <div class="col-md-6 mb-3">
                     <label class="form-label">Nama Pengguna</label>
                     <input type="text"
                            name="username"
                            class="form-control"
-                           value="{{ $profile->username }}"
+                           value="{{ old('username', $profile->username) }}"
                            required>
                 </div>
 
-                {{-- SOCIAL MEDIA --}}
                 <div class="col-md-6 mb-3">
                     <label class="form-label">Social Media</label>
                     <input type="text"
                            name="social_media"
                            class="form-control"
                            placeholder="Instagram / Twitter / LinkedIn"
-                           value="{{ $profile->social_media }}">
+                           value="{{ old('social_media', $profile->social_media) }}">
                 </div>
 
-                {{-- BIO --}}
                 <div class="col-12 mb-3">
                     <label class="form-label">Bio</label>
                     <textarea name="bio"
                               rows="4"
                               class="form-control"
-                              placeholder="Ceritakan sedikit tentang dirimu">{{ $profile->bio }}</textarea>
+                              placeholder="Ceritakan sedikit tentang dirimu">{{ old('bio', $profile->bio) }}</textarea>
                 </div>
 
-                {{-- FOTO --}}
                 <div class="col-12 mb-4">
                     <label class="form-label">Foto Profil Baru</label>
                     <input type="file"
                            name="foto_profil"
-                           class="form-control">
+                           class="form-control"
+                           accept="image/*">
                 </div>
             </div>
 
-            {{-- ACTION --}}
             <div class="d-flex justify-content-between flex-wrap gap-2">
-                <a href="{{ url('/profile') }}"
-                    class="btn btn-secondary btn-rounded">
+                <a href="{{ route('profile') }}"
+                   class="btn btn-secondary btn-rounded">
                     <i class="bi bi-arrow-left"></i> Batal
                 </a>
 

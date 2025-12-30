@@ -9,20 +9,25 @@
 
     <div class="reward-layout">
 
-        <!-- ================= LEADERBOARD ================= -->
         <div class="leaderboard">
 
-            <!-- TOP 3 -->
             <div class="top-three">
                 @foreach($ranking->take(3) as $index => $user)
                     <div class="top-card rank-{{ $index + 1 }}">
                         <span class="badge-rank">{{ $index + 1 }}</span>
 
-                        <img
-                            src="{{ $user->foto_profil
-                                ? asset($user->foto_profil)
-                                : 'https://ui-avatars.com/api/?name='.$user->username }}"
-                            class="avatar">
+                        @if($user->foto_profil)
+                            <img src="{{ asset('storage/' . $user->foto_profil) }}"
+                                 class="rounded-circle mb-2"
+                                 width="48"
+                                 height="48"
+                                 style="object-fit: cover;">
+                        @else
+                            <img src="https://ui-avatars.com/api/?name={{ $user->username }}"
+                                 class="rounded-circle mb-2"
+                                 width="48"
+                                 height="48">
+                        @endif
 
                         <h5>{{ $user->username }}</h5>
                         <p>⭐ {{ $user->points }} pts</p>
@@ -30,17 +35,19 @@
                 @endforeach
             </div>
 
-            <!-- LIST 4+ -->
             <div class="rank-list">
                 @foreach($ranking->skip(3) as $index => $user)
                     <div class="rank-item">
                         <span class="rank-number">{{ $index + 4 }}</span>
 
-                        <img
-                            src="{{ $user->foto_profil
-                                ? asset($user->foto_profil)
-                                : 'https://ui-avatars.com/api/?name='.$user->username }}"
-                            class="avatar-sm">
+                        @if($user->foto_profil)
+                            <img src="{{ asset('storage/' . $user->foto_profil) }}"
+                                 class="avatar-sm"
+                                 style="object-fit: cover;">
+                        @else
+                            <img src="https://ui-avatars.com/api/?name={{ $user->username }}"
+                                 class="avatar-sm">
+                        @endif
 
                         <strong>{{ $user->username }}</strong>
                         <span class="points">{{ $user->points }} pts</span>
@@ -50,16 +57,23 @@
 
         </div>
 
-        <!-- ================= USER LOGIN CARD ================= -->
         @if($currentUser)
         <div class="user-point-card">
+
             <p>⭐ {{ $currentUser->points }} pts</p>
 
-            <img
-                src="{{ $currentUser->foto_profil
-                    ? asset($currentUser->foto_profil)
-                    : 'https://ui-avatars.com/api/?name='.$currentUser->username }}"
-                class="avatar-lg">
+            @if(Auth::user()->foto_profil)
+                <img src="{{ asset('storage/' . Auth::user()->foto_profil) }}"
+                     class="rounded-circle mb-2"
+                     width="48"
+                     height="48"
+                     style="object-fit: cover;">
+            @else
+                <img src="https://ui-avatars.com/api/?name={{ Auth::user()->username }}"
+                     class="rounded-circle mb-2"
+                     width="48"
+                     height="48">
+            @endif
 
             <h5>{{ $currentUser->username }}</h5>
 
