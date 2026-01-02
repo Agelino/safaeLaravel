@@ -23,8 +23,7 @@
         @endforeach
     </div>
 
-
-    <form method="GET" action="{{ route('genre.index') }}" class="search-bar">
+    <form method="GET" action="{{ route('genre.index') }}" class="search-bar d-flex">
         <input type="hidden" name="genre" value="{{ $current_genre }}">
         <input type="text"
                name="search"
@@ -46,13 +45,13 @@
 
                 {{-- COVER BUKU --}}
                 @if($book->image_path)
-            <img src="{{ $book->image_path }}"
-                class="card-img-top"
-                alt="{{ $book->title }}">
-            @else
-            <img src="https://via.placeholder.com/300x200?text=No+Image"
-                class="card-img-top">
-            @endif
+                    <img src="{{ asset($book->image_path) }}"
+                         class="card-img-top"
+                         alt="{{ $book->title }}">
+                @else
+                    <img src="https://via.placeholder.com/300x200?text=No+Image"
+                         class="card-img-top">
+                @endif
 
                 <div class="card-body">
                     <h6 class="card-title">{{ $book->title }}</h6>
@@ -64,8 +63,8 @@
                 {{-- FOOTER BUTTON --}}
                 <div class="card-footer bg-white text-center d-flex justify-content-center gap-1">
 
-                    {{-- VIEW --}}
-                    <a href="{{ route('fullbacaan.show', $book->id) }}"
+                    {{-- VIEW (FIXED, NO ERROR) --}}
+                    <a href="{{ route('book.show', $book->id) }}"
                        class="btn btn-sm btn-info text-white"
                        title="Lihat Buku">
                         <i class="fa fa-eye"></i>

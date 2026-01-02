@@ -32,7 +32,7 @@ class PembayaranController extends Controller
         DB::table('users')
             ->where('id', Auth::id())
             ->update([
-                'points' => DB::raw('points + ' . (int) $request->points)
+                'points' => DB::raw('points` + ' . (int) $request->points)
             ]);
 
         // 2. simpan ke tabel pembayarans (buat admin)

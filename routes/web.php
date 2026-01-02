@@ -31,7 +31,6 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\AdminNotificationController;
 use App\Http\Middleware\AdminOnly;
 
-
 /*
 |--------------------------------------------------------------------------
 | AUTH PUBLIC
@@ -46,7 +45,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 /*
 |--------------------------------------------------------------------------
-| CONTACT & ABOUT (PUBLIC)
+| CONTACT & ABOUT
 |--------------------------------------------------------------------------
 */
 Route::get('/contact-us', [ContactController::class, 'index'])->name('contact.index');
@@ -55,83 +54,76 @@ Route::get('/about-us', [AboutController::class, 'index'])->name('about.index');
 
 /*
 |--------------------------------------------------------------------------
-| ROUTES DENGAN AUTH (USER & ADMIN)
+| USER AREA (AUTH)
 |--------------------------------------------------------------------------
 */
 Route::middleware('auth')->group(function () {
 
-    // ===================== USER DASHBOARD =====================
     Route::get('/user/dashboard', [UserDashboardController::class, 'index'])
-    ->name('user.dashboard');
+        ->name('user.dashboard');
 
-    // ===================== PROFILE =====================
+    // PROFILE
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile');
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::post('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
     Route::post('/profile/delete', [ProfileController::class, 'destroy'])->name('profile.delete');
 
-
-    // ===================== GENRE USER =====================
+    // GENRE USER
     Route::get('/genre', [GenreUserController::class, 'index'])->name('genre.index');
 
-    // ===================== FULL BACAAN =====================
+    // BACA BUKU
     Route::get('/buku/{id}/{page?}', [FullBacaanController::class, 'show'])->name('book.show');
     Route::get('/full-bacaan/{id}', [FullBacaanController::class, 'show'])->name('fullbacaan.show');
 
-    // ===================== FAVORIT =====================
+    // FAVORIT
     Route::get('/buku-favorit', [BukuFavoritController::class, 'index'])->name('favorite.index');
     Route::post('/buku-favorit/tambah', [BukuFavoritController::class, 'tambah'])->name('favorite.tambah');
     Route::post('/buku-favorit/hapus', [BukuFavoritController::class, 'hapus'])->name('favorite.hapus');
 
-    // ===================== REWARD =====================
+    // REWARD
     Route::get('/reward', [RewardController::class, 'index'])->name('reward.index');
 
-    // ===================== PEMBAYARAN USER =====================
+    // PEMBAYARAN
     Route::get('/pembayaran', [PembayaranController::class, 'index'])->name('pembayaran.index');
     Route::post('/pembayaran/proses', [PembayaranController::class, 'proses'])->name('pembayaran.proses');
 
-    // ===================== RIWAYAT BACA USER =====================
+    // RIWAYAT BACA
     Route::get('/riwayat-baca', [ReadingHistoryController::class, 'index'])->name('reading.history');
-    Route::delete('/riwayat-baca/{id}', [ReadingHistoryController::class, 'destroy'])->name('reading.history.delete');
+    Route::delete('/riwayat-baca/{id}', [ReadingHistoryController::class, 'destroy'])
+        ->name('reading.history.delete');
 
-    // ===================== FORUM USER =====================
-Route::get('/forum', [ForumController::class, 'index'])->name('forum.index');
-Route::get('/forum/{id}', [ForumController::class, 'detail'])->name('forum.detail');
-
-Route::middleware('auth')->group(function () {
+    // FORUM
+    Route::get('/forum', [ForumController::class, 'index'])->name('forum.index');
+    Route::get('/forum/{id}', [ForumController::class, 'detail'])->name('forum.detail');
     Route::get('/forum/create/{genre_id}', [ForumController::class, 'create'])->name('forum.create');
     Route::post('/forum/store', [ForumController::class, 'store'])->name('forum.store');
     Route::post('/forum/comment', [ForumController::class, 'comment'])->name('forum.comment');
     Route::get('/forum/{id}/edit', [ForumController::class, 'edit'])->name('forum.edit');
     Route::post('/forum/{id}/update', [ForumController::class, 'update'])->name('forum.update');
-    Route::delete('/forum/{id}/delete', [ForumController::class, 'destroy'])->name('forum.destroy');
-});
+    Route::delete('/forum/{id}', [ForumController::class, 'destroy'])->name('forum.destroy');
 
-
-    // ===================== KOMENTAR USER =====================
-    Route::get('/books/{book}/page/{page}/komentar', [KomentarController::class, 'index'])->name('komentar.index');
+    // KOMENTAR
     Route::post('/komentar/simpan', [KomentarController::class, 'simpan'])->name('komentar.simpan');
-    Route::get('/komentar/edit/{id}', [KomentarController::class, 'edit'])->name('komentar.edit');
     Route::post('/komentar/update/{id}', [KomentarController::class, 'update'])->name('komentar.update');
     Route::post('/komentar/hapus/{id}', [KomentarController::class, 'hapus'])->name('komentar.hapus');
 
-
-    // ===================== ULASAN =====================
+    // ULASAN
     Route::get('/ulasan/{id}', [FullBacaanController::class, 'ulasan'])->name('ulasan.index');
     Route::post('/ulasan/{id}', [FullBacaanController::class, 'storeReview'])->name('ulasan.store');
 
-    // ===================== USER TULIS BUKU =====================
-    Route::get('/tulis-buku', [BookSubmissionController::class, 'halamanTulis'])->name('tulis-buku.create');
-    Route::post('/tulis-buku/store', [BookSubmissionController::class, 'simpanBuku'])->name('tulis-buku.store');
+    // TULIS BUKU
+    Route::get('/tulis-buku', [BookSubmissionController::class, 'create'])->name('tulis-buku.create');
+    Route::post('/tulis-buku/store', [BookSubmissionController::class, 'store'])->name('tulis-buku.store');
 
-    // ===================== NOTIFIKASI =====================
+    // NOTIFIKASI USER
     Route::get('/notifikasi', [NotificationController::class, 'index'])->name('notifikasi.index');
-    Route::post('/notifikasi/read/{id}', [NotificationController::class, 'markAsRead'])->name('notifikasi.read');
+    Route::post('/notifikasi/read/{id}', [NotificationController::class, 'markAsRead'])
+        ->name('notifikasi.read');
 });
 
 /*
 |--------------------------------------------------------------------------
-| ADMIN AREA (AUTH + ADMIN ONLY)
+| ADMIN AREA
 |--------------------------------------------------------------------------
 */
 Route::middleware(['auth', AdminOnly::class])
@@ -139,77 +131,64 @@ Route::middleware(['auth', AdminOnly::class])
     ->name('admin.')
     ->group(function () {
 
-            Route::get('/', [AdminController::class, 'index'])->name('dashboard');
+        Route::get('/', [AdminController::class, 'index'])->name('dashboard');
 
-            // ===================== PEMBAYARAN ADMIN =====================
-            Route::get('/pembayaran', [PembayaranAdminController::class, 'index'])
-                ->name('pembayaran.index');
+        // PEMBAYARAN
+        Route::get('/pembayaran', [PembayaranAdminController::class, 'index'])
+            ->name('pembayaran.index');
 
-            // ===================== KELOLA RIWAYAT BACA (ADMIN) =====================
-            Route::prefix('riwayat-baca')->name('kelolariwayat.')->group(function () {
-                Route::get('/', [KelolaRiwayatBacaController::class, 'index'])->name('index');
-                Route::get('/create', [KelolaRiwayatBacaController::class, 'create'])->name('create');
-                Route::post('/', [KelolaRiwayatBacaController::class, 'store'])->name('store');
-                Route::get('/{id}/edit', [KelolaRiwayatBacaController::class, 'edit'])->name('edit');
-                Route::post('/{id}', [KelolaRiwayatBacaController::class, 'update'])->name('update');
-                Route::delete('/{id}', [KelolaRiwayatBacaController::class, 'destroy'])->name('destroy');
-            });
-
-            // KELOLA USER
-            Route::get('/users', [UserController::class, 'index'])->name('users.index');
-
-            // TAMBAH USER
-            Route::get('/users/create', [UserController::class, 'create'])->name('users.create');
-            Route::post('/users', [UserController::class, 'store'])->name('users.store');
-
-            Route::get('/users/{id}', [UserController::class, 'show'])->name('users.show');
-            Route::get('/users/{id}/edit', [UserController::class, 'edit'])->name('users.edit');
-            Route::post('/users/{id}/update', [UserController::class, 'update'])->name('users.update');
-            Route::delete('/users/{id}', [UserController::class, 'destroy'])->name('users.destroy');
-
-            // KELOLA REVIEW
-            Route::get('/reviews', [AdminReviewController::class, 'index'])->name('reviews.index');
-            Route::get('/reviews/{id}', [AdminReviewController::class, 'show'])->name('reviews.show');
-            Route::delete('/reviews/{id}', [AdminReviewController::class, 'destroy'])->name('reviews.destroy');
-
-            // KELOLA FORUM
-            Route::get('/forum', [AdminForumController::class, 'index'])->name('forum.index');
-            Route::get('/forum/{id}', [AdminForumController::class, 'detail'])->name('forum.detail');
-            Route::get('/forum/{id}/delete', [AdminForumController::class, 'destroy'])->name('forum.destroy');
-            Route::get('/forum/topik/{id}/delete', [AdminForumController::class, 'hapusTopik'])->name('forum.topik.hapus');
-            Route::get('/forum/komentar/{id}/delete', [AdminForumController::class, 'hapusKomentar'])->name('forum.komentar.hapus');
-
-            // GENRE & BUKU
-            Route::get('/genre', [GenreAdminController::class, 'daftarBuku'])->name('genre.index');
-            Route::get('/buku/tambah', [GenreAdminController::class, 'halamanTambah'])->name('buku.tambah');
-            Route::post('/buku/simpan', [GenreAdminController::class, 'simpanBuku'])->name('buku.simpan');
-            Route::get('/buku/{id}', [GenreAdminController::class, 'lihatBuku'])->name('show-book');
-            Route::get('/buku/{id}/edit', [GenreAdminController::class, 'halamanEdit'])->name('buku.edit');
-            Route::post('/buku/{id}/perbarui', [GenreAdminController::class, 'perbaruiBuku'])->name('buku.perbarui');
-            Route::post('/buku/hapus', [GenreAdminController::class, 'hapusBuku'])->name('buku.hapus');
-
-            // VALIDASI BUKU
-            Route::get('/validasi', [BookSubmissionController::class, 'indexAdmin'])->name('validasi.index');
-            Route::post('/validasi/{id}/approve', [BookSubmissionController::class, 'approve'])->name('validasi.approve');
-            Route::post('/validasi/{id}/reject', [BookSubmissionController::class, 'reject'])->name('validasi.reject');
-
-           // kelola komentar
-            Route::get('/komentar', [AdminKomentarController::class, 'index'])->name('komentar.index');
-            Route::delete('/komentar/{id}', [AdminKomentarController::class, 'hapus'])->name('komentar.hapus');
-
-            // kelola reward
-            Route::get('/rewards', [AdminRewardController::class, 'index'])->name('rewards.index');
-            Route::post('/rewards/{user}/add', [AdminRewardController::class, 'add'])->name('reward.add');
-            Route::post('/rewards/{user}/remove', [AdminRewardController::class, 'remove'])->name('reward.remove');
-
-            // kelola buku favorit
-            Route::get('/favorit', [AdminBukuFavoritController::class, 'index'])->name('favorit.index');
-            Route::get('/favorit/{id}', [AdminBukuFavoritController::class, 'show'])->name('favorit.show');
-            Route::delete('/favorit/{id}', [AdminBukuFavoritController::class, 'destroy'])->name('favorit.destroy');
-
-            // kelola notifikasi admin
-            Route::get('/notifications', [AdminNotificationController::class, 'index'])->name('notifications.index');
-            Route::post('/notifications/{id}/read', [AdminNotificationController::class, 'markAsRead'])->name('notifications.read');
-            Route::delete('/notifications/{id}', [AdminNotificationController::class, 'destroy'])->name('notifications.destroy');
+        // RIWAYAT BACA
+        Route::prefix('riwayat-baca')->name('kelolariwayat.')->group(function () {
+            Route::get('/', [KelolaRiwayatBacaController::class, 'index'])->name('index');
+            Route::get('/create', [KelolaRiwayatBacaController::class, 'create'])->name('create');
+            Route::post('/', [KelolaRiwayatBacaController::class, 'store'])->name('store');
+            Route::get('/{id}/edit', [KelolaRiwayatBacaController::class, 'edit'])->name('edit');
+            Route::post('/{id}', [KelolaRiwayatBacaController::class, 'update'])->name('update');
+            Route::delete('/{id}', [KelolaRiwayatBacaController::class, 'destroy'])->name('destroy');
         });
 
+        // USER
+        Route::resource('/users', UserController::class);
+
+        // REVIEW
+        Route::get('/reviews', [AdminReviewController::class, 'index'])->name('reviews.index');
+        Route::delete('/reviews/{id}', [AdminReviewController::class, 'destroy'])->name('reviews.destroy');
+
+        // FORUM
+        Route::get('/forum', [AdminForumController::class, 'index'])->name('forum.index');
+
+        // GENRE & BUKU
+        Route::get('/genre', [GenreAdminController::class, 'index'])->name('genre.index');
+        Route::get('/books/create', [GenreAdminController::class, 'create'])->name('books.create');
+        Route::post('/books/store', [GenreAdminController::class, 'store'])->name('books.store');
+        Route::get('/books/{id}/edit', [GenreAdminController::class, 'edit'])->name('books.edit');
+        Route::post('/books/{id}/update', [GenreAdminController::class, 'update'])->name('books.update');
+        Route::post('/books/delete', [GenreAdminController::class, 'destroy'])->name('books.delete');
+
+        // VALIDASI
+        Route::get('/validasi', [BookSubmissionController::class, 'indexAdmin'])->name('validasi.index');
+        Route::post('/validasi/{id}/approve', [BookSubmissionController::class, 'approve'])->name('validasi.approve');
+        Route::post('/validasi/{id}/reject', [BookSubmissionController::class, 'reject'])->name('validasi.reject');
+
+        // KOMENTAR
+        Route::get('/komentar', [AdminKomentarController::class, 'index'])->name('komentar.index');
+        Route::delete('/komentar/{id}', [AdminKomentarController::class, 'hapus'])->name('komentar.hapus');
+
+        // REWARD
+        Route::get('/rewards', [AdminRewardController::class, 'index'])->name('rewards.index');
+        Route::post('/rewards/{user}/add', [AdminRewardController::class, 'add'])->name('reward.add');
+        Route::post('/rewards/{user}/remove', [AdminRewardController::class, 'remove'])->name('reward.remove');
+
+        // FAVORIT
+        Route::get('/favorit', [AdminBukuFavoritController::class, 'index'])->name('favorit.index');
+        Route::get('/favorit/{id}', [AdminBukuFavoritController::class, 'show'])->name('favorit.show');
+        Route::delete('/favorit/{id}', [AdminBukuFavoritController::class, 'destroy'])->name('favorit.destroy');
+
+        // NOTIFIKASI ADMIN
+        Route::get('/notifications', [AdminNotificationController::class, 'index'])
+            ->name('notifications.index');
+        Route::post('/notifications/{id}/read', [AdminNotificationController::class, 'markAsRead'])
+            ->name('notifications.read');
+        Route::delete('/notifications/{id}', [AdminNotificationController::class, 'destroy'])
+            ->name('notifications.destroy');
+    });

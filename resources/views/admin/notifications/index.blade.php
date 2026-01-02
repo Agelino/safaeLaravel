@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+@extends('layouts.layoutsAdmin')
 
 @section('content')
 <h3>Kelola Notifikasi Admin</h3>
@@ -22,7 +22,7 @@
             <td>{{ $notif->created_at->format('d M Y H:i') }}</td>
             <td>
                 @if(!$notif->is_read)
-                <form action="{{ route('notifications.read', $notif->id) }}" method="POST">
+                <form action="{{ route('admin.notifications.read', $notif->id) }}" method="POST">
                     @csrf
                     <button class="btn btn-sm btn-success">Tandai Sudah Dibaca</button>
                 </form>
