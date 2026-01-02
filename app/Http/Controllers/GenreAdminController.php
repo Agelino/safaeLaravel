@@ -52,7 +52,7 @@ class GenreAdminController extends Controller
         ]);
     }
 
-    public function simpanBuku(Request $request)//mengecek  from
+    public function simpanBuku(Request $request)
     {
         $data_valid = $request->validate([
             'title' => 'required|string|max:255',
@@ -64,14 +64,14 @@ class GenreAdminController extends Controller
             'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
-        if ($request->hasFile('image')) {//cek apakah user upload foto
+        if ($request->hasFile('image')) {       //cek apakah user upload foto
             $path = $request->file('image')->store('covers', 'public');//ambil file nya gambar yang diupload
             $data_valid['image_path'] = '/storage/' . $path;
         }
 
         $data_valid['status'] = 'approved';
         
-        Book::create($data_valid);//simpan semua data di var data valid
+        Book::create($data_valid);
 
         return redirect('/admin/genre')
                ->with('success', 'Buku berhasil ditambahkan! Status: Menunggu Persetujuan');
