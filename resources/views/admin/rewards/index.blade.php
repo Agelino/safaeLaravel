@@ -28,14 +28,14 @@
                 <td>{{ $user->email }}</td>
                 <td><strong>{{ $user->points }}</strong></td>
                 <td>
-                    {{-- TAMBAH POINT --}}
+                
                     <form action="{{ route('admin.reward.add', $user) }}" method="POST" class="d-inline">
                         @csrf
                         <input type="number" name="points" class="form-control form-control-sm d-inline w-50" required>
                         <button class="btn btn-success btn-sm mt-1">Tambah</button>
                     </form>
 
-                    {{-- KURANGI POINT --}}
+                    
                     <form action="{{ route('admin.reward.remove', $user) }}" method="POST" class="d-inline">
                         @csrf
                         <input type="number" name="points" class="form-control form-control-sm d-inline w-50" required>
