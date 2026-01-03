@@ -158,12 +158,12 @@ Route::middleware(['auth', AdminOnly::class])
         Route::get('/forum', [AdminForumController::class, 'index'])->name('forum.index');
 
         // GENRE & BUKU
-        Route::get('/genre', [GenreAdminController::class, 'index'])->name('genre.index');
-        Route::get('/books/create', [GenreAdminController::class, 'create'])->name('books.create');
-        Route::post('/books/store', [GenreAdminController::class, 'store'])->name('books.store');
-        Route::get('/books/{id}/edit', [GenreAdminController::class, 'edit'])->name('books.edit');
-        Route::post('/books/{id}/update', [GenreAdminController::class, 'update'])->name('books.update');
-        Route::post('/books/delete', [GenreAdminController::class, 'destroy'])->name('books.delete');
+        Route::get('/genre', [GenreAdminController::class, 'daftarBuku'])->name('genre.index');
+        Route::get('/books/create', [GenreAdminController::class, 'halamanTambah'])->name('books.create');
+        Route::post('/books/store', [GenreAdminController::class, 'simpanBuku'])->name('books.store');
+        Route::get('/books/{id}/edit', [GenreAdminController::class, 'halamanEdit'])->name('books.edit');
+        Route::post('/books/{id}/update', [GenreAdminController::class, 'perbaruiBuku'])->name('books.update');
+        Route::post('/books/delete', [GenreAdminController::class, 'hapusBuku'])->name('books.delete');
 
         // VALIDASI
         Route::get('/validasi', [BookSubmissionController::class, 'indexAdmin'])->name('validasi.index');

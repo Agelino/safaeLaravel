@@ -32,7 +32,7 @@
                     <div class="card-body">
                         {{-- FORM UPDATE BUKU --}}
                         <form method="POST"
-                              action="{{ route('admin.buku.perbarui', $book->id) }}"
+                              action="{{ route('admin.books.edit', $book->id) }}"
                               enctype="multipart/form-data">
                             @csrf
 

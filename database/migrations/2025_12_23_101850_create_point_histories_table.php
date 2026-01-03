@@ -12,11 +12,13 @@ return new class extends Migration
             $table->id();
 
             $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('book_id')->nullable();
             $table->integer('points');
             $table->timestamps();
 
-            // relasi ke users
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+
+            $table->foreign('book_id')->references('id')->on('books')->onDelete('set null');
         });
     }
 
