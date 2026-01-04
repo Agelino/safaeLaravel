@@ -16,6 +16,7 @@ use App\Http\Controllers\Api\ContactController;
 use App\Http\Controllers\Api\PembayaranController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\ReadingHistoryController;
+use App\Http\Controllers\Api\KomentarController;
 
 /*
 |--------------------------------------------------------------------------
@@ -64,6 +65,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/reading/progress', [ReadingController::class, 'progress']);
     Route::post('/reading/progress', [ReadingController::class, 'recordDuration']);
     Route::get('/reading/duration', [ReadingController::class, 'totalDuration']);
+
+    // komentar
+
+    Route::get('/komentar/{bookId}/{page}',[KomentarController::class, 'index']);
+    Route::post('/komentar',[KomentarController::class, 'simpan']);
+    Route::put('/komentar/{id}',[KomentarController::class, 'update']);
+    Route::delete('/komentar/{id}', [KomentarController::class, 'hapus']);
 
     // ==================== READING HISTORY (USER) ====================
     // 🔵 USER hanya bisa kelola history MILIK SENDIRI

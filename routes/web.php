@@ -102,10 +102,13 @@ Route::middleware('auth')->group(function () {
     Route::post('/forum/{id}/update', [ForumController::class, 'update'])->name('forum.update');
     Route::delete('/forum/{id}', [ForumController::class, 'destroy'])->name('forum.destroy');
 
-    // KOMENTAR
+    // komentar
+    Route::get('/buku/{bookId}/{page}/komentar', [KomentarController::class, 'index'])->name('komentar.index');
     Route::post('/komentar/simpan', [KomentarController::class, 'simpan'])->name('komentar.simpan');
+    Route::get('/komentar/edit/{id}', [KomentarController::class, 'edit'])->name('komentar.edit');
     Route::post('/komentar/update/{id}', [KomentarController::class, 'update'])->name('komentar.update');
     Route::post('/komentar/hapus/{id}', [KomentarController::class, 'hapus'])->name('komentar.hapus');
+
 
     // ULASAN
     Route::get('/ulasan/{id}', [FullBacaanController::class, 'ulasan'])->name('ulasan.index');

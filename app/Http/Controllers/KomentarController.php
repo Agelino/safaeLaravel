@@ -51,10 +51,11 @@ class KomentarController extends Controller
             'image_path' => $namaFile
         ]);
 
-       return redirect()->route('komentar.index', [
-        'book' => $r->book_id,
+        return redirect()->route('komentar.index', [
+        'bookId' => $r->book_id,
         'page' => $r->page
     ]);
+
 
     }
 

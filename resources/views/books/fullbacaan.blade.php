@@ -47,9 +47,11 @@
             📚 Daftar Buku
         </a>
 
-        <a href="{{ url('/books/'.$buku->id.'/page/'.$page.'/komentar') }}" class="btn btn-yellow">
+       <a href="{{ route('komentar.index', ['bookId' => $buku->id, 'page' => $page]) }}"
+   class="btn btn-yellow">
     💬 Komentar
 </a>
+
 
 
     </div>
