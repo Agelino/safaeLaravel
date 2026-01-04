@@ -15,7 +15,6 @@ use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\ContactController;
 use App\Http\Controllers\Api\PembayaranController;
 use App\Http\Controllers\Api\UserController;
-use App\Http\Controllers\Api\ReadingHistoryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -53,25 +52,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('reviews', ReviewController::class);
 
     // ===== COMMENT =====
-    Route::apiResource('comments', CommentController::class);
-
-    // ==================== READING (USER) ====================
-    Route::get('/reading/history', [ReadingController::class, 'history']);
-    Route::get('/reading/history/book/{bookId}', [ReadingController::class, 'getBookHistory']);
-    Route::post('/reading/history', [ReadingController::class, 'updateHistory']);
-    Route::delete('/reading/history/{id}', [ReadingController::class, 'deleteHistory']);
-
-    Route::get('/reading/progress', [ReadingController::class, 'progress']);
-    Route::post('/reading/progress', [ReadingController::class, 'recordDuration']);
-    Route::get('/reading/duration', [ReadingController::class, 'totalDuration']);
-
-    // ==================== READING HISTORY (USER) ====================
-    // 🔵 USER hanya bisa kelola history MILIK SENDIRI
-    Route::get('/reading-histories', [ReadingHistoryController::class, 'index']);        // list
-    Route::get('/reading-histories/{id}', [ReadingHistoryController::class, 'show']);   // detail
-    Route::post('/reading-histories', [ReadingHistoryController::class, 'store']);      // create / update
-    Route::put('/reading-histories/{id}', [ReadingHistoryController::class, 'update']); // edit
-    Route::delete('/reading-histories/{id}', [ReadingHistoryController::class, 'destroy']); // delete
+    Route::apiResource('comments', CommentController::class);  
 
     // ==================== FAVORITE ====================
     Route::get('/favorites', [FavoriteController::class, 'index']);
@@ -116,27 +97,6 @@ Route::middleware(['auth:sanctum', 'admin.api'])->group(function () {
 
     // ===== USER MANAGEMENT =====
     Route::apiResource('users', UserController::class);
-
-    // ==================== READING HISTORY (ADMIN) ====================
-    Route::get(
-        '/admin/users/{userId}/reading-histories',
-        [ReadingHistoryController::class, 'historiesByUser']
-    ); // list by user
-
-    Route::get(
-        '/admin/reading-histories/{id}',
-        [ReadingHistoryController::class, 'adminShow']
-    ); // detail
-
-    Route::put(
-        '/admin/reading-histories/{id}',
-        [ReadingHistoryController::class, 'adminUpdate']
-    ); // edit
-
-    Route::delete(
-        '/admin/reading-histories/{id}',
-        [ReadingHistoryController::class, 'adminDestroy']
-    ); // delete
 
     // ===== PAYMENT ADMIN =====
     Route::get('/payments/admin/all', [PembayaranController::class, 'all']);
