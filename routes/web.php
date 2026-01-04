@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProfileController;
@@ -136,11 +137,9 @@ Route::middleware(['auth', AdminOnly::class])
 
         Route::get('/', [AdminController::class, 'index'])->name('dashboard');
 
-        // PEMBAYARAN
         Route::get('/pembayaran', [PembayaranAdminController::class, 'index'])
             ->name('pembayaran.index');
 
-        // RIWAYAT BACA
         Route::prefix('riwayat-baca')->name('kelolariwayat.')->group(function () {
             Route::get('/', [KelolaRiwayatBacaController::class, 'index'])->name('index');
             Route::get('/create', [KelolaRiwayatBacaController::class, 'create'])->name('create');
@@ -150,14 +149,11 @@ Route::middleware(['auth', AdminOnly::class])
             Route::delete('/{id}', [KelolaRiwayatBacaController::class, 'destroy'])->name('destroy');
         });
 
-        // USER
         Route::resource('/users', UserController::class);
 
-        // REVIEW
         Route::get('/reviews', [AdminReviewController::class, 'index'])->name('reviews.index');
         Route::delete('/reviews/{id}', [AdminReviewController::class, 'destroy'])->name('reviews.destroy');
 
-        // FORUM
         Route::get('/forum', [AdminForumController::class, 'index'])->name('forum.index');
 
         // GENRE & BUKU
@@ -168,26 +164,21 @@ Route::middleware(['auth', AdminOnly::class])
         Route::post('/books/{id}/update', [GenreAdminController::class, 'perbaruiBuku'])->name('books.update');
         Route::post('/books/delete', [GenreAdminController::class, 'hapusBuku'])->name('books.delete');
 
-        // VALIDASI
         Route::get('/validasi', [BookSubmissionController::class, 'indexAdmin'])->name('validasi.index');
         Route::post('/validasi/{id}/approve', [BookSubmissionController::class, 'approve'])->name('validasi.approve');
         Route::post('/validasi/{id}/reject', [BookSubmissionController::class, 'reject'])->name('validasi.reject');
 
-        // KOMENTAR
         Route::get('/komentar', [AdminKomentarController::class, 'index'])->name('komentar.index');
         Route::delete('/komentar/{id}', [AdminKomentarController::class, 'hapus'])->name('komentar.hapus');
 
-        // REWARD
         Route::get('/rewards', [AdminRewardController::class, 'index'])->name('rewards.index');
         Route::post('/rewards/{user}/add', [AdminRewardController::class, 'add'])->name('reward.add');
         Route::post('/rewards/{user}/remove', [AdminRewardController::class, 'remove'])->name('reward.remove');
 
-        // FAVORIT
         Route::get('/favorit', [AdminBukuFavoritController::class, 'index'])->name('favorit.index');
         Route::get('/favorit/{id}', [AdminBukuFavoritController::class, 'show'])->name('favorit.show');
         Route::delete('/favorit/{id}', [AdminBukuFavoritController::class, 'destroy'])->name('favorit.destroy');
 
-        // NOTIFIKASI ADMIN
         Route::get('/notifications', [AdminNotificationController::class, 'index'])
             ->name('notifications.index');
         Route::post('/notifications/{id}/read', [AdminNotificationController::class, 'markAsRead'])
@@ -195,3 +186,22 @@ Route::middleware(['auth', AdminOnly::class])
         Route::delete('/notifications/{id}', [AdminNotificationController::class, 'destroy'])
             ->name('notifications.destroy');
     });
+
+/*
+|--------------------------------------------------------------------------
+| IMAGE PUBLIC
+|--------------------------------------------------------------------------
+*/
+Route::get('/image/{path}', function ($path) {
+    $fullPath = storage_path('app/public/' . $path);
+
+    if (!File::exists($fullPath)) {
+        abort(404);
+    }
+
+    return response()->file($fullPath, [
+        'Access-Control-Allow-Origin'  => '*',
+        'Access-Control-Allow-Methods' => 'GET, OPTIONS',
+        'Access-Control-Allow-Headers' => '*',
+    ]);
+})->where('path', '.*');

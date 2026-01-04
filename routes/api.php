@@ -80,6 +80,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/reading-histories', [ReadingHistoryController::class, 'store']);      // create / update
     Route::put('/reading-histories/{id}', [ReadingHistoryController::class, 'update']); // edit
     Route::delete('/reading-histories/{id}', [ReadingHistoryController::class, 'destroy']); // delete
+    Route::apiResource('comments', CommentController::class);  
 
     // ==================== FAVORITE ====================
     Route::get('/favorites', [FavoriteController::class, 'index']);
@@ -124,27 +125,6 @@ Route::middleware(['auth:sanctum', 'admin.api'])->group(function () {
 
     // ===== USER MANAGEMENT =====
     Route::apiResource('users', UserController::class);
-
-    // ==================== READING HISTORY (ADMIN) ====================
-    Route::get(
-        '/admin/users/{userId}/reading-histories',
-        [ReadingHistoryController::class, 'historiesByUser']
-    ); // list by user
-
-    Route::get(
-        '/admin/reading-histories/{id}',
-        [ReadingHistoryController::class, 'adminShow']
-    ); // detail
-
-    Route::put(
-        '/admin/reading-histories/{id}',
-        [ReadingHistoryController::class, 'adminUpdate']
-    ); // edit
-
-    Route::delete(
-        '/admin/reading-histories/{id}',
-        [ReadingHistoryController::class, 'adminDestroy']
-    ); // delete
 
     // ===== PAYMENT ADMIN =====
     Route::get('/payments/admin/all', [PembayaranController::class, 'all']);
