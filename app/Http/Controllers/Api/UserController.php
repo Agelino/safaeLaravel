@@ -9,9 +9,7 @@ use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
-    // =====================
-    // GET /api/users
-    // =====================
+
     public function index()
     {
         $users = User::select(
@@ -21,18 +19,12 @@ class UserController extends Controller
             'foto_profil'
         )->get();
 
-        // ❌ JANGAN ubah jadi asset()
-        // ✅ biarin path asli (foto_profil/xxx.jpg)
-
         return response()->json([
             'success' => true,
             'data' => $users
         ]);
     }
 
-    // =====================
-    // GET /api/users/{id}
-    // =====================
     public function show($id)
     {
         $u = User::select(
@@ -48,15 +40,11 @@ class UserController extends Controller
                 'id' => $u->id,
                 'username' => $u->username,
                 'social_media' => $u->social_media,
-                // ✅ PATH SAJA
                 'foto_profil' => $u->foto_profil ?? '',
             ]
         ]);
     }
 
-    // =====================
-    // PUT /api/users/{id}
-    // =====================
     public function update(Request $request, $id)
     {
         $request->validate([
@@ -75,12 +63,9 @@ class UserController extends Controller
             if ($user->foto_profil && Storage::disk('public')->exists($user->foto_profil)) {
                 Storage::disk('public')->delete($user->foto_profil);
             }
-
-            // simpan ke storage/app/public/foto_profil
             $path = $request->file('foto_profil')
                 ->store('foto_profil', 'public');
 
-            // ✅ simpan PATH SAJA ke DB
             $user->foto_profil = $path;
         }
 
@@ -93,15 +78,11 @@ class UserController extends Controller
                 'id' => $user->id,
                 'username' => $user->username,
                 'social_media' => $user->social_media,
-                // ✅ PATH SAJA
                 'foto_profil' => $user->foto_profil ?? '',
             ]
         ]);
     }
 
-    // =====================
-    // DELETE /api/users/{id}
-    // =====================
     public function destroy($id)
     {
         $user = User::findOrFail($id);
