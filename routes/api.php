@@ -15,12 +15,9 @@ use App\Http\Controllers\Api\PointController;
 use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\ContactController;
 use App\Http\Controllers\Api\PembayaranController;
-<<<<<<< HEAD
 use App\Http\Controllers\Api\ForumApiController;
-=======
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\KomentarController;
->>>>>>> 3a9eee54a144ac0a8aafcdec37b50dce48d93c3f
 
 /*
 |--------------------------------------------------------------------------
@@ -41,17 +38,12 @@ Route::get('/books/latest/list', [BookController::class, 'latest']);
 Route::get('/genres', [GenreController::class, 'index']);
 Route::get('/genres/{id}', [GenreController::class, 'show']);
 
-<<<<<<< HEAD
-// public forum routes
+// ===== FORUM (PUBLIC READ) =====
 Route::get('/forum', [ForumApiController::class, 'index']);
 Route::get('/forum/{id}', [ForumApiController::class, 'show']);
 
 
-// Protected routes (requires authentication)
-=======
-
 // ==================== AUTHENTICATED USER ====================
->>>>>>> 3a9eee54a144ac0a8aafcdec37b50dce48d93c3f
 Route::middleware('auth:sanctum')->group(function () {
 
     // ===== AUTH =====
@@ -62,36 +54,18 @@ Route::middleware('auth:sanctum')->group(function () {
     // ===== TOPIC =====
     Route::apiResource('topics', TopicController::class);
 
-<<<<<<< HEAD
-    // Genre management (Admin only)
-    Route::post('/genres', [GenreController::class, 'store']);
-    Route::put('/genres/{id}', [GenreController::class, 'update']);
-    Route::delete('/genres/{id}', [GenreController::class, 'destroy']);
-
-    // Topic routes
-    Route::get('/topics', [TopicController::class, 'index']);
-    Route::get('/topics/{id}', [TopicController::class, 'show']);
-    Route::post('/topics', [TopicController::class, 'store']);
-    Route::put('/topics/{id}', [TopicController::class, 'update']);
-    Route::delete('/topics/{id}', [TopicController::class, 'destroy']);
-
-    //  Forum routes
-    Route::post('/forum', [ForumApiController::class, 'store']);
-    Route::post('/forum/comment', [ForumApiController::class, 'comment']);
-    Route::put('/forum/{id}', [ForumApiController::class, 'update']);
-    Route::delete('/forum/{id}', [ForumApiController::class, 'destroy']);
-
-    // Review routes
-    Route::get('/reviews', [ReviewController::class, 'index']);
-    Route::get('/reviews/{id}', [ReviewController::class, 'show']);
-=======
     // ===== REVIEW =====
->>>>>>> 3a9eee54a144ac0a8aafcdec37b50dce48d93c3f
     Route::get('/reviews/my/list', [ReviewController::class, 'myReviews']);
     Route::apiResource('reviews', ReviewController::class);
 
     // ===== COMMENT =====
     Route::apiResource('comments', CommentController::class);
+
+    // ===== FORUM (WRITE) =====
+    Route::post('/forum', [ForumApiController::class, 'store']);
+    Route::post('/forum/comment', [ForumApiController::class, 'comment']);
+    Route::put('/forum/{id}', [ForumApiController::class, 'update']);
+    Route::delete('/forum/{id}', [ForumApiController::class, 'destroy']);
 
     // ==================== READING ====================
     Route::get('/reading/history', [ReadingController::class, 'history']);
@@ -150,7 +124,7 @@ Route::middleware(['auth:sanctum', 'admin.api'])->group(function () {
     Route::put('/genres/{id}', [GenreController::class, 'update']);
     Route::delete('/genres/{id}', [GenreController::class, 'destroy']);
 
-    // ===== USER MANAGEMENT (ADMIN) =====
+    // ===== USER MANAGEMENT =====
     Route::get('/users', [UserController::class, 'index']);
     Route::get('/users/{id}', [UserController::class, 'show']);
     Route::put('/users/{id}', [UserController::class, 'update']);
