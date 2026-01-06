@@ -33,9 +33,9 @@
                     </div>
                     <div class="card-body">
                         
-                        <form method="POST" action="{{ route('admin.buku.simpan') }}" enctype="multipart/form-data">
-                            @csrf {{-- Token Keamanan Laravel --}}
-
+                       <form method="POST" action="/admin/books/store">
+                             @csrf
+                             
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="mb-3">
