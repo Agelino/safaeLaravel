@@ -14,6 +14,7 @@ use App\Http\Controllers\Api\PointController;
 use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\ContactController;
 use App\Http\Controllers\Api\PembayaranController;
+use App\Http\Controllers\Api\ForumApiController;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,6 +36,11 @@ Route::get('/books/latest/list', [BookController::class, 'latest']);
 // Public genre routes
 Route::get('/genres', [GenreController::class, 'index']);
 Route::get('/genres/{id}', [GenreController::class, 'show']);
+
+// public forum routes
+Route::get('/forum', [ForumApiController::class, 'index']);
+Route::get('/forum/{id}', [ForumApiController::class, 'show']);
+
 
 // Protected routes (requires authentication)
 Route::middleware('auth:sanctum')->group(function () {
@@ -60,6 +66,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/topics', [TopicController::class, 'store']);
     Route::put('/topics/{id}', [TopicController::class, 'update']);
     Route::delete('/topics/{id}', [TopicController::class, 'destroy']);
+
+    //  Forum routes
+    Route::post('/forum', [ForumApiController::class, 'store']);
+    Route::post('/forum/comment', [ForumApiController::class, 'comment']);
+    Route::put('/forum/{id}', [ForumApiController::class, 'update']);
+    Route::delete('/forum/{id}', [ForumApiController::class, 'destroy']);
 
     // Review routes
     Route::get('/reviews', [ReviewController::class, 'index']);
