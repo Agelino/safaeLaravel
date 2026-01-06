@@ -14,7 +14,7 @@ class BookController extends Controller
     /**
      * Get all books with pagination
      */
-    public function index(Request $request)
+   public function index(Request $request)
     {
         $perPage = $request->get('per_page', 15);
         $search = $request->get('search');
@@ -23,7 +23,6 @@ class BookController extends Controller
 
         $query = Book::with(['reviews', 'komentar']);
 
-        // Search by title or author
         if ($search) {
             $query->where(function($q) use ($search) {
                 $q->where('title', 'like', "%{$search}%")
@@ -31,32 +30,40 @@ class BookController extends Controller
             });
         }
 
-        // Filter by genre
         if ($genre) {
             $query->where('genre', $genre);
         }
 
-        // Filter by status
         if ($status) {
             $query->where('status', $status);
         }
 
         $books = $query->paginate($perPage);
 
+        $books->getCollection()->transform(function ($book) {
+        $book->image_url = $book->image_path
+            ? asset('storage/' . $book->image_path)
+            : null;
+        return $book;
+    });
+
         return ResponseHelper::success($books, 'Books retrieved successfully');
     }
-
     /**
      * Get book by ID
      */
     public function show($id)
     {
         $book = Book::with(['reviews.user', 'komentar.user', 'readingHistories'])
-                    ->findOrFail($id);
+            ->findOrFail($id);
+
+        $book->image_url = $book->image_path
+        ? asset('storage/' . $book->image_path)
+        : null;
+
 
         return ResponseHelper::success($book, 'Book retrieved successfully');
     }
-
     /**
      * Create new book (Admin only)
      */
@@ -77,15 +84,21 @@ class BookController extends Controller
             return ResponseHelper::error('Validation Error', 422, $validator->errors());
         }
 
-        $data = $request->only(['title', 'author', 'genre', 'year', 'description', 'status', 'content']);
+        $data = $request->only([
+            'title', 'author', 'genre', 'year', 'description', 'status', 'content'
+        ]);
 
-        // Handle image upload
         if ($request->hasFile('image')) {
             $imagePath = $request->file('image')->store('books', 'public');
             $data['image_path'] = $imagePath;
         }
 
         $book = Book::create($data);
+
+        // 🔥 TAMBAHAN
+        $book->image_url = $book->image_path
+            ? asset('storage/' . $book->image_path)
+            : null;
 
         return ResponseHelper::success($book, 'Book created successfully', 201);
     }
@@ -112,20 +125,25 @@ class BookController extends Controller
             return ResponseHelper::error('Validation Error', 422, $validator->errors());
         }
 
-        $data = $request->only(['title', 'author', 'genre', 'year', 'description', 'status', 'content']);
+        $data = $request->only([
+            'title', 'author', 'genre', 'year', 'description', 'status', 'content'
+        ]);
 
-        // Handle image upload
         if ($request->hasFile('image')) {
-            // Delete old image
             if ($book->image_path) {
                 Storage::disk('public')->delete($book->image_path);
             }
-            
+
             $imagePath = $request->file('image')->store('books', 'public');
             $data['image_path'] = $imagePath;
         }
 
         $book->update($data);
+
+        // 🔥 TAMBAHAN
+        $book->image_url = $book->image_path
+            ? asset('storage/' . $book->image_path)
+            : null;
 
         return ResponseHelper::success($book, 'Book updated successfully');
     }
@@ -137,7 +155,6 @@ class BookController extends Controller
     {
         $book = Book::findOrFail($id);
 
-        // Delete image if exists
         if ($book->image_path) {
             Storage::disk('public')->delete($book->image_path);
         }
@@ -153,11 +170,19 @@ class BookController extends Controller
     public function popular()
     {
         $books = Book::withCount('reviews')
-                     ->withCount('readingHistories')
-                     ->orderBy('reviews_count', 'desc')
-                     ->orderBy('reading_histories_count', 'desc')
-                     ->limit(10)
-                     ->get();
+            ->withCount('readingHistories')
+            ->orderBy('reviews_count', 'desc')
+            ->orderBy('reading_histories_count', 'desc')
+            ->limit(10)
+            ->get();
+
+        // 🔥 TAMBAHAN
+        $books->transform(function ($book) {
+            $book->image_url = $book->image_path
+                ? asset('storage/' . $book->image_path)
+                : null;
+            return $book;
+        });
 
         return ResponseHelper::success($books, 'Popular books retrieved successfully');
     }
@@ -168,8 +193,16 @@ class BookController extends Controller
     public function latest()
     {
         $books = Book::orderBy('created_at', 'desc')
-                     ->limit(10)
-                     ->get();
+            ->limit(10)
+            ->get();
+
+        // 🔥 TAMBAHAN
+        $books->transform(function ($book) {
+            $book->image_url = $book->image_path
+                ? asset('storage/' . $book->image_path)
+                : null;
+            return $book;
+        });
 
         return ResponseHelper::success($books, 'Latest books retrieved successfully');
     }

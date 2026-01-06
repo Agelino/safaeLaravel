@@ -83,7 +83,7 @@
 
                     <div class="card-footer action-buttons">
                         {{-- VIEW --}}
-                        <a href="{{ route('admin.show-book', $book->id) }}"
+                        <a href="{{ route('admin.genre.index', $book->id) }}"
                            class="btn btn-info btn-sm">
                             <i class="fas fa-eye"></i>
                         </a>
@@ -149,20 +149,20 @@
 
                     <div class="card-footer action-buttons">
                         {{-- VIEW --}}
-                        <a href="{{ route('admin.show-book', $book->id) }}"
+                        <a href="{{ route('admin.genre.index', $book->id) }}"
                            class="btn btn-info btn-sm">
                             <i class="fas fa-eye"></i>
                         </a>
 
                         {{-- EDIT --}}
-                        <a href="{{ route('admin.buku.edit', $book->id) }}"
+                        <a href="{{ route('admin.books.edit', $book->id) }}"
                            class="btn btn-primary btn-sm">
                             <i class="fas fa-edit"></i>
                         </a>
 
                         {{-- DELETE --}}
                         <form method="POST"
-                              action="{{ route('admin.buku.hapus') }}"
+                              action="{{ route('admin.books.delete') }}"
                               style="display:inline;">
                             @csrf
                             <input type="hidden" name="id" value="{{ $book->id }}">

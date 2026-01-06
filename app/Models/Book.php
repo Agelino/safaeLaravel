@@ -15,23 +15,35 @@ class Book extends Model
         'genre',
         'year',
         'description',
-        'image_path',
-        'status',
         'content',
+        'status',
+        'image_path',
     ];
 
-    public function readingHistories()
+    /**
+     * Accessor URL GAMBAR (UNTUK FLUTTER)
+     */
+    protected $appends = ['image_url'];
+
+    public function getImageUrlAttribute()
     {
-        return $this->hasMany(ReadingHistory::class);
+        return $this->image_path
+            ? asset('storage/' . $this->image_path)
+            : null;
     }
 
     public function reviews()
     {
-        return $this->hasMany(Review::class, 'book_id'); 
+        return $this->hasMany(Review::class);
     }
 
     public function komentar()
     {
-        return $this->hasMany(Komentar::class, 'book_id', 'id');
+        return $this->hasMany(Komentar::class);
+    }
+
+    public function readingHistories()
+    {
+        return $this->hasMany(ReadingHistory::class);
     }
 }
