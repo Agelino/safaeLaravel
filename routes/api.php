@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\BookController;
 use App\Http\Controllers\Api\GenreController;
@@ -15,7 +16,6 @@ use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\ContactController;
 use App\Http\Controllers\Api\PembayaranController;
 use App\Http\Controllers\Api\UserController;
-use App\Http\Controllers\Api\ReadingHistoryController;
 use App\Http\Controllers\Api\KomentarController;
 
 /*
@@ -56,7 +56,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // ===== COMMENT =====
     Route::apiResource('comments', CommentController::class);
 
-    // ==================== READING (USER) ====================
+    // ==================== READING ====================
     Route::get('/reading/history', [ReadingController::class, 'history']);
     Route::get('/reading/history/book/{bookId}', [ReadingController::class, 'getBookHistory']);
     Route::post('/reading/history', [ReadingController::class, 'updateHistory']);
@@ -66,21 +66,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/reading/progress', [ReadingController::class, 'recordDuration']);
     Route::get('/reading/duration', [ReadingController::class, 'totalDuration']);
 
-    // komentar
-
-    Route::get('/komentar/{bookId}/{page}',[KomentarController::class, 'index']);
-    Route::post('/komentar',[KomentarController::class, 'simpan']);
-    Route::put('/komentar/{id}',[KomentarController::class, 'update']);
+    // ===== KOMENTAR (CUSTOM) =====
+    Route::get('/komentar/{bookId}/{page}', [KomentarController::class, 'index']);
+    Route::post('/komentar', [KomentarController::class, 'simpan']);
+    Route::put('/komentar/{id}', [KomentarController::class, 'update']);
     Route::delete('/komentar/{id}', [KomentarController::class, 'hapus']);
-
-    // ==================== READING HISTORY (USER) ====================
-    // 🔵 USER hanya bisa kelola history MILIK SENDIRI
-    Route::get('/reading-histories', [ReadingHistoryController::class, 'index']);        // list
-    Route::get('/reading-histories/{id}', [ReadingHistoryController::class, 'show']);   // detail
-    Route::post('/reading-histories', [ReadingHistoryController::class, 'store']);      // create / update
-    Route::put('/reading-histories/{id}', [ReadingHistoryController::class, 'update']); // edit
-    Route::delete('/reading-histories/{id}', [ReadingHistoryController::class, 'destroy']); // delete
-    Route::apiResource('comments', CommentController::class);  
 
     // ==================== FAVORITE ====================
     Route::get('/favorites', [FavoriteController::class, 'index']);
@@ -123,8 +113,11 @@ Route::middleware(['auth:sanctum', 'admin.api'])->group(function () {
     Route::put('/genres/{id}', [GenreController::class, 'update']);
     Route::delete('/genres/{id}', [GenreController::class, 'destroy']);
 
-    // ===== USER MANAGEMENT =====
-    Route::apiResource('users', UserController::class);
+    // ===== USER MANAGEMENT (ADMIN) =====
+    Route::get('/users', [UserController::class, 'index']);
+    Route::get('/users/{id}', [UserController::class, 'show']);
+    Route::put('/users/{id}', [UserController::class, 'update']);
+    Route::delete('/users/{id}', [UserController::class, 'destroy']);
 
     // ===== PAYMENT ADMIN =====
     Route::get('/payments/admin/all', [PembayaranController::class, 'all']);
