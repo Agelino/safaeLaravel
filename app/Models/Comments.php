@@ -6,15 +6,24 @@ use Illuminate\Database\Eloquent\Model;
 
 class Comments extends Model
 {
-    protected $fillable = ['topic_id', 'user_id', 'isi'];
+    protected $fillable = [
+        'topic_id',
+        'user_id',
+        'parent_id',
+        'isi'
+    ];
 
-    public function topic()
+    // 🔁 balasan
+    public function replies()
     {
-        return $this->belongsTo(Topic::class);
+        return $this->hasMany(Comments::class, 'parent_id')
+            ->with('replies', 'user');
     }
 
+    // 👤 user
     public function user()
     {
         return $this->belongsTo(User::class);
     }
+
 }

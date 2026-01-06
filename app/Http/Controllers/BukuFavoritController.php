@@ -27,19 +27,19 @@ class BukuFavoritController extends Controller
         'book_id' => 'required|exists:books,id'
         ]);
 
-        $fav = FavoriteBook::firstOrCreate([
-    'user_id' => Auth::id(),
-    'book_id' => $request->book_id
-]);
-
-
-if ($fav->wasRecentlyCreated) {
-    \App\Models\Notification::create([
+            $fav = FavoriteBook::firstOrCreate([
         'user_id' => Auth::id(),
-        'message' => 'Buku "' . $fav->book->judul . '" ditambahkan ke favorit',
-        'url' => route('favorite.index')
+        'book_id' => $request->book_id
     ]);
-}
+
+
+    if ($fav->wasRecentlyCreated) {
+        \App\Models\Notification::create([
+            'user_id' => Auth::id(),
+            'message' => 'Buku "' . $fav->book->judul . '" ditambahkan ke favorit',
+            'url' => route('favorite.index')
+        ]);
+    }
 
 
 return redirect('/genre');
