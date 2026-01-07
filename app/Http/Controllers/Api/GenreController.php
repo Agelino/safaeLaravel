@@ -3,88 +3,67 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\Genre;
-use App\Helpers\ResponseHelper;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Str;
+use App\Models\Book;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class GenreController extends Controller
 {
-    /**
-     * Get all genres
-     */
-    public function index()
+    public function index(Request $request)
     {
-        $genres = Genre::withCount('topics')->get();
+        $current_genre = $request->query('genre', '');
+        $search = $request->query('search', '');
 
-        return ResponseHelper::success($genres, 'Genres retrieved successfully');
-    }
+        // Ambil genre unik
+        $all_genres = Book::where('status', 'approved')
+            ->pluck('genre')
+            ->unique()
+            ->values();
 
-    /**
-     * Get genre by ID with topics
-     */
-    public function show($id)
-    {
-        $genre = Genre::with(['topics.user', 'topics.comments'])->findOrFail($id);
+        // Query buku
+        $books_query = Book::where('status', 'approved');
 
-        return ResponseHelper::success($genre, 'Genre retrieved successfully');
-    }
-
-    /**
-     * Create new genre (Admin only)
-     */
-    public function store(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'nama_genre' => 'required|string|max:255|unique:genres',
-        ]);
-
-        if ($validator->fails()) {
-            return ResponseHelper::error('Validation Error', 422, $validator->errors());
+        if (!empty($current_genre)) {
+            $books_query->where('genre', $current_genre);
         }
 
-        $genre = Genre::create([
-            'nama_genre' => $request->nama_genre,
-            'slug' => Str::slug($request->nama_genre),
-        ]);
-
-        return ResponseHelper::success($genre, 'Genre created successfully', 201);
-    }
-
-    /**
-     * Update genre (Admin only)
-     */
-    public function update(Request $request, $id)
-    {
-        $genre = Genre::findOrFail($id);
-
-        $validator = Validator::make($request->all(), [
-            'nama_genre' => 'sometimes|string|max:255|unique:genres,nama_genre,' . $id,
-        ]);
-
-        if ($validator->fails()) {
-            return ResponseHelper::error('Validation Error', 422, $validator->errors());
+        if (!empty($search)) {
+            $books_query->where('title', 'like', "%{$search}%");
         }
 
-        if ($request->filled('nama_genre')) {
-            $genre->update([
-                'nama_genre' => $request->nama_genre,
-                'slug' => Str::slug($request->nama_genre),
-            ]);
+        // Ambil data buku + mapping gambar
+        $books = $books_query->get()->map(function ($book) {
+            return [
+                'id' => $book->id,
+                'title' => $book->title,
+                'genre' => $book->genre,
+                'author' => $book->author ?? '',
+                'description' => $book->description ?? '',
+                'image' => $book->cover
+                    ? asset('storage/' . $book->cover)
+                    : null,
+            ];
+        });
+
+        // Favorite user (jika login)
+        $favorites = [];
+        if (Auth::check()) {
+            $favorites = Auth::user()
+                ->favoriteBooks()
+                ->pluck('book_id');
         }
 
-        return ResponseHelper::success($genre, 'Genre updated successfully');
-    }
-
-    /**
-     * Delete genre (Admin only)
-     */
-    public function destroy($id)
-    {
-        $genre = Genre::findOrFail($id);
-        $genre->delete();
-
-        return ResponseHelper::success(null, 'Genre deleted successfully');
+        return response()->json([
+            'status' => true,
+            'message' => 'Data genre dan buku berhasil diambil',
+            'data' => [
+                'genres' => $all_genres,
+                'current_genre' => $current_genre,
+                'search' => $search,
+                'books' => $books,
+                'favorites' => $favorites
+            ]
+        ]);
     }
 }
